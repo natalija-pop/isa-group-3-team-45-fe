@@ -1,0 +1,38 @@
+<div class="container mt-4">
+    <div class="row">
+        <h1>Medical equipment company</h1>
+    </div>
+    <div class="row">
+        <ul class="nav nav-underline">
+            <li class="nav-item">
+              <a class="nav-link active" [class.active]="selectedNavItem === 'description'" (click)="showDescription()">Description</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" [class.active]="selectedNavItem === 'companyInfo'" (click)="showCompanyInfo()">Company info</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" [class.active]="selectedNavItem === 'equipment'" (click)="showEquipment()">Equipment</a>
+            </li>
+          </ul>
+    </div>
+
+    <div class="content-container">
+        <div *ngIf="selectedNavItem === 'description'">
+            {{company.description}}
+        </div>
+        <div *ngIf="selectedNavItem === 'companyInfo'">
+            <div class=".col-6">
+                {{company.address.street}} {{company.address.number}}
+            </div>
+            <div class=".col-6">
+                {{company.address.city}}
+            </div>
+            <div class=".col-6">
+                {{company.address.country}}
+            </div>
+        </div>
+        <div *ngIf="selectedNavItem === 'equipment'">
+            OPREMA
+        </div>
+    </div>
+</div>
