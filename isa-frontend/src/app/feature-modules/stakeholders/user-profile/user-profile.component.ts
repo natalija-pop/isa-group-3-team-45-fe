@@ -33,11 +33,16 @@ export class UserProfileComponent implements OnInit {
   penaltyPoints: number = 4;
   newPassword: string = '';
   repeatedNewPassword: string = '';
+  userId: number = 0;
 
   ngOnInit() {
     this.editMode = false;
 
-     this.service.getUser(1).subscribe({
+    this.authService.user$.subscribe(user => {
+      this.userId = user.id;
+    });
+
+     this.service.getUser(this.userId).subscribe({
       next: (result: User) => {
         this.user = result;
           console.log(result);
