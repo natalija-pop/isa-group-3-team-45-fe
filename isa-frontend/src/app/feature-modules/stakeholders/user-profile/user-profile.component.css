@@ -1,0 +1,96 @@
+.popup {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .popup-content {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 5px;
+  }
+  .image {
+    width: 19px;
+    height: 19px;
+    margin-left: 10px;
+    margin-top: -2px;
+  }
+  .button-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+  }
+  
+  .button-container button {
+    margin: 10px;
+  }
+  .profile-form {
+    width: 40%;
+    margin: auto;
+    text-align: center;
+  }
+  .point-part {
+    margin-top: 18px;
+  }
+  .form-item {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    width: 80%;
+    margin: auto;
+    padding: 12px;
+  }
+  .deleteLabel {
+    color: rgb(13, 13, 139);
+    margin-top: 15px;
+  }
+  .form-item label {
+    text-align: left;
+    font-weight: 600;
+    margin-bottom: 6px;
+  }
+  
+  .form-item-error {
+    color: red;
+  }
+  .label-item {
+    padding: 12px;
+  }
+  .gender {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+  }
+  .button {
+    margin: 24px;
+    padding: 16px;
+    border-radius: 6px;
+    width: 50%;
+    outline: none;
+    cursor: pointer;
+    border: none;
+    font-family: Avenir;
+    font-size: 24px;
+    font-weight: 600;
+  }
+  .submit {
+    background-color: rgb(160, 226, 160);
+  }
+  .edit {
+    background-color: rgb(192, 193, 192);
+  }
+  .undo {
+    margin-top: 22px;
+    font-weight: 700;
+    cursor: pointer;
+    padding: 12px;
+  }
+  .change-password-label {
+    cursor: pointer;
+  }

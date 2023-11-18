@@ -1,0 +1,92 @@
+<div class="profile-form">
+    <h1>Profile</h1>
+    <form >
+      <div class="form-item">
+        <label>First name:</label>
+        <input [disabled]="!editMode" type="text" [(ngModel)]="user.name" name="name"/>
+      </div>
+      <div class="form-item">
+        <label>Last name:</label>
+        <input [disabled]="!editMode" type="text" [(ngModel)]="user.surname" name="surname"/>
+      </div>
+      <div *ngIf="editMode">
+        <label
+          (click)="switchChangePasswordMode(true)"
+          class="change-password-label"
+          *ngIf="!changePassword"
+        >Change password?</label>
+        <label
+          (click)="switchChangePasswordMode(false)"
+          class="change-password-label"
+          *ngIf="changePassword"
+        >Don't change password</label>
+      
+
+      <div *ngIf="editMode && changePassword">
+        <div class="form-item">
+          <label>New password:</label>
+          <input type="password" [(ngModel)]="newPassword"  name="newPassword"/>
+          <label
+            class="form-item-error"
+            *ngIf="newPassword && repeatedNewPassword && newPassword !== repeatedNewPassword"
+          >Passwords do not match!</label>
+        </div>
+
+        <div class="form-item">
+          <label>Repeat new password:</label>
+          <input type="password" [(ngModel)]="repeatedNewPassword"  name="repeatedNewPassword"/>
+        </div>
+      </div>
+      </div>
+
+      <div class="form-item">
+        <label>Old password:</label>
+        <input [disabled]=true type="password" [(ngModel)]="user.password" name="oldPassword" />
+      </div>
+
+      <div class="form-item">
+        <label>Profession:</label>
+        <input [disabled]="!editMode" type="text" [(ngModel)]="user.profession" name="profession"/>
+      </div>
+      <div class="form-item">
+        <label>Email:</label>
+        <input [disabled]=true type="text" [(ngModel)]="user.email" name="email"/>
+      </div>
+      <div class="form-item">
+        <label>City:</label>
+        <input [disabled]="!editMode" type="text" [(ngModel)]="user.city" name="city"/>
+      </div>
+      <div class="form-item">
+        <label>Country:</label>
+        <input [disabled]="!editMode" type="text" [(ngModel)]="user.country" name="country"/>
+      </div>
+      <div class="form-item">
+        <label>Phone:</label>
+        <input [disabled]="!editMode" type="text" [(ngModel)]="user.phone" name="phone"/>
+      </div>
+      <div class="form-item">
+        <label>Company:</label>
+        <input [disabled]="!editMode" type="text" [(ngModel)]="user.companyInformation" name="companyInformation"/>
+      </div>
+      <div class="form-item">
+        <label>Penalty points:</label>
+        <input [disabled]="true" type="text" [(ngModel)]="penaltyPoints" name="penaltyPoints"/>
+      </div>
+      <div class="form-item">
+        <label>Category:</label>
+        <input [disabled]="true" type="text" [(ngModel)]="category" name="category"/>
+      </div>
+  
+  
+      <div class="label-item">
+        <label class="undo" *ngIf="editMode" (click)="switchMode(false)">Undo</label>
+      </div>
+  
+      <div *ngIf="editMode">
+        <button class="button submit" type="submit" (click)="saveChanges()" >Save</button>
+      </div>
+    </form>
+  
+      <button *ngIf="!editMode" (click)="switchMode(true)">Edit profile</button>
+  
+  </div>
