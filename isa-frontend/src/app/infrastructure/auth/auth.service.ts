@@ -14,19 +14,7 @@ import { JwtHelperService } from '@auth0/angular-jwt';
   providedIn: 'root'
 })
 export class AuthService {
-  user$ = new BehaviorSubject<User>({
-    id: 0,
-    role: "",
-    email: "",
-    password: "",
-    name: "",
-    surname: "",
-    city: "",
-    country: "",
-    phone: "",
-    profession: "",
-    companyInformation: "",
-    isActive: false});
+  user$ = new BehaviorSubject<User>({email: "", id: 0, role: "" });
 
   constructor(private http: HttpClient,
     private tokenStorage: TokenStorage,
@@ -57,19 +45,7 @@ export class AuthService {
   logout(): void {
     this.router.navigate(['/home']).then(_ => {
       this.tokenStorage.clear();
-      this.user$.next({
-      id: 0,
-      role: "",
-      email: "",
-      password: "",
-      name: "",
-      surname: "",
-      city: "",
-      country: "",
-      phone: "",
-      profession: "",
-      companyInformation: "",
-      isActive: false});
+      this.user$.next({email: "", id: 0, role: "" });
       }
     );
   }
@@ -87,21 +63,12 @@ export class AuthService {
     const accessToken = this.tokenStorage.getAccessToken() || "";
     const user: User = {
       id: +jwtHelperService.decodeToken(accessToken).id,
+      email: jwtHelperService.decodeToken(accessToken).email,
       role: jwtHelperService.decodeToken(accessToken)[
         'http://schemas.microsoft.com/ws/2008/06/identity/claims/role'
       ],
-      email: jwtHelperService.decodeToken(accessToken).email,
-      password: jwtHelperService.decodeToken(accessToken).password,
-      name: jwtHelperService.decodeToken(accessToken).name,
-      surname: jwtHelperService.decodeToken(accessToken).surname,
-      city: jwtHelperService.decodeToken(accessToken).city,
-      country: jwtHelperService.decodeToken(accessToken).country,
-      phone: jwtHelperService.decodeToken(accessToken).phone,
-      profession: jwtHelperService.decodeToken(accessToken).profession,
-      companyInformation: jwtHelperService.decodeToken(accessToken).companyInformation,
-      isActive: jwtHelperService.decodeToken(accessToken).isActive
     };
     this.user$.next(user);
-  }
+  }
 }
 
