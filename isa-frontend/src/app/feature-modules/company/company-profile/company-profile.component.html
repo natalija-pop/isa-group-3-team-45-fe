@@ -1,8 +1,8 @@
 <div class="container mt-4">
     <div class="row">
-        <h1>Medical equipment company</h1>
+        <h1>{{company?.name}}</h1>
     </div>
-    <div class="row">
+    <div class="row mt-4">
         <ul class="nav nav-underline">
             <li class="nav-item">
               <a class="nav-link active" [class.active]="selectedNavItem === 'description'" (click)="showDescription()">Description</a>
@@ -16,23 +16,31 @@
           </ul>
     </div>
 
-    <div class="content-container">
-        <div *ngIf="selectedNavItem === 'description'">
-            {{company.description}}
+    <div class="content-container mt-4">
+        <div class="text-body-secondary fw-normal fs-5" *ngIf="selectedNavItem === 'description'">
+            {{company?.description}}
         </div>
-        <div *ngIf="selectedNavItem === 'companyInfo'">
+        <div class="text-body-secondary fw-normal fs-5" *ngIf="selectedNavItem === 'companyInfo'">
             <div class=".col-6">
-                {{company.address.street}} {{company.address.number}}
+                {{company?.address?.street}} {{company?.address?.number}}
             </div>
-            <div class=".col-6">
-                {{company.address.city}}
+            <div class=".col-6 mt-2">
+                {{company?.address?.city}}
             </div>
-            <div class=".col-6">
-                {{company.address.country}}
+            <div class=".col-6 mt-2">
+                {{company?.address?.country}}
             </div>
         </div>
-        <div *ngIf="selectedNavItem === 'equipment'">
-            OPREMA
-        </div>
+        <div *ngIf="selectedNavItem === 'equipment'" class="row">
+            <div *ngFor="let equipment of equipmentList" class="col-md-4">
+              <div class="card border-dark mb-3" style="max-width: 30rem; max-height: 30rem;">
+                <div class="card-header">{{ getEquipmentTypeString(equipment.type) }}</div>
+                <div class="card-body">
+                  <h5 class="card-title">{{ equipment.name }}</h5>
+                  <p class="card-text">{{ equipment.description }}</p>
+                </div>
+              </div>
+            </div>
+          </div>
     </div>
 </div>
