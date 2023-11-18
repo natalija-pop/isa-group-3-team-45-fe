@@ -1,0 +1,76 @@
+/* Globalni stilovi */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #f4f4f4;
+  }
+  
+  /* Stilovi forme za registraciju */
+  form {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    width: 300px;
+  }
+  
+  .form-group {
+    margin-bottom: 15px;
+  }
+  
+  label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+  }
+  
+  input[type="text"],
+  input[type="email"],
+  input[type="password"],
+  textarea,
+  select {
+    padding: 8px;
+    border-radius: 3px;
+    border: 1px solid #ccc;
+    width: calc(100% - 18px);
+    box-sizing: border-box;
+    margin-top: 4px;
+  }
+  
+  button {
+    padding: 10px 15px;
+    border: none;
+    border-radius: 3px;
+    background-color: #007bff;
+    color: #fff;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    width: 100%;
+  }
+  
+  button:hover {
+    background-color: #0056b3;
+  }
+  
+  .has-error input, .has-error textarea {
+    border-color: red; /* Polje postaje crveno kada nije validno */
+  }
+  
+  .has-error .help-block {
+    color: red; /* Boja teksta za grešku */
+  }
+
+  .invalid-message {
+    color: red;
+    margin-top: 10px;
+  }
+
+  .error-message {
+    color: red;
+    margin-top: 5px;
+  }
