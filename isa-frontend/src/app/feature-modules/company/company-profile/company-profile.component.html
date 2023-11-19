@@ -1,6 +1,14 @@
 <div class="container mt-4">
     <div class="row">
-        <h1>{{company?.name}}</h1>
+      <div class="col-9">
+        <h1>{{company.name}}</h1>
+      </div>
+      <div class="col-3 text-end">
+        <button class="btn btn-light border border-dark" data-bs-toggle="modal" data-bs-target="#editCompanyModal">
+          <span class="me-2">Edit</span>
+          <i class="bi bi-pencil-fill"></i>
+        </button>
+      </div>
     </div>
     <div class="row mt-4">
         <ul class="nav nav-underline">
@@ -18,17 +26,17 @@
 
     <div class="content-container mt-4">
         <div class="text-body-secondary fw-normal fs-5" *ngIf="selectedNavItem === 'description'">
-            {{company?.description}}
+            {{company.description}}
         </div>
         <div class="text-body-secondary fw-normal fs-5" *ngIf="selectedNavItem === 'companyInfo'">
             <div class=".col-6">
-                {{company?.address?.street}} {{company?.address?.number}}
+                {{company.address.street}} {{company.address.number}}
             </div>
             <div class=".col-6 mt-2">
-                {{company?.address?.city}}
+                {{company.address.city}}
             </div>
             <div class=".col-6 mt-2">
-                {{company?.address?.country}}
+                {{company.address.country}}
             </div>
         </div>
         <div *ngIf="selectedNavItem === 'equipment'" class="row">
@@ -43,4 +51,48 @@
             </div>
           </div>
     </div>
+</div>
+
+
+<div class="modal fade" id="editCompanyModal" tabindex="-1" aria-labelledby="editCompanyModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header ft-5">
+        <h1 class="modal-title fs-5" id="editCompanyModalLabel">Edit company</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form >
+          <div class="form-item">
+            <label>Name:</label>
+            <input type="text" [(ngModel)]="company.name" name="name"/>
+          </div>
+          <div class="form-item">
+            <label>Description:</label>
+            <input type="text" [(ngModel)]="company.description" name="description"/>
+          </div>
+          <div class="form-item">
+            <label>Street:</label>
+            <input type="text" [(ngModel)]="company.address.street" name="street"/>
+          </div>
+          <div class="form-item">
+            <label>Number:</label>
+            <input type="text" [(ngModel)]="company.address.number" name="number"/>
+          </div>
+          <div class="form-item">
+            <label>City:</label>
+            <input type="text" [(ngModel)]="company.address.city" name="city"/>
+          </div>
+          <div class="form-item">
+            <label>Country:</label>
+            <input type="text" [(ngModel)]="company.address.country" name="country"/>
+          </div>
+          <div class="modal-footer me-4">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-success" (click)="saveChanges() ">Apply</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
 </div>

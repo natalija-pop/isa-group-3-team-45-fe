@@ -20,4 +20,8 @@ export class CompanyService {
   getEquipmentByCompanyId(companyId: number): Observable<PagedResults<Company>>{
     return this.http.get<PagedResults<Company>>(environment.apiHost + 'equipment/getCompanyEquipment/' + companyId);
   }
+
+  updateCompany(company: Company): Observable<Company>{
+    return this.http.put<Company>(environment.apiHost + 'company/' + company.id, company);
+  }
 }
