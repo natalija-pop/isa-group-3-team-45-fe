@@ -14,7 +14,7 @@ import { Login } from './model/login.model';
   providedIn: 'root'
 })
 export class AuthService {
-  user$ = new BehaviorSubject<User>({email: "", id: 0, role: "" });
+  user$ = new BehaviorSubject<User>({email: "", id: 0, role: 0 });
 
   constructor(private http: HttpClient,
     private tokenStorage: TokenStorage,
@@ -45,7 +45,7 @@ export class AuthService {
   logout(): void {
     this.router.navigate(['/login']).then(_ => {
       this.tokenStorage.clear();
-      this.user$.next({email: "", id: 0, role: "" });
+      this.user$.next({email: "", id: 0, role: 0 });
       }
     );
   }

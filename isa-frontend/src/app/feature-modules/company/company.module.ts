@@ -4,20 +4,25 @@ import { CompanyProfileComponent } from './company-profile/company-profile.compo
 import { CompaniesPageComponent } from './companies-page/companies-page.component';
 import { FormsModule } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
+import { CompanyFormComponent } from './company-form/company-form.component';
+
+
 
 @NgModule({
   declarations: [
     CompanyProfileComponent,
-    CompaniesPageComponent
+    CompaniesPageComponent,
+    CompanyFormComponent
   ],
   imports: [
     CommonModule,
-    FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    FormsModule
   ],
   exports: [
     CompanyProfileComponent,
-    CompaniesPageComponent
+    CompaniesPageComponent,
+    CompanyFormComponent
   ]
 })
 export class CompanyModule { }
