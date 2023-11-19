@@ -1,0 +1,98 @@
+<div class="container mt-4">
+    <div class="row">
+      <div class="col-9">
+        <h1>{{company.name}}</h1>
+      </div>
+      <div class="col-3 text-end">
+        <button class="btn btn-light border border-dark" data-bs-toggle="modal" data-bs-target="#editCompanyModal">
+          <span class="me-2">Edit</span>
+          <i class="bi bi-pencil-fill"></i>
+        </button>
+      </div>
+    </div>
+    <div class="row mt-4">
+        <ul class="nav nav-underline">
+            <li class="nav-item">
+              <a class="nav-link active" [class.active]="selectedNavItem === 'description'" (click)="showDescription()">Description</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" [class.active]="selectedNavItem === 'companyInfo'" (click)="showCompanyInfo()">Company info</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" [class.active]="selectedNavItem === 'equipment'" (click)="showEquipment()">Equipment</a>
+            </li>
+          </ul>
+    </div>
+
+    <div class="content-container mt-4">
+        <div class="text-body-secondary fw-normal fs-5" *ngIf="selectedNavItem === 'description'">
+            {{company.description}}
+        </div>
+        <div class="text-body-secondary fw-normal fs-5" *ngIf="selectedNavItem === 'companyInfo'">
+            <div class=".col-6">
+                {{company.address.street}} {{company.address.number}}
+            </div>
+            <div class=".col-6 mt-2">
+                {{company.address.city}}
+            </div>
+            <div class=".col-6 mt-2">
+                {{company.address.country}}
+            </div>
+        </div>
+        <div *ngIf="selectedNavItem === 'equipment'" class="row">
+            <div *ngFor="let equipment of equipmentList" class="col-md-4">
+              <div class="card border-dark mb-3" style="max-width: 30rem; max-height: 30rem;">
+                <div class="card-header">{{ getEquipmentTypeString(equipment.type) }}</div>
+                <div class="card-body">
+                  <h5 class="card-title">{{ equipment.name }}</h5>
+                  <p class="card-text">{{ equipment.description }}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="editCompanyModal" tabindex="-1" aria-labelledby="editCompanyModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header ft-5">
+        <h1 class="modal-title fs-5" id="editCompanyModalLabel">Edit company</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form >
+          <div class="form-item">
+            <label>Name:</label>
+            <input type="text" [(ngModel)]="company.name" name="name"/>
+          </div>
+          <div class="form-item">
+            <label>Description:</label>
+            <input type="text" [(ngModel)]="company.description" name="description"/>
+          </div>
+          <div class="form-item">
+            <label>Street:</label>
+            <input type="text" [(ngModel)]="company.address.street" name="street"/>
+          </div>
+          <div class="form-item">
+            <label>Number:</label>
+            <input type="text" [(ngModel)]="company.address.number" name="number"/>
+          </div>
+          <div class="form-item">
+            <label>City:</label>
+            <input type="text" [(ngModel)]="company.address.city" name="city"/>
+          </div>
+          <div class="form-item">
+            <label>Country:</label>
+            <input type="text" [(ngModel)]="company.address.country" name="country"/>
+          </div>
+          <div class="modal-footer me-4">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-success" (click)="saveChanges() ">Apply</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

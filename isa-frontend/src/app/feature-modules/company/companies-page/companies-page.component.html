@@ -1,0 +1,50 @@
+<html lang="en">
+<head>
+  <title>Company Search</title>
+</head>
+<body>
+
+  <div class="container">
+    <h1 class="mt-5">Companies</h1>
+    
+    <div class="row mt-4 justify-content-end">
+      <div class="col-md-4 mb-3">
+        <label for="name" class="form-label">Name:</label>
+        <input type="text" id="name" [(ngModel)]="name" name="name" class="form-control" placeholder="Enter company name">
+      </div>
+  
+      <div class="col-md-4 mb-3">
+        <label for="city" class="form-label">City:</label>
+        <input type="text" id="city" [(ngModel)]="city" name="city" class="form-control" placeholder="Enter city">
+      </div>
+  
+      <div class="col-md-4 mb-3">
+        <label for="rating" class="form-label">Rating:</label>
+        <select id="rating" name="rating" [(ngModel)]="rating" class="form-control" (change)="filterCompaniesByRating()">
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="5">5</option>
+        </select>
+      </div>
+      <div class="col-md-4 mb-3 d-flex align-items-end justify-content-end">
+        <button (click)="searchCompanies()" class="btn btn-primary">Search</button>
+      </div>
+    </div>
+  
+    <div class="row mt-4">
+      <div class="col-md-12">
+        <div *ngFor="let company of companies" class="card mb-3">
+          <div class="card-body">
+            <h5 class="card-title"> {{ company.name }}</h5>
+            <p class="card-text">Address: {{ company.address.street }} {{ company.address.number }}, {{ company.address.city }}, {{ company.address.country }}</p>
+            <p class="card-text"><strong>Rating: {{ company.rating }}</strong> </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>
