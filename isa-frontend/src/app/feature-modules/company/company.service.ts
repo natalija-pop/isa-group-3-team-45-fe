@@ -20,4 +20,13 @@ export class CompanyService {
   getEquipmentByCompanyId(companyId: number): Observable<PagedResults<Company>>{
     return this.http.get<PagedResults<Company>>(environment.apiHost + 'equipment/getCompanyEquipment/' + companyId);
   }
+
+  getSearchResults(name?: string, city?: string): Observable<PagedResults<Company>> {
+    return this.http.get<PagedResults<Company>>(`${environment.apiHost}company/getSearchResults?name=${name}&city=${city}`);
+  }
+
+  getAllCompanies(): Observable<PagedResults<Company>>{
+    return this.http.get<PagedResults<Company>>(environment.apiHost + 'company/getAll');
+  }
+  
 }

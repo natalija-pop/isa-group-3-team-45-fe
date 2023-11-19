@@ -6,14 +6,15 @@ import { LoginComponent } from './infrastructure/auth/login/login.component';
 import { RegistrationComponent } from './infrastructure/auth/registration/registration.component';
 import { AuthGuard } from './infrastructure/auth/auth.guard';
 import { UserProfileComponent } from './feature-modules/stakeholders/user-profile/user-profile.component';
+import { CompaniesPageComponent } from './feature-modules/company/companies-page/companies-page.component';
 
 const routes: Routes = [
   {path: '', component: HomeComponent},
   {path: 'company-profile', component: CompanyProfileComponent},
   {path: 'user-profile', component: UserProfileComponent},
   {path: 'login', component: LoginComponent},
-  {path: 'register', component: RegistrationComponent}
-
+  {path: 'register', component: RegistrationComponent},
+  {path: 'companies-page', component: CompaniesPageComponent}
 ];
 
 @NgModule({

@@ -9,6 +9,7 @@ import { MaterialModule } from './infrastructure/material/material.module';
 import { JwtInterceptor } from './infrastructure/auth/jwt/jwt.interceptor';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { StakeholdersModule } from './feature-modules/stakeholders/stakeholders.module';
+import { FormsModule } from '@angular/forms';
 
 
 @NgModule({
@@ -23,7 +24,8 @@ import { StakeholdersModule } from './feature-modules/stakeholders/stakeholders.
     CompanyModule,
     AuthModule,
     MaterialModule,
-    StakeholdersModule
+    StakeholdersModule,
+    FormsModule
   ],
   providers: [
     {

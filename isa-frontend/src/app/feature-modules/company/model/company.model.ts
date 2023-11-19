@@ -1,7 +1,8 @@
 export interface Company {
     name: string,
     description: string,
-    address: Address
+    address: Address,
+    rating: number
 }
 
 export interface Address {
