@@ -18,6 +18,7 @@ export class CompanyProfileComponent implements OnInit {
     id: 0,
     name: "",
     description: "",
+    rating: 0,
     address: {
       street: "",
       number: 0,
