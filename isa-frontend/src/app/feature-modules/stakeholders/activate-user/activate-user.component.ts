@@ -15,7 +15,7 @@ export class ActivateUserComponent implements OnInit{
   constructor(private route: ActivatedRoute ,private authService: AuthService, private service: StakeholdersService) {}
   user: User = {
     id: 0,
-    role: "",
+    role: 0,
     email: "",
     password: "",
     name: "",

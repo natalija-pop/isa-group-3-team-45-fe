@@ -4,6 +4,7 @@ import { Company } from '../model/company.model';
 import { Equipment, EquipmentType } from '../model/equipment.model';
 import { User } from 'src/app/infrastructure/auth/model/user.model';
 import { AbstractControl, FormControl, FormGroup, Validators } from '@angular/forms';
+import { AuthService } from 'src/app/infrastructure/auth/auth.service';
 
 @Component({
   selector: 'app-company-profile',
@@ -25,18 +26,36 @@ export class CompanyProfileComponent implements OnInit {
       country: '',
     }
   }
+  user: User = {
+    id: 0,
+    role: 0,
+    email: "",
+    password: "",
+    name: "",
+    surname: "",
+    city: "",
+    country: "",
+    phone: "",
+    profession: "",
+    companyInformation: "",
+    isActivated: false
+  };
   admins: User[] = [];
   equipmentList: Equipment[] = [];
   addAdmin: boolean = false;
   editMode: boolean = false;
 
-  constructor(private companyService: CompanyService) {}
+  constructor(private companyService: CompanyService, private authService: AuthService) {}
 
   ngOnInit(): void {
     this.getCompanyById(1);
     this.getEquipment(1);
     this.editMode = false;
     this.getCompanyAdmins(1);
+
+    this.authService.user$.subscribe(user => {
+      this.user = user;
+    }); 
   }
 
   getCompanyById(id: number): void {
