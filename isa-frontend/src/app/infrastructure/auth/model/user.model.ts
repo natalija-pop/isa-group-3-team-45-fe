@@ -10,5 +10,5 @@ export interface User {
     phone?: string;
     profession?: string;
     companyInformation?: string;
-    isActive?: boolean;
+    isActivated?: boolean;
 }
