@@ -14,6 +14,7 @@ import { NavbarComponent } from './navbar/navbar.component';
     CommonModule
   ],
   exports: [
+    HomeComponent,
     NavbarComponent
   ]
 })
