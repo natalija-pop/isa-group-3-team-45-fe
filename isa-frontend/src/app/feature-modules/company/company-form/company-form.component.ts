@@ -55,11 +55,12 @@ export class CompanyFormComponent {
       id: 0,
       name: this.companyForm.value.name || "",
       description: this.companyForm.value.description || "",
+      rating: 0,
       address: {
         street: this.companyForm.value.street || "",
         number: this.companyForm.value.number || -1,
         city: this.companyForm.value.city || "",
-        country: this.companyForm.value.country || ""
+        country: this.companyForm.value.country || "",
       },
       rating: 0,
       admins: []
