@@ -1,0 +1,33 @@
+  <div class="container">
+    <h1 class="mt-5">Equipment</h1>
+    <div class="row mt-4 justify-content-end">
+      <div class="col-md-4 mb-3">
+        <label for="name" class="form-label">Name:</label>
+        <input type="text" id="searchKeyword" [(ngModel)]="searchKeyword" name="searchKeyword" class="form-control" placeholder="Enter equipment name">
+      </div>
+      <div class="col-md-4 mb-3">
+        <label for="type" class="form-label">Type:</label>
+        <select id="type" name="type" [(ngModel)]="equipmentType" class="form-control" (change)="filterEquipmentByType()">
+          <option value="All">Reset filter</option>
+          <option value="Mask">Mask</option>
+          <option value="Sterile">Sterile</option>
+          <option value="Surgical">Surgical</option>
+          <option value="Instrument">Instrument</option>
+        </select>
+      </div>
+      <div class="col-md-4 mb-3 d-flex align-items-end justify-content-end">
+        <button (click)="searchEquipment()" class="btn btn-primary">Search</button>
+      </div>
+    </div>
+  
+    <div class="row mt-4">
+      <div class="col-md-12">
+        <div *ngFor="let eq of equipment" class="card mb-3">
+          <div class="card-body">
+            <h5 class="card-title"> {{ eq.name }}</h5>
+            <p class="card-text"><strong>Type: {{ getEquipmentTypeString(eq.type) }}</strong> </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
