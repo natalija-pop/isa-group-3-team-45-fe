@@ -14,7 +14,7 @@ import { AllEquipmentPageComponent } from './feature-modules/equipment/all-equip
 
 const routes: Routes = [
   {path: '', component: HomeComponent},
-  {path: 'company-profile', component: CompanyProfileComponent},
+  {path: 'company-profile/:id', component: CompanyProfileComponent},
   {path: 'user-profile', component: UserProfileComponent, canActivate: [AuthGuard]},
   {path: 'login', component: LoginComponent},
   {path: 'register', component: RegistrationComponent},

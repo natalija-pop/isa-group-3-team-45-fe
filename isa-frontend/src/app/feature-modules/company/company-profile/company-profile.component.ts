@@ -5,6 +5,7 @@ import { Equipment, EquipmentType } from '../model/equipment.model';
 import { User } from 'src/app/infrastructure/auth/model/user.model';
 import { AbstractControl, FormControl, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from 'src/app/infrastructure/auth/auth.service';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-company-profile',
@@ -44,14 +45,18 @@ export class CompanyProfileComponent implements OnInit {
   equipmentList: Equipment[] = [];
   addAdmin: boolean = false;
   editMode: boolean = false;
+  companyId: number = 1;
 
-  constructor(private companyService: CompanyService, private authService: AuthService) {}
+  constructor(private companyService: CompanyService, private authService: AuthService, private route: ActivatedRoute) {}
 
   ngOnInit(): void {
-    this.getCompanyById(1);
-    this.getEquipment(1);
+    this.route.params.subscribe(params => {
+      this.companyId = +params['id'];
+    });
+    this.getCompanyById(this.companyId);
+    this.getEquipment(this.companyId);
     this.editMode = false;
-    this.getCompanyAdmins(1);
+    this.getCompanyAdmins(this.companyId);
 
     this.authService.user$.subscribe(user => {
       this.user = user;

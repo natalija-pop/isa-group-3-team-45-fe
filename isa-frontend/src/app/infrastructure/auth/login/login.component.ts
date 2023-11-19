@@ -52,7 +52,7 @@ export class LoginComponent implements OnInit {
     if (this.loginForm.valid) {
       this.authService.login(login).subscribe({
         next: () => {
-          
+          this.router.navigate(['/companies-page']);
         },
       });
     }
