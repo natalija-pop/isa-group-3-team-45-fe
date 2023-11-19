@@ -68,5 +68,6 @@ export class UserProfileComponent implements OnInit {
        this.service.updateUser(this.user).subscribe({
          next: () => {}
        })
+       this.switchMode(false);
   }
 }
