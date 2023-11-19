@@ -10,6 +10,7 @@ import { JwtInterceptor } from './infrastructure/auth/jwt/jwt.interceptor';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { StakeholdersModule } from './feature-modules/stakeholders/stakeholders.module';
 import { FormsModule } from '@angular/forms';
+import { EquipmentModule } from './feature-modules/equipment/equipment.module';
 
 
 @NgModule({
@@ -21,6 +22,7 @@ import { FormsModule } from '@angular/forms';
     AppRoutingModule,
     HttpClientModule,
     LayoutModule,
+    EquipmentModule,
     CompanyModule,
     AuthModule,
     MaterialModule,
