@@ -16,11 +16,13 @@ import { CompanyFormComponent } from './company-form/company-form.component';
   ],
   imports: [
     CommonModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    FormsModule
   ],
   exports: [
     CompanyProfileComponent,
-    CompaniesPageComponent
+    CompaniesPageComponent,
+    CompanyFormComponent
   ]
 })
 export class CompanyModule { }
