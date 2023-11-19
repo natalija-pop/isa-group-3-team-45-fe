@@ -62,7 +62,6 @@ export class CompanyFormComponent {
         city: this.companyForm.value.city || "",
         country: this.companyForm.value.country || "",
       },
-      rating: 0,
       admins: []
     }
   

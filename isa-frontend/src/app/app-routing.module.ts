@@ -10,6 +10,7 @@ import { ActivateUserComponent } from './feature-modules/stakeholders/activate-u
 import { CompaniesPageComponent } from './feature-modules/company/companies-page/companies-page.component';
 import { CompanyFormComponent } from './feature-modules/company/company-form/company-form.component';
 import { CompanyAdminProfileComponent } from './feature-modules/stakeholders/company-admin-profile/company-admin-profile.component';
+import { AllEquipmentPageComponent } from './feature-modules/equipment/all-equipment-page/all-equipment-page.component';
 
 const routes: Routes = [
   {path: '', component: HomeComponent},
@@ -20,7 +21,8 @@ const routes: Routes = [
   {path: 'activate', component: ActivateUserComponent},
   {path: 'companies-page', component: CompaniesPageComponent},
   {path: 'register-company', component: CompanyFormComponent},
-  {path: 'company-admin-profile', component: CompanyAdminProfileComponent}
+  {path: 'company-admin-profile', component: CompanyAdminProfileComponent},
+  {path: 'all-equipment', component: AllEquipmentPageComponent}
 
 ];
 
