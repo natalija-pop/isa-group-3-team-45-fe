@@ -7,6 +7,14 @@ export interface Registration {
     country: string, 
     phone: string,
     profession: string,
-    companyInformation: string
+    companyInformation: string,
+    role: UserRole,
+    isActivated: boolean
 }
+
+export enum UserRole {
+    Employee = 0,
+    CompanyAdministrator,
+    SystemAdministrator
+  }
 
