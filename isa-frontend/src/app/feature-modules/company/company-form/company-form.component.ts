@@ -61,6 +61,7 @@ export class CompanyFormComponent {
         city: this.companyForm.value.city || "",
         country: this.companyForm.value.country || ""
       },
+      rating: 0,
       admins: []
     }
   
@@ -75,7 +76,7 @@ export class CompanyFormComponent {
       phone: this.adminForm.value.phone || "",
       profession: this.adminForm.value.profession || "",
       companyInformation: this.adminForm.value.companyInformation || "",
-      isActive: true,
+      isActivated: true,
       role: 1
     };
     

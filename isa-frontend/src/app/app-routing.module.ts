@@ -9,6 +9,7 @@ import { UserProfileComponent } from './feature-modules/stakeholders/user-profil
 import { ActivateUserComponent } from './feature-modules/stakeholders/activate-user/activate-user.component';
 import { CompaniesPageComponent } from './feature-modules/company/companies-page/companies-page.component';
 import { CompanyFormComponent } from './feature-modules/company/company-form/company-form.component';
+import { CompanyAdminProfileComponent } from './feature-modules/stakeholders/company-admin-profile/company-admin-profile.component';
 
 const routes: Routes = [
   {path: '', component: HomeComponent},
@@ -18,7 +19,8 @@ const routes: Routes = [
   {path: 'register', component: RegistrationComponent},
   {path: 'activate', component: ActivateUserComponent},
   {path: 'companies-page', component: CompaniesPageComponent},
-  {path: 'register-company', component: CompanyFormComponent}
+  {path: 'register-company', component: CompanyFormComponent},
+  {path: 'company-admin-profile', component: CompanyAdminProfileComponent}
 
 ];
 
