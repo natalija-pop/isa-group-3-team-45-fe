@@ -12,7 +12,7 @@ import { CompaniesPageComponent } from './feature-modules/company/companies-page
 const routes: Routes = [
   {path: '', component: HomeComponent},
   {path: 'company-profile', component: CompanyProfileComponent},
-  {path: 'user-profile', component: UserProfileComponent},
+  {path: 'user-profile', component: UserProfileComponent, canActivate: [AuthGuard]},
   {path: 'login', component: LoginComponent},
   {path: 'register', component: RegistrationComponent},
   {path: 'activate', component: ActivateUserComponent},
