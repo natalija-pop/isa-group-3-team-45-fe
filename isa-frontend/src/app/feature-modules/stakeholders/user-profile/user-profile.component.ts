@@ -17,7 +17,7 @@ export class UserProfileComponent implements OnInit {
   
   user: User = {
     id: 0,
-    role: "",
+    role: 0,
     email: "",
     password: "",
     name: "",

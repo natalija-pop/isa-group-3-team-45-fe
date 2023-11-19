@@ -33,4 +33,8 @@ export class CompanyService {
     return this.http.get<PagedResults<Company>>(environment.apiHost + 'company/getAll');
   }
   
+  createCompany(company: Company): Observable<Company>{
+    return this.http.post<Company>(environment.apiHost + 'company', company);
+  }
+
 }

@@ -1,6 +1,6 @@
 export interface User {
     id: number;
-    role: string;
+    role: UserRole;
     email: string;
     password?: string;
     name?: string;
@@ -11,4 +11,11 @@ export interface User {
     profession?: string;
     companyInformation?: string;
     isActivated?: boolean;
+}
+
+
+export enum UserRole{
+    Employee = 0,
+    CompanyAdministrator,
+    SystemAdministrator
 }
