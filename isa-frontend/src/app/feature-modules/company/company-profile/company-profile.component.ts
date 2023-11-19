@@ -11,14 +11,29 @@ import { Equipment, EquipmentType } from '../model/equipment.model';
 export class CompanyProfileComponent implements OnInit {
 
   selectedNavItem: 'description' | 'companyInfo' | 'equipment' = 'description';
-  company: Company | undefined;
   equipmentList: Equipment[] = [];
+  editMode: boolean = false;
+
+  company: Company = {
+    id: 0,
+    name: "",
+    description: "",
+    rating: 0,
+    address: {
+      street: "",
+      number: 0,
+      city: "",
+      country: ""
+    }
+  }
 
   constructor(private companyService: CompanyService) {}
 
   ngOnInit(): void {
     this.getCompanyById(1);
     this.getEquipment(1);
+
+    this.editMode = false;
   }
 
   getCompanyById(id: number): void {
@@ -54,5 +69,15 @@ export class CompanyProfileComponent implements OnInit {
 
   showEquipment() {
     this.selectedNavItem = 'equipment';
+  }
+
+  switchMode(newMode: boolean) {
+    this.editMode = newMode;
+  }
+
+  saveChanges(){
+    this.companyService.updateCompany(this.company).subscribe({
+      next: () => {}
+    })
   }
 }

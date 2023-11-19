@@ -1,3 +1,21 @@
 .nav-link {
     cursor: pointer;
   }
+
+.form-item {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    width: 80%;
+    margin: auto;
+    padding: 12px;
+  }
+  .form-item label {
+    text-align: left;
+    font-weight: 600;
+    margin-bottom: 6px;
+  }
+  .form-item-error {
+    color: red;
+  }
+
