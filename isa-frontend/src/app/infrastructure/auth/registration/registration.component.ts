@@ -44,7 +44,9 @@ export class RegistrationComponent {
       country: this.registrationForm.value.country || "",
       phone: this.registrationForm.value.phone || "",
       profession: this.registrationForm.value.profession || "",
-      companyInformation: this.registrationForm.value.companyInformation || ""
+      companyInformation: this.registrationForm.value.companyInformation || "",
+      role: 0,
+      isActivated: false
     };
 
     if (this.registrationForm.valid) {

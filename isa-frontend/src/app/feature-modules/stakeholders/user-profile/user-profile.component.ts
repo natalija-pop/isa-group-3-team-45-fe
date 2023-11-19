@@ -27,7 +27,7 @@ export class UserProfileComponent implements OnInit {
     phone: "",
     profession: "",
     companyInformation: "",
-    isActive: false
+    isActivated: false
   };
   category: string = 'Silver';
   penaltyPoints: number = 4;

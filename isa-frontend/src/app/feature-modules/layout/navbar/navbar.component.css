@@ -1,0 +1,30 @@
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #f8f9fa; /* Boja pozadine */
+    padding: 15px 30px; /* Unutrašnji razmak */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Senka */
+  }
+  
+  .navbar-nav {
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  
+  .nav-item {
+    margin-right: 15px; /* Razmak između stavki */
+  }
+  
+  .nav-link {
+    text-decoration: none;
+    color: #333; /* Boja teksta */
+    font-size: 1.1rem; /* Veličina fonta za stavke */
+  }
+  
+  .nav-link:hover {
+    color: #555; /* Boja teksta prilikom hovera */
+  }
+  

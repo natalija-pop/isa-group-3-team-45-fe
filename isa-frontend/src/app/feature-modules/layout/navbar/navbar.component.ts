@@ -9,13 +9,29 @@ import { AuthService } from 'src/app/infrastructure/auth/auth.service';
 })
 export class NavbarComponent implements OnInit{
 
-  //user: User;
-  constructor() {}
+  user: User = {
+    id: 0,
+    role: "",
+    email: "",
+    password: "",
+    name: "",
+    surname: "",
+    city: "",
+    country: "",
+    phone: "",
+    profession: "",
+    companyInformation: "",
+    isActivated: false
+  }; 
+  constructor(private authService : AuthService) {}
 
   ngOnInit(): void {
-    //this.authService.user$.subscribe(user => {
-      //this.user = user;
-    //});  
+    this.authService.user$.subscribe(user => {
+      this.user = user;
+    }); 
   }
 
+  onLogout(): void {
+    this.authService.logout();
+  }
 }
