@@ -57,20 +57,24 @@
             </div>
           </div>
           <div *ngIf="selectedNavItem === 'admins'" class="row">
-            <div *ngFor="let admin of admins" class="col-md-4">
-              <div class="card border-dark mb-3" style="max-width: 30rem; max-height: 30rem;">
-                <div class="card-header">{{ admin.email }}</div>
-                <div class="card-body">
-                  <p class="card-text">{{ admin.name }} {{ admin.surname }}</p>
-                  <p class="card-text">{{ admin.phone }}</p>
-                  <p class="card-text">{{ admin.profession }}</p>
+            <div  *ngIf="!addAdmin">
+              <button class="add-admin-btns positive-btn" (click)="this.addAdmin = true" >Add new admin</button>
+            </div>
+            <div *ngIf="!addAdmin">
+              <div *ngFor="let admin of admins" class="col-md-4" style="margin-top: 10px;">
+                <div class="card border-dark mb-3" style="max-width: 30rem; max-height: 30rem;">
+                  <div class="card-header">{{ admin.email }}</div>
+                  <div class="card-body">
+                    <p class="card-text">{{ admin.name }} {{ admin.surname }}</p>
+                    <p class="card-text">{{ admin.phone }}</p>
+                    <p class="card-text">{{ admin.profession }}</p>
+                  </div>
                 </div>
               </div>
             </div>
             <div class="label-item">
-              <label (click)="this.addAdmin = true" >Add new admin</label>
-              <div id="second-step" [style.visibility]=" addAdmin ? 'visible' : 'hidden'">
-                <form [formGroup]="adminForm">
+              <div *ngIf="addAdmin">
+                <form [formGroup]="adminForm" class="add-admin">
                     <div>
                         <div class="form-group"  [ngClass]="{ 'has-error': adminForm.get('name')?.invalid && (adminForm.get('name')?.dirty || adminForm.get('name')?.touched) }">
                           <label for="name">Name</label>
@@ -125,10 +129,15 @@
                           <textarea id="companyInformation" formControlName="companyInformation"  required></textarea>
                         </div>
                       </div>
+                      <div  *ngIf="addAdmin" class="form-btns">
+                        <div>
+                          <button class="add-admin-btns negative-btn" (click)="this.addAdmin = false">Cancel</button>
+                        </div>
+                        <div>
+                          <button class="add-admin-btns positive-btn" (click)="createNewAdmin()">Submit</button>
+                        </div>
+                      </div>
                 </form>
-                <div class="label-item">
-                    <label (click)="createNewAdmin()">Submit</label>
-                </div>
             </div>
             </div>
           </div>
