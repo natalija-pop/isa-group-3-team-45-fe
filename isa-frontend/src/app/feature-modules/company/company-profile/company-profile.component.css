@@ -19,3 +19,95 @@
     color: red;
   }
 
+  body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+    background-color: #f4f4f4;
+  }
+  
+  .add-admin {
+    background-color: #fff;
+    padding: 25px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    width: 40%;
+    margin: auto;
+  }
+
+  .form-group {
+    margin-bottom: 15px;
+  }
+  
+  label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+  }
+  
+  input[type="text"],
+  input[type="email"],
+  input[type="password"],
+  textarea,
+  select {
+    padding: 8px;
+    border-radius: 3px;
+    border-style: none;
+    border-bottom: 1px solid #ccc; 
+    width: calc(100% - 18px);
+    box-sizing: border-box;
+    margin-top: 4px;
+  }
+  
+  .add-admin-btns {
+    padding: 10px 15px;
+    border: none;
+    border-radius: 3px;
+    color: #fff;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+
+  button:hover {
+    background-color: #0056b3;
+  }
+
+  .positive-btn{
+    background-color: #198754;
+  }
+
+  .negative-btn{
+    background-color: #6c757d;
+  }
+  
+  .has-error input, .has-error textarea {
+    border-color: red;
+  }
+  
+  .has-error .help-block {
+    color: red;
+  }
+  
+  .invalid-message {
+    color: red;
+    margin-top: 10px;
+    text-align: center; 
+  }
+  
+  .error-message {
+    color: red;
+    margin-top: 5px;
+  }
+
+  .form-btns{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    gap: 10px;
+  }
+
+  .form-btns button{
+    width: 120px;
+  }
+
