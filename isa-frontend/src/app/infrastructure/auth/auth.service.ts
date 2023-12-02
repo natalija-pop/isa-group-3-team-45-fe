@@ -10,6 +10,7 @@ import { Registration } from './model/registration.model';
 import { AuthenticationResponse } from './model/authentication-response.model';
 import { Login } from './model/login.model';
 import { PasswordChange } from './model/password-change.model';
+import { SysAdminRegistration } from './model/sys-admin-registration.model';
 
 @Injectable({
   providedIn: 'root'
@@ -44,6 +45,10 @@ export class AuthService {
         this.setUser();
       })
     );
+  }
+
+  registerSysAdmin(registration: SysAdminRegistration): Observable<AuthenticationResponse> {
+    return this.http.post<AuthenticationResponse>(environment.apiHost + 'users/registerSysAdmin', registration)
   }
 
   logout(): void {

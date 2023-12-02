@@ -12,6 +12,7 @@ import { CompanyFormComponent } from './feature-modules/company/company-form/com
 import { CompanyAdminProfileComponent } from './feature-modules/stakeholders/company-admin-profile/company-admin-profile.component';
 import { AllEquipmentPageComponent } from './feature-modules/equipment/all-equipment-page/all-equipment-page.component';
 import { ChangePasswordComponent } from './feature-modules/stakeholders/change-password/change-password.component';
+import { SysAdminRegistrationComponent } from './infrastructure/auth/sys-admin-registration/sys-admin-registration.component';
 
 const routes: Routes = [
   {path: '', component: HomeComponent},
@@ -24,7 +25,8 @@ const routes: Routes = [
   {path: 'register-company', component: CompanyFormComponent},
   {path: 'company-admin-profile', component: CompanyAdminProfileComponent},
   {path: 'all-equipment', component: AllEquipmentPageComponent},
-  {path: 'change-password', component: ChangePasswordComponent}
+  {path: 'change-password', component: ChangePasswordComponent},
+  {path: 'register-sys-admin', component: SysAdminRegistrationComponent}
 
 ];
 
