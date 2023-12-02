@@ -26,6 +26,9 @@ export class AuthService {
       .post<AuthenticationResponse>(environment.apiHost + 'users/login', login)
       .pipe(
         tap((authenticationResponse) => {
+          if(authenticationResponse.id == -1 && authenticationResponse.accessToken == "ForcePasswordReset"){
+              this.router.navigate(['change-password'])
+          }
           this.tokenStorage.saveAccessToken(authenticationResponse.accessToken);
           this.setUser();
         })
