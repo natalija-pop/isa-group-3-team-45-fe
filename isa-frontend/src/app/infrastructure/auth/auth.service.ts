@@ -9,6 +9,7 @@ import { JwtHelperService } from '@auth0/angular-jwt';
 import { Registration } from './model/registration.model';
 import { AuthenticationResponse } from './model/authentication-response.model';
 import { Login } from './model/login.model';
+import { PasswordChange } from './model/password-change.model';
 
 @Injectable({
   providedIn: 'root'
@@ -48,6 +49,10 @@ export class AuthService {
       this.user$.next({email: "", id: 0, role: 0 });
       }
     );
+  }
+
+  changePassword(passwordChange: PasswordChange): Observable<boolean> {
+    return this.http.put<boolean>(environment.apiHost + 'user/changePassword', passwordChange)
   }
 
   checkIfUserExists(): void {
