@@ -4,7 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { TokenStorage } from './jwt/token.service';
 import { environment } from 'src/env/environment';
-import { User } from './model/user.model';
+import { User, UserRole } from './model/user.model';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { Registration } from './model/registration.model';
 import { AuthenticationResponse } from './model/authentication-response.model';
@@ -74,12 +74,13 @@ export class AuthService {
   private setUser(): void {
     const jwtHelperService = new JwtHelperService();
     const accessToken = this.tokenStorage.getAccessToken() || "";
+    const rawRole = jwtHelperService.decodeToken(accessToken)[
+      'http://schemas.microsoft.com/ws/2008/06/identity/claims/role'
+    ];
     const user: User = {
       id: +jwtHelperService.decodeToken(accessToken).id,
       email: jwtHelperService.decodeToken(accessToken).email,
-      role: jwtHelperService.decodeToken(accessToken)[
-        'http://schemas.microsoft.com/ws/2008/06/identity/claims/role'
-      ],
+      role: UserRole[rawRole as keyof typeof UserRole] || UserRole.Employee
     };
     this.user$.next(user);
   }
