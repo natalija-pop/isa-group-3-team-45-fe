@@ -6,6 +6,20 @@
       <li class="nav-item">
         <a class="nav-link" href="/all-equipment">Equipment</a>
       </li>
+      <li class="nav-item">
+      </li>
+
+      <!-- Administration Menu -->
+      <li class="nav-item dropdown" *ngIf="user && user.role == 2">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink2" role="button"
+            data-bs-toggle="dropdown" aria-expanded="false">
+            Administration
+        </a>
+        <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink2">
+            <li><a class="dropdown-item" [routerLink]="['register-sys-admin']">Register system admin</a></li>
+            <li><a class="dropdown-item" [routerLink]="['register-company']">Register company</a></li>
+        </ul>
+    </li>
     </ul>
     <ul class="navbar-nav">
       <li class="nav-item" *ngIf="user && user.email === ''">

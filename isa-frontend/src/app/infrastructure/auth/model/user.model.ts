@@ -17,5 +17,5 @@ export interface User {
 export enum UserRole{
     Employee = 0,
     CompanyAdministrator,
-    SystemAdministrator
+    systemadministrator
 }

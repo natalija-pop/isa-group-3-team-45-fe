@@ -58,7 +58,7 @@
           </div>
           <div *ngIf="selectedNavItem === 'admins'" class="row">
             <div  *ngIf="!addAdmin">
-              <button class="add-admin-btns positive-btn" (click)="this.addAdmin = true" >Add new admin</button>
+              <button class="add-admin-btns positive-btn" (click)="this.addAdmin = true" *ngIf="user && user.role == 2" >Add new admin</button>
             </div>
             <div *ngIf="!addAdmin">
               <div *ngFor="let admin of admins" class="col-md-4" style="margin-top: 10px;">
@@ -73,7 +73,7 @@
               </div>
             </div>
             <div class="label-item">
-              <div *ngIf="addAdmin">
+              <div *ngIf="addAdmin && user.role == 2 && user">
                 <form [formGroup]="adminForm" class="add-admin">
                     <div>
                         <div class="form-group"  [ngClass]="{ 'has-error': adminForm.get('name')?.invalid && (adminForm.get('name')?.dirty || adminForm.get('name')?.touched) }">
