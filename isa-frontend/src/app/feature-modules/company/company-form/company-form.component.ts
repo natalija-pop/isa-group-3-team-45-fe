@@ -21,7 +21,10 @@ export class CompanyFormComponent {
     street: new FormControl('', [Validators.required]),
     number: new FormControl(-1, [Validators.required, Validators.pattern('[0-9]+')]),
     city: new FormControl('', [Validators.required]),
-    country: new FormControl('', [Validators.required])
+    country: new FormControl('', [Validators.required]),
+    openingHours: new FormControl(),
+    closingHours: new FormControl(),
+    weekends: new FormControl()
   })
 
   adminForm = new FormGroup({
@@ -50,7 +53,6 @@ export class CompanyFormComponent {
   }
 
   registerCompany(){
-      
     const company: Company = {
       id: 0,
       name: this.companyForm.value.name || "",
@@ -61,6 +63,11 @@ export class CompanyFormComponent {
         number: this.companyForm.value.number || -1,
         city: this.companyForm.value.city || "",
         country: this.companyForm.value.country || "",
+      },
+      workingHours: {
+        openingHours: this.companyForm.value.openingHours + ":00" || "08:00:00", //Because of backend converter
+        closingHours: this.companyForm.value.closingHours + ":00" || "16:00:00",
+        weekends: this.companyForm.value.weekends || false
       },
       admins: []
     }
