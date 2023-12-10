@@ -20,6 +20,11 @@ export class CompanyProfileComponent implements OnInit {
     name: '',
     description: '',
     rating: 0,
+    workingHours: {
+      openingHours: '',
+      closingHours: '',
+      weekends: false
+    },
     address: {
       street: '',
       number: 0,

@@ -35,6 +35,20 @@
                   </div>
               </div>
               <div class="label-item">
+                  <div class="form-item">
+                    <label>Opening hours: </label>
+                    <input type="time" name="openingHours" formControlName="openingHours"/>
+                  </div>
+                  <div class="form-item">
+                    <label>Closing hours: </label>
+                    <input type="time" name="closingHours" formControlName="closingHours"/>
+                  </div>
+                  <div class="form-item">
+                    <label>Weekends: </label>
+                    <input type="checkbox" name="weekends" formControlName="weekends"/>
+                  </div>
+              </div>
+              <div class="label-item">
                   <button (click)="switchPage()">Next</button>
               </div>
           </div>
