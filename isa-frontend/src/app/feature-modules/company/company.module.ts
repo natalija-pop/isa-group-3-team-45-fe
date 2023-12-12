@@ -5,6 +5,7 @@ import { CompaniesPageComponent } from './companies-page/companies-page.componen
 import { FormsModule } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
 import { CompanyFormComponent } from './company-form/company-form.component';
+import { WorkCalendarComponent } from './work-calendar/work-calendar.component';
 
 
 
@@ -12,7 +13,8 @@ import { CompanyFormComponent } from './company-form/company-form.component';
   declarations: [
     CompanyProfileComponent,
     CompaniesPageComponent,
-    CompanyFormComponent
+    CompanyFormComponent,
+    WorkCalendarComponent
   ],
   imports: [
     CommonModule,
