@@ -1,4 +1,5 @@
 import { NgModule } from '@angular/core';
+import { FullCalendarModule } from '@fullcalendar/angular';
 import { CommonModule } from '@angular/common';
 import { CompanyProfileComponent } from './company-profile/company-profile.component';
 import { CompaniesPageComponent } from './companies-page/companies-page.component';
@@ -18,6 +19,7 @@ import { WorkCalendarComponent } from './work-calendar/work-calendar.component';
   ],
   imports: [
     CommonModule,
+    FullCalendarModule,
     ReactiveFormsModule,
     FormsModule
   ],

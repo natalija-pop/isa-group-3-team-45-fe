@@ -30,7 +30,8 @@ export class CompanyProfileComponent implements OnInit {
       number: 0,
       city: '',
       country: '',
-    }
+    },
+    workCalendar: []
   }
   user: User = {
     id: 0,

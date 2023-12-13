@@ -8,7 +8,7 @@ export interface Company {
     address: Address,
     rating: number
     admins?: User[],
-    workCalendar?: Appointment[]
+    workCalendar: Appointment[]
 }
 
 export interface Address {

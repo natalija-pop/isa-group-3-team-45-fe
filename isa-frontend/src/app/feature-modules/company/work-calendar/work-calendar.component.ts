@@ -1,5 +1,8 @@
-import { Component, OnInit } from '@angular/core';
-import { Company } from '../model/company.model';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { CalendarOptions } from 'fullcalendar';
+import { FullCalendarComponent } from '@fullcalendar/angular';
+import dayGridPlugin from '@fullcalendar/daygrid';
+import { Appointment, Company } from '../model/company.model';
 import { CompanyService } from '../company.service';
 import { ActivatedRoute } from '@angular/router';
 
@@ -9,7 +12,34 @@ import { ActivatedRoute } from '@angular/router';
   styleUrls: ['./work-calendar.component.css']
 })
 export class WorkCalendarComponent implements OnInit {
-  
+
+  @ViewChild('calendar') calendarComponent!: FullCalendarComponent;
+
+
+  calendarOptions: CalendarOptions = {
+    firstDay: 1,
+    height: 600,
+    headerToolbar: {
+      center: 'dayGridMonth,dayGridYear,dayGridWeek'
+    },
+    initialView: 'dayGridMonth',
+    plugins: [dayGridPlugin],
+    weekends: true,
+    displayEventEnd: true,
+    events: [],
+    eventTimeFormat: {
+      hour: 'numeric',
+      minute: '2-digit',
+      meridiem: false,
+      hour12: false
+    },
+    eventDisplay: 'block',
+    eventMouseEnter(arg) {
+      const description = arg.event.extendedProps['description'];
+      alert(description)
+    },
+  };
+
   company: Company = {
     id: 0,
     name: '',
@@ -25,7 +55,8 @@ export class WorkCalendarComponent implements OnInit {
       number: 0,
       city: '',
       country: '',
-    }
+    },
+    workCalendar: []
   };
   
   constructor(private service: CompanyService, private route: ActivatedRoute) {}
@@ -34,13 +65,33 @@ export class WorkCalendarComponent implements OnInit {
       this.company.id = +params['id'];
     });
     this.getCompanyById(this.company.id);
-    console.log(this.company);
   }
 
   getCompanyById(id: number): void {
     this.service.getCompanyById(id).subscribe((result: any) => {
       console.log(result);
       this.company = result;
+      this.insertEvents(this.company.workCalendar);
     })
+  }
+
+  insertEvents(appointments: Appointment[]): void{
+    let events: any[] = [];
+    appointments.forEach(a => {
+      var event = {
+        title: "Preuzimanje opreme",  
+        start : new Date(a.start),
+        end: new Date(new Date(a.start).getTime() + a.duration * 60000),
+        extendedProps:{
+          description: "Osoba koja preuzima opremu: " + a.customerName + " " + a.customerSurname
+        }
+      };
+      events.push(event);
+    });
+    this.calendarOptions.events = events;
+  }
+
+  toggleWeekends() {
+    this.calendarOptions.weekends = !this.calendarOptions.weekends;
   }
 }
