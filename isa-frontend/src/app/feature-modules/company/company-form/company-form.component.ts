@@ -69,7 +69,8 @@ export class CompanyFormComponent {
         closingHours: this.companyForm.value.closingHours + ":00" || "16:00:00",
         weekends: this.companyForm.value.weekends || false
       },
-      admins: []
+      admins: [],
+      workCalendar: []
     }
   
     const admin: User = {

@@ -13,6 +13,7 @@ import { CompanyAdminProfileComponent } from './feature-modules/stakeholders/com
 import { AllEquipmentPageComponent } from './feature-modules/equipment/all-equipment-page/all-equipment-page.component';
 import { ChangePasswordComponent } from './feature-modules/stakeholders/change-password/change-password.component';
 import { SysAdminRegistrationComponent } from './infrastructure/auth/sys-admin-registration/sys-admin-registration.component';
+import { WorkCalendarComponent } from './feature-modules/company/work-calendar/work-calendar.component';
 
 const routes: Routes = [
   {path: '', component: HomeComponent},
@@ -26,8 +27,8 @@ const routes: Routes = [
   {path: 'company-admin-profile', component: CompanyAdminProfileComponent},
   {path: 'all-equipment', component: AllEquipmentPageComponent},
   {path: 'change-password', component: ChangePasswordComponent},
-  {path: 'register-sys-admin', component: SysAdminRegistrationComponent}
-
+  {path: 'register-sys-admin', component: SysAdminRegistrationComponent},
+  {path: 'work-calendar/:id', component: WorkCalendarComponent}
 ];
 
 @NgModule({

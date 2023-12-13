@@ -1,4 +1,3 @@
-import { Time } from "@angular/common"
 import { User } from "src/app/infrastructure/auth/model/user.model"
 
 export interface Company {
@@ -8,7 +7,8 @@ export interface Company {
     workingHours: WorkingHours,
     address: Address,
     rating: number
-    admins?: User[]
+    admins?: User[],
+    workCalendar: Appointment[]
 }
 
 export interface Address {
@@ -22,4 +22,14 @@ export interface WorkingHours{
     openingHours: string,
     closingHours: string,
     weekends: boolean
+}
+
+export interface Appointment{
+    start: Date,
+    duration: number,
+    adminName: string,
+    adminSurname: string,
+    customerName?: string,
+    customerSurname?: string
+    companyId: number
 }
