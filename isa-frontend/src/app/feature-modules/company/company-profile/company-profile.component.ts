@@ -6,6 +6,7 @@ import { User } from 'src/app/infrastructure/auth/model/user.model';
 import { AbstractControl, FormControl, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from 'src/app/infrastructure/auth/auth.service';
 import { ActivatedRoute } from '@angular/router';
+import { EquipmentService } from '../../equipment/equipment.service';
 
 @Component({
   selector: 'app-company-profile',
@@ -53,7 +54,7 @@ export class CompanyProfileComponent implements OnInit {
   editMode: boolean = false;
   companyId: number = 1;
 
-  constructor(private companyService: CompanyService, private authService: AuthService, private route: ActivatedRoute) {}
+  constructor(private companyService: CompanyService, private authService: AuthService, private route: ActivatedRoute, private equipmentService: EquipmentService) { }
 
   ngOnInit(): void {
     this.route.params.subscribe(params => {
@@ -66,7 +67,7 @@ export class CompanyProfileComponent implements OnInit {
 
     this.authService.user$.subscribe(user => {
       this.user = user;
-    }); 
+    });
   }
 
   getCompanyById(id: number): void {
@@ -82,7 +83,7 @@ export class CompanyProfileComponent implements OnInit {
     })
   }
 
-  getCompanyAdmins(id: number): void{
+  getCompanyAdmins(id: number): void {
     this.companyService.getCompanyAdmins(id).subscribe((result: any) => {
       this.admins = result;
     })
@@ -110,7 +111,7 @@ export class CompanyProfileComponent implements OnInit {
     this.selectedNavItem = 'equipment';
   }
 
-  showAdmins(){
+  showAdmins() {
     this.selectedNavItem = 'admins';
   }
 
@@ -118,9 +119,9 @@ export class CompanyProfileComponent implements OnInit {
     this.editMode = newMode;
   }
 
-  saveChanges(){
+  saveChanges() {
     this.companyService.updateCompany(this.company).subscribe({
-      next: () => {}
+      next: () => { }
     })
   }
 
@@ -129,28 +130,28 @@ export class CompanyProfileComponent implements OnInit {
     surname: new FormControl('', [Validators.required]),
     email: new FormControl('', [Validators.required, Validators.email, Validators.pattern('[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$')]),
     password: new FormControl('', [Validators.required, Validators.minLength(6)]),
-    passwordConfirmation: new FormControl ('', [Validators.required, Validators.minLength(6)]),
+    passwordConfirmation: new FormControl('', [Validators.required, Validators.minLength(6)]),
     city: new FormControl('', [Validators.required]),
     country: new FormControl('', [Validators.required]),
     phone: new FormControl('', [Validators.required, Validators.pattern('[0-9]+')]),
     profession: new FormControl('', [Validators.required]),
     companyInformation: new FormControl('', [Validators.required]),
-    }, { validators: this.passwordMatchValidator })
+  }, { validators: this.passwordMatchValidator })
 
-    passwordMatchValidator(group: AbstractControl) {
-      const password = group.get('password')?.value;
-      const passwordConfirmation = group.get('passwordConfirmation')?.value;
-      return password === passwordConfirmation ? null : { passwordMismatch: true };
+  passwordMatchValidator(group: AbstractControl) {
+    const password = group.get('password')?.value;
+    const passwordConfirmation = group.get('passwordConfirmation')?.value;
+    return password === passwordConfirmation ? null : { passwordMismatch: true };
   }
 
-  createNewAdmin(): void{
+  createNewAdmin(): void {
     const admin: User = {
       id: 0,
       name: this.adminForm.value.name || "",
       surname: this.adminForm.value.surname || "",
       email: this.adminForm.value.email || "",
       password: this.adminForm.value.password || "",
-      city : this.adminForm.value.city || "",
+      city: this.adminForm.value.city || "",
       country: this.adminForm.value.country || "",
       phone: this.adminForm.value.phone || "",
       profession: this.adminForm.value.profession || "",
@@ -159,7 +160,7 @@ export class CompanyProfileComponent implements OnInit {
       role: 1
     };
 
-    if(this.adminForm.valid){
+    if (this.adminForm.valid) {
       this.companyService.createCompanyAdmin(this.company.id, admin).subscribe({
         next: (result: any) => {
           console.log(result);
@@ -167,9 +168,56 @@ export class CompanyProfileComponent implements OnInit {
         },
         error: (err) => {
           console.log(err);
-        } 
+        }
       })
     }
+  }
 
+  equipmentForm = new FormGroup({
+    name: new FormControl('', [Validators.required]),
+    description: new FormControl('', [Validators.required]),
+    type: new FormControl('', [Validators.required])
+  })
+
+  createEquipment(): void {
+    const equipment: Equipment = {
+      id: 0,
+      name: this.equipmentForm.value.name || "",
+      description: this.equipmentForm.value.description || "",
+      type: this.getEquipmentTypeEnum(this.equipmentForm.value.type || ""),
+      companyId: this.companyId
+    };
+
+    if (this.equipmentForm.valid) {
+      this.equipmentService.addEquipment(equipment).subscribe({
+        next: (result: any) => {
+          this.getEquipment(this.companyId)
+        },
+        error: (err) => {
+          console.log(err);
+        }
+      })
+    }
+  }
+
+  private getEquipmentTypeEnum(typeInput: string): EquipmentType {
+    switch (typeInput) {
+      case 'instrument':
+        return EquipmentType.Instrument;
+      case 'surgical':
+        return EquipmentType.Surgical;
+      case 'sterile':
+        return EquipmentType.Sterile;
+      case 'mask':
+        return EquipmentType.Mask;
+      default:
+        return EquipmentType.Instrument;
+    }
+  }
+
+  deleteEquipment(equipment: Equipment): void {
+    this.equipmentService.deleteEquipment(equipment.id).subscribe((result: any) => {
+      this.getEquipment(this.companyId);
+    })
   }
 }

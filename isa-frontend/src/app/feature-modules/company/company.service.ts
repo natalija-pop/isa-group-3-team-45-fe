@@ -14,15 +14,15 @@ export class CompanyService {
 
   constructor(private http: HttpClient) { }
 
-  getCompanyById(companyId: number): Observable<PagedResults<Company>>{
+  getCompanyById(companyId: number): Observable<PagedResults<Company>> {
     return this.http.get<PagedResults<Company>>(environment.apiHost + 'company/get/' + companyId);
   }
 
-  getEquipmentByCompanyId(companyId: number): Observable<PagedResults<Company>>{
+  getEquipmentByCompanyId(companyId: number): Observable<PagedResults<Company>> {
     return this.http.get<PagedResults<Company>>(environment.apiHost + 'equipment/getCompanyEquipment/' + companyId);
   }
 
-  updateCompany(company: Company): Observable<Company>{
+  updateCompany(company: Company): Observable<Company> {
     return this.http.put<Company>(environment.apiHost + 'company/' + company.id, company);
   }
 
@@ -30,20 +30,19 @@ export class CompanyService {
     return this.http.get<PagedResults<Company>>(`${environment.apiHost}company/getSearchResults?name=${name}&city=${city}`);
   }
 
-  getAllCompanies(): Observable<PagedResults<Company>>{
+  getAllCompanies(): Observable<PagedResults<Company>> {
     return this.http.get<PagedResults<Company>>(environment.apiHost + 'company/getAll');
   }
-  
-  getCompanyAdmins(companyId: number) : Observable<User[]>{
+
+  getCompanyAdmins(companyId: number): Observable<User[]> {
     return this.http.get<User[]>(environment.apiHost + 'user/getCompanyAdmins/' + companyId);
   }
 
-  createCompany(company: Company): Observable<Company>{
+  createCompany(company: Company): Observable<Company> {
     return this.http.post<Company>(environment.apiHost + 'company', company);
   }
 
-  createCompanyAdmin(companyId: number, admin: User): Observable<User>{
+  createCompanyAdmin(companyId: number, admin: User): Observable<User> {
     return this.http.post<User>(environment.apiHost + 'user/createCompanyAdmin/' + companyId, admin);
   }
-
 }
