@@ -46,20 +46,41 @@
             </div>
         </div>
         <div *ngIf="selectedNavItem === 'equipment'" class="row">
-          <div class="container mt-4">
+          <div class="container mt-2">
             <div class="row">
-              <div class="col-12">
-                  <button type="button" class="btn btn-lg" data-bs-toggle="modal" data-bs-target="#equipmentModal">
-                      <i class="bi bi-plus-square"></i>
+                <div class="col-8">
+                  <div class="row mt-2 justify-content-end">
+                    <div class="col-md-4 mb-3">
+                      <label for="name" class="form-label">Name:</label>
+                      <input type="text" id="searchKeyword" [(ngModel)]="searchKeyword" name="searchKeyword" class="form-control" placeholder="Enter equipment name">
+                    </div>
+                    <div class="col-md-4 mb-3">
+                      <label for="type" class="form-label">Type:</label>
+                      <select id="type" name="type" [(ngModel)]="equipmentType" class="form-control" (change)="filterEquipmentByType()">
+                        <option value="All">Reset filter</option>
+                        <option value="Mask">Mask</option>
+                        <option value="Sterile">Sterile</option>
+                        <option value="Surgical">Surgical</option>
+                        <option value="Instrument">Instrument</option>
+                      </select>
+                    </div>
+                    <div class="col-md-4 mb-3 d-flex align-items-end justify-content-end">
+                      <button (click)="searchCompanyEquipment()" class="btn btn-primary">Search</button>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-4 d-flex align-items-end justify-content-end">
+                  <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#equipmentModal">
+                      <i class="bi bi-plus-square add-icon-size"></i>
                   </button>
                 </div>
               </div>
             </div>
             <div *ngFor="let equipment of equipmentList" class="col-md-4">
               <div class="card border-dark mb-3" style="max-width: 30rem; max-height: 30rem;">
-                <div class="card-header">{{ getEquipmentTypeString(equipment.type) }}
+                <div class="card-header d-flex justify-content-between align-items-center">{{ getEquipmentTypeString(equipment.type) }}
                   <button type="button" class="btn float-end" (click)="deleteEquipment(equipment)">
-                    <i class="bi bi-trash"></i>
+                    <i class="bi bi-trash delete-icon-size"></i>
                   </button>
                 </div>
                 <div class="card-body">

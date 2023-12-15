@@ -6,6 +6,7 @@ import { Company } from './model/company.model';
 import { environment } from 'src/env/environment';
 import { CompanyProfileComponent } from './company-profile/company-profile.component';
 import { User } from 'src/app/infrastructure/auth/model/user.model';
+import { Equipment } from './model/equipment.model';
 
 @Injectable({
   providedIn: 'root'
@@ -44,5 +45,9 @@ export class CompanyService {
 
   createCompanyAdmin(companyId: number, admin: User): Observable<User> {
     return this.http.post<User>(environment.apiHost + 'user/createCompanyAdmin/' + companyId, admin);
+  }
+
+  getCompanyEquipmentSearchResults(companyId: number, searchKeyword?: string): Observable<Equipment[]> {
+    return this.http.get<Equipment[]>(`${environment.apiHost}company/getCompanyEquipmentSearchResults/${companyId}?searchKeyword=${searchKeyword}`);
   }
 }

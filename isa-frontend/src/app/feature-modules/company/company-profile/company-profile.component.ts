@@ -53,6 +53,9 @@ export class CompanyProfileComponent implements OnInit {
   addAdmin: boolean = false;
   editMode: boolean = false;
   companyId: number = 1;
+  searchKeyword: string = '';
+  searchedEquipment: Equipment[] = [];
+  equipmentType: string = '';
 
   constructor(private companyService: CompanyService, private authService: AuthService, private route: ActivatedRoute, private equipmentService: EquipmentService) { }
 
@@ -80,6 +83,7 @@ export class CompanyProfileComponent implements OnInit {
   getEquipment(id: number): void {
     this.companyService.getEquipmentByCompanyId(id).subscribe((result: any) => {
       this.equipmentList = result;
+      this.searchedEquipment = this.equipmentList;
     })
   }
 
@@ -219,5 +223,29 @@ export class CompanyProfileComponent implements OnInit {
     this.equipmentService.deleteEquipment(equipment.id).subscribe((result: any) => {
       this.getEquipment(this.companyId);
     })
+  }
+
+  searchCompanyEquipment() {
+    if (this.searchKeyword == '') {
+      this.getEquipment(this.companyId);
+    }
+    else {
+      this.companyService.getCompanyEquipmentSearchResults(this.companyId, this.searchKeyword).subscribe(
+        (result: any) => {
+          console.log(result)
+          this.equipmentList = result;
+          this.searchedEquipment = this.equipmentList;
+        }
+      )
+    }
+  }
+
+  filterEquipmentByType() {
+    if (this.equipmentType == 'All') {
+      this.equipmentList = this.searchedEquipment;
+    }
+    else {
+      this.equipmentList = this.searchedEquipment.filter(e => this.getEquipmentTypeString(e.type) == this.equipmentType);
+    }
   }
 }
