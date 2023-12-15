@@ -57,6 +57,15 @@ export class CompanyProfileComponent implements OnInit {
   searchedEquipment: Equipment[] = [];
   equipmentType: string = '';
 
+  selectedEquipment: Equipment = {
+    id: 0,
+    name: "",
+    description: "",
+    type: 0,
+    companyId: 0,
+  }
+  selectedEquipmentType: string = '';
+
   constructor(private companyService: CompanyService, private authService: AuthService, private route: ActivatedRoute, private equipmentService: EquipmentService) { }
 
   ngOnInit(): void {
@@ -204,19 +213,33 @@ export class CompanyProfileComponent implements OnInit {
     }
   }
 
-  private getEquipmentTypeEnum(typeInput: string): EquipmentType {
+  getEquipmentTypeEnum(typeInput: string): EquipmentType {
     switch (typeInput) {
-      case 'instrument':
+      case 'Instrument':
         return EquipmentType.Instrument;
-      case 'surgical':
+      case 'Surgical':
         return EquipmentType.Surgical;
-      case 'sterile':
+      case 'Sterile':
         return EquipmentType.Sterile;
-      case 'mask':
+      case 'Mask':
         return EquipmentType.Mask;
       default:
         return EquipmentType.Instrument;
     }
+  }
+
+  editButtonClicked(equipment: Equipment): void {
+    this.selectedEquipment = equipment;
+    this.selectedEquipmentType = this.getEquipmentTypeString(this.selectedEquipment.type);
+  }
+
+  updateEquipment(): void {
+    this.selectedEquipment.type = this.getEquipmentTypeEnum(this.selectedEquipmentType);
+    console.log(this.selectedEquipment.type);
+
+    this.equipmentService.updateEquipment(this.selectedEquipment).subscribe({
+      next: () => { }
+    })
   }
 
   deleteEquipment(equipment: Equipment): void {

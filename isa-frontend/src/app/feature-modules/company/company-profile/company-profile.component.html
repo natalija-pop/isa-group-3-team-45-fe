@@ -78,10 +78,16 @@
             </div>
             <div *ngFor="let equipment of equipmentList" class="col-md-4">
               <div class="card border-dark mb-3" style="max-width: 30rem; max-height: 30rem;">
-                <div class="card-header d-flex justify-content-between align-items-center">{{ getEquipmentTypeString(equipment.type) }}
-                  <button type="button" class="btn float-end" (click)="deleteEquipment(equipment)">
-                    <i class="bi bi-trash delete-icon-size"></i>
-                  </button>
+                <div class="card-header d-flex justify-content-between align-items-center">
+                  <div>{{ getEquipmentTypeString(equipment.type) }}</div>
+                  <div>
+                    <button type="button" class="btn" (click)="editButtonClicked(equipment)" data-bs-toggle="modal" data-bs-target="#editEquipmentModal">
+                      <i class="bi bi-pencil-square"></i>
+                    </button>
+                    <button type="button" class="btn" (click)="deleteEquipment(equipment)">
+                      <i class="bi bi-trash delete-icon-size"></i>
+                    </button>
+                  </div>
                 </div>
                 <div class="card-body">
                   <h5 class="card-title">{{ equipment.name }}</h5>
@@ -258,5 +264,42 @@
               </form>
           </div>
       </div>
+  </div>
+</div>
+
+<div class="modal fade" id="editEquipmentModal" tabindex="-1" aria-labelledby="editEquipmentModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header ft-5">
+        <h1 class="modal-title fs-5" id="editEquipmentModalLabel">Edit equipment</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="form-item">
+            <label>Name:</label>
+            <input type="text" [(ngModel)]="selectedEquipment.name" name="name"/>
+          </div>
+          <div class="form-item">
+            <label>Description:</label>
+            <input type="text" [(ngModel)]="selectedEquipment.description" name="description"/>
+          </div>
+          <div class="form-item mb-3">
+            <label for="type" class="form-label">Type:</label>
+            <select class="form-select" id="type" name="type" [(ngModel)]="selectedEquipmentType">
+                <option [ngValue]="selectedEquipmentType" disabled selected style="display: none;">{{ selectedEquipmentType }}</option>
+                <option value="Instrument">Instrument</option>
+                <option value="Surgical">Surgical</option>
+                <option value="Sterile">Sterile</option>
+                <option value="Mask">Mask</option>
+            </select>
+          </div>
+          <div class="modal-footer me-4">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-success" (click)="updateEquipment() ">Apply</button>
+          </div>
+        </form>
+      </div>
+    </div>
   </div>
 </div>
