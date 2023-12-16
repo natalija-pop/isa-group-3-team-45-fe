@@ -15,16 +15,18 @@ export interface Address {
     street: string,
     number: number,
     city: string,
-    country: string
+    country: string,
+    longitude: number,
+    latitude: number,
 }
 
-export interface WorkingHours{
+export interface WorkingHours {
     openingHours: string,
     closingHours: string,
     weekends: boolean
 }
 
-export interface Appointment{
+export interface Appointment {
     start: Date,
     duration: number,
     adminName: string,

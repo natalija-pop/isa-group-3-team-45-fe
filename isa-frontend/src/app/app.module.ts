@@ -11,6 +11,7 @@ import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { StakeholdersModule } from './feature-modules/stakeholders/stakeholders.module';
 import { FormsModule } from '@angular/forms';
 import { EquipmentModule } from './feature-modules/equipment/equipment.module';
+import { SharedModule } from './shared/shared.module';
 
 
 @NgModule({
@@ -27,7 +28,8 @@ import { EquipmentModule } from './feature-modules/equipment/equipment.module';
     AuthModule,
     MaterialModule,
     StakeholdersModule,
-    FormsModule
+    FormsModule,
+    SharedModule
   ],
   providers: [
     {

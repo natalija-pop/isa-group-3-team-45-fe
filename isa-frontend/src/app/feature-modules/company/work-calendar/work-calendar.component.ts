@@ -55,11 +55,13 @@ export class WorkCalendarComponent implements OnInit {
       number: 0,
       city: '',
       country: '',
+      longitude: 0,
+      latitude: 0,
     },
     workCalendar: []
   };
-  
-  constructor(private service: CompanyService, private route: ActivatedRoute) {}
+
+  constructor(private service: CompanyService, private route: ActivatedRoute) { }
   ngOnInit(): void {
     this.route.params.subscribe(params => {
       this.company.id = +params['id'];
@@ -75,14 +77,14 @@ export class WorkCalendarComponent implements OnInit {
     })
   }
 
-  insertEvents(appointments: Appointment[]): void{
+  insertEvents(appointments: Appointment[]): void {
     let events: any[] = [];
     appointments.forEach(a => {
       var event = {
-        title: "Preuzimanje opreme",  
-        start : new Date(a.start),
+        title: "Preuzimanje opreme",
+        start: new Date(a.start),
         end: new Date(new Date(a.start).getTime() + a.duration * 60000),
-        extendedProps:{
+        extendedProps: {
           description: "Osoba koja preuzima opremu: " + a.customerName + " " + a.customerSurname
         }
       };

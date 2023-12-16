@@ -44,6 +44,7 @@
             <div class=".col-6 mt-2">
                 {{company.address.country}}
             </div>
+            <xp-map [company]="company"></xp-map>
         </div>
         <div *ngIf="selectedNavItem === 'equipment'" class="row">
           <div class="container mt-2">
