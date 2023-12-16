@@ -10,6 +10,8 @@ import { SysAdminRegistration } from '../model/sys-admin-registration.model';
 })
 export class SysAdminRegistrationComponent {
 
+  response: boolean = false;
+
   constructor(private authService: AuthService){}
 
   adminForm = new FormGroup({
@@ -34,7 +36,17 @@ export class SysAdminRegistrationComponent {
         profession: this.adminForm.value.profession || "",
         companyInformation: this.adminForm.value.companyInformation || "",
       };
-      this.authService.registerSysAdmin(admin)
+      this.authService.registerSysAdmin(admin).subscribe({
+        next: (result: any) => {
+          console.log(result);
+          if(result != null && result != undefined){
+              this.response = true;
+              const timeOut = setTimeout(() => this.response = false, 2000);
+          }
+        },
+        error: (err) => {
+          console.log(err);
+        }
+      })
     }
-
 }
