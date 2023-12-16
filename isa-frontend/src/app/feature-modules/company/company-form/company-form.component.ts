@@ -13,7 +13,7 @@ import { AbstractControl, FormControl, FormGroup, Validators } from '@angular/fo
 export class CompanyFormComponent {
   firstStep: boolean = true;
 
-  constructor(private authService: AuthService, private service: CompanyService) {}
+  constructor(private authService: AuthService, private service: CompanyService) { }
 
   companyForm = new FormGroup({
     name: new FormControl('', [Validators.required]),
@@ -32,27 +32,27 @@ export class CompanyFormComponent {
     surname: new FormControl('', [Validators.required]),
     email: new FormControl('', [Validators.required, Validators.email, Validators.pattern('[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$')]),
     password: new FormControl('', [Validators.required, Validators.minLength(6)]),
-    passwordConfirmation: new FormControl ('', [Validators.required, Validators.minLength(6)]),
+    passwordConfirmation: new FormControl('', [Validators.required, Validators.minLength(6)]),
     city: new FormControl('', [Validators.required]),
     country: new FormControl('', [Validators.required]),
     phone: new FormControl('', [Validators.required, Validators.pattern('[0-9]+')]),
     profession: new FormControl('', [Validators.required]),
     companyInformation: new FormControl('', [Validators.required]),
-    }, { validators: this.passwordMatchValidator })
+  }, { validators: this.passwordMatchValidator })
 
-    passwordMatchValidator(group: AbstractControl) {
-      const password = group.get('password')?.value;
-      const passwordConfirmation = group.get('passwordConfirmation')?.value;
-      return password === passwordConfirmation ? null : { passwordMismatch: true };
+  passwordMatchValidator(group: AbstractControl) {
+    const password = group.get('password')?.value;
+    const passwordConfirmation = group.get('passwordConfirmation')?.value;
+    return password === passwordConfirmation ? null : { passwordMismatch: true };
   }
-  
-  
-  
-   switchPage(){
+
+
+
+  switchPage() {
     this.firstStep = !this.firstStep;
   }
 
-  registerCompany(){
+  registerCompany() {
     const company: Company = {
       id: 0,
       name: this.companyForm.value.name || "",
@@ -63,6 +63,8 @@ export class CompanyFormComponent {
         number: this.companyForm.value.number || -1,
         city: this.companyForm.value.city || "",
         country: this.companyForm.value.country || "",
+        longitude: 0,
+        latitude: 0,
       },
       workingHours: {
         openingHours: this.companyForm.value.openingHours + ":00" || "08:00:00", //Because of backend converter
@@ -72,14 +74,14 @@ export class CompanyFormComponent {
       admins: [],
       workCalendar: []
     }
-  
+
     const admin: User = {
       id: 0,
       name: this.adminForm.value.name || "",
       surname: this.adminForm.value.surname || "",
       email: this.adminForm.value.email || "",
       password: this.adminForm.value.password || "",
-      city : this.adminForm.value.city || "",
+      city: this.adminForm.value.city || "",
       country: this.adminForm.value.country || "",
       phone: this.adminForm.value.phone || "",
       profession: this.adminForm.value.profession || "",
@@ -87,8 +89,8 @@ export class CompanyFormComponent {
       isActivated: true,
       role: 1
     };
-    
-    if(this.adminForm.valid && this.companyForm.valid){
+
+    if (this.adminForm.valid && this.companyForm.valid) {
       company.admins?.push(admin);
       console.log(company);
 
@@ -98,8 +100,8 @@ export class CompanyFormComponent {
         },
         error: (err) => {
           console.log(err);
-        } 
+        }
       });
-    }  
+    }
   }
 }

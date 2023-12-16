@@ -7,6 +7,7 @@ import { FormsModule } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
 import { CompanyFormComponent } from './company-form/company-form.component';
 import { WorkCalendarComponent } from './work-calendar/work-calendar.component';
+import { SharedModule } from 'src/app/shared/shared.module';
 
 
 
@@ -15,13 +16,14 @@ import { WorkCalendarComponent } from './work-calendar/work-calendar.component';
     CompanyProfileComponent,
     CompaniesPageComponent,
     CompanyFormComponent,
-    WorkCalendarComponent
+    WorkCalendarComponent,
   ],
   imports: [
     CommonModule,
     FullCalendarModule,
     ReactiveFormsModule,
-    FormsModule
+    FormsModule,
+    SharedModule
   ],
   exports: [
     CompanyProfileComponent,
