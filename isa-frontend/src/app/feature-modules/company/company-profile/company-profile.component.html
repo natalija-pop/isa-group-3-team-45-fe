@@ -91,21 +91,21 @@
                     <button *ngIf="user && user.role == 1" type="button" class="btn" (click)="deleteEquipment(equipment)">
                       <i class="bi bi-trash delete-icon-size"></i>
                     </button>
-                    <button type="button" class="btn" (click)="toggleSelection(equipment)">
+                    <button *ngIf="user.id != 0 && user.role == 0 && equipment.quantity != equipment.reservedQuantity" type="button" class="btn" (click)="toggleSelection(equipment)">
                       <i class="bi bi-cart-plus"></i>
                     </button>
                   </div>
-            
                 </div>
                 <div class="card-body">
                   <h5 class="card-title">{{ equipment.name }}</h5>
                   <p class="card-text">{{ equipment.description }}</p>
                 </div>
+                <p></p>
               </div>
             </div>
             <div class="text-end">
               <div>
-                <button (click)="reserveEquipment(selectedEquipments)" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#reserveEquipmentModal">Reserve</button>
+                <button *ngIf="user.id != 0 && user.role == 0" (click)="reserveEquipment(selectedEquipments)" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#reserveEquipmentModal">Reserve</button>
               </div>
             </div>
           </div>

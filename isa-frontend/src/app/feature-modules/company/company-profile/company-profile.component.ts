@@ -134,7 +134,7 @@ export class CompanyProfileComponent implements OnInit {
       const hours = ('0' + start.getHours()).slice(-2);
       const minutes = ('0' + start.getMinutes()).slice(-2);
 
-      const dateTimeString = `${year}-${month}-${day}T${hours}:${minutes}:00`;
+      const dateTimeString = `${year}-${month}-${day}T${hours}:${minutes}:00.000Z`;
       var newAppointment: Appointment = {
         start: new Date(dateTimeString),
         duration: this.selectedAppointment.duration,
@@ -148,7 +148,7 @@ export class CompanyProfileComponent implements OnInit {
       };
 
       console.log(newAppointment)
-      this.companyService.createAdditionalAppointment(newAppointment).subscribe({
+      this.companyService.createAdditionalAppointment(newAppointment, this.user.email).subscribe({
         next: () => {}
       })
     }
@@ -389,7 +389,8 @@ export class CompanyProfileComponent implements OnInit {
       this.selectedAppointment.customerSurname = this.user.surname;
       this.selectedAppointment.equipment = equipment;
       this.selectedAppointment.scheduled = true;
-      this.companyService.reserveEquipment(this.selectedAppointment).subscribe({
+      
+      this.companyService.reserveEquipment(this.selectedAppointment, this.user.email).subscribe({
         next: () => { }
       })
     }
