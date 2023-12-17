@@ -81,4 +81,8 @@ export class CompanyService {
     };
     return this.http.post<boolean>(`${environment.apiHost}appointment/checkValidity`, requestBody);
   }
+
+  checkIfEquipmentCanBeDeleted(equipmentId: number) {
+    return this.http.get<boolean>(`${environment.apiHost}appointment/checkIfEquipmentIsReserved/${equipmentId}`);
+  }
 }
