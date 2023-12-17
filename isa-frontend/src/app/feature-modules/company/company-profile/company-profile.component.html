@@ -27,6 +27,9 @@
             <li class="nav-item">
               <a class="nav-link" [class.active]="selectedNavItem === 'admins'" (click)="showAdmins()">Company admins</a>
             </li>
+            <li class="nav-item">
+              <a class="nav-link" [class.active]="selectedNavItem === 'appointments'" (click)="showAppointments()">Appointments</a>
+            </li>
           </ul>
     </div>
 
@@ -193,6 +196,15 @@
                 </form>
             </div>
             </div>
+          </div>
+          <div *ngIf="selectedNavItem === 'appointments'" class="row">
+              <div class="row">
+                <div class="col-12 d-flex align-items-end justify-content-end">
+                  <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#predefinedAppointmentModal">
+                      <i class="bi bi-plus-square add-icon-size"></i>
+                  </button>
+                </div>
+              </div>
           </div>
     </div>
 </div>
@@ -376,6 +388,50 @@
             <div class="modal-footer me-4">
               <button type="submit" (click)="reserveEquipmentConfirmation(selectedEquipments)" data-bs-dismiss="modal" [disabled]="!selectedAppointment" class="btn btn-primary">Reserve</button>
             </div>
+          </div>
+      </div>
+  </div>
+</div>
+
+<div class="modal fade" id="predefinedAppointmentModal" tabindex="-1" aria-labelledby="predefinedAppointmentModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+      <div class="modal-content">
+          <div class="modal-header">
+              <h2 class="modal-title" id="predefinedAppointmentModalLabel">Add predefined appointment</h2>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+              <form [formGroup]="appointmentForm">
+
+                  <div class="mb-3">
+                      <label for="name" class="form-label">Name:</label>
+                      <input type="text" class="form-control" formControlName="adminName" id="adminName" name="adminName" placeholder="Enter your name">
+                  </div>
+
+                  <div class="mb-3">
+                      <label for="description" class="form-label">Surname:</label>
+                      <input type="text" class="form-control" formControlName="adminSurname" id="adminSurname" name="adminSurname" placeholder="Enter your surname">
+                  </div>
+
+                  <div class="mb-3">
+                    <label for="date" class="form-label">Date:</label>
+                    <input type="date" id="datepicker" formControlName="date" name="date"/>
+                  </div>
+
+                  <div class="mb-3">
+                    <label for="time" class="form-label">Time:</label>
+                    <input type="text" class="form-control" formControlName="time" id="time" name="time" placeholder="HH:mm">
+                  </div>
+
+                  <div class="mb-3">
+                    <label for="time" class="form-label">Duration:</label>
+                    <input type="text" class="form-control" formControlName="duration" value="60" id="duration" name="duration">
+                  </div>
+
+                  <div class="modal-footer me-4">
+                    <button type="submit" (click)="createPredefinedAppointment()" class="btn btn-primary">Submit</button>
+                  </div>
+              </form>
           </div>
       </div>
   </div>
