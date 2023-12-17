@@ -1,10 +1,12 @@
 import { Company } from "./company.model";
 
 export interface Equipment {
-    id: number,
+    id?: number,
     name: string,
     description: string,
     type: EquipmentType,
+    quantity: number,
+    reservedQuantity: number,
     companyId: number,
     company?: Company
 }

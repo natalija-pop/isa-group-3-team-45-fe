@@ -67,6 +67,8 @@ export class CompanyProfileComponent implements OnInit {
     name: "",
     description: "",
     type: 0,
+    quantity: 0,
+    reservedQuantity: 0,
     companyId: 0,
   }
   selectedEquipmentType: string = '';
@@ -244,15 +246,17 @@ export class CompanyProfileComponent implements OnInit {
   equipmentForm = new FormGroup({
     name: new FormControl('', [Validators.required]),
     description: new FormControl('', [Validators.required]),
+    quantity: new FormControl(0, [Validators.required]),
     type: new FormControl('', [Validators.required])
   })
 
   createEquipment(): void {
     const equipment: Equipment = {
-      id: 0,
       name: this.equipmentForm.value.name || "",
       description: this.equipmentForm.value.description || "",
       type: this.getEquipmentTypeEnum(this.equipmentForm.value.type || ""),
+      quantity: this.equipmentForm.value.quantity || 0,
+      reservedQuantity: 0,
       companyId: this.companyId
     };
 
@@ -298,9 +302,22 @@ export class CompanyProfileComponent implements OnInit {
   }
 
   deleteEquipment(equipment: Equipment): void {
-    this.equipmentService.deleteEquipment(equipment.id).subscribe((result: any) => {
-      this.getEquipment(this.companyId);
-    })
+    if (equipment.id) {
+      this.companyService.checkIfEquipmentCanBeDeleted(equipment.id).subscribe(
+        (canBeDeleted: boolean) => {
+          if (canBeDeleted) {
+            alert('You successfully deleted equipment!');
+            if (equipment.id) {
+              this.equipmentService.deleteEquipment(equipment.id).subscribe((result: any) => {
+                this.getEquipment(this.companyId);
+              });
+            }
+          } else {
+            alert('Equipment is reserved. Deletion is not possible.');
+          }
+        }
+      );
+    }
   }
 
   searchCompanyEquipment() {
@@ -417,8 +434,11 @@ export class CompanyProfileComponent implements OnInit {
     this.companyService.getAllCompanyAppointments().subscribe((result: any) => {
       this.allAppointments = result;
       this.predefinedCompanyAppointments = this.allAppointments.filter(appointment =>
-        appointment.companyId === this.companyId && !appointment.scheduled
-      );
+        appointment.companyId === this.companyId &&
+        appointment.adminName === this.user.name &&
+        appointment.adminSurname === this.user.surname
+      )
+        .sort((a, b) => new Date(a.start).getTime() - new Date(b.start).getTime());
     })
   }
 }
