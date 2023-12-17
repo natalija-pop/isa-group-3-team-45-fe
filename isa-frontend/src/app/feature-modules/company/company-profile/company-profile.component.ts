@@ -1,12 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { CompanyService } from '../company.service';
-import { Company } from '../model/company.model';
+import { Appointment, Company } from '../model/company.model';
 import { Equipment, EquipmentType } from '../model/equipment.model';
 import { User } from 'src/app/infrastructure/auth/model/user.model';
 import { AbstractControl, FormControl, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from 'src/app/infrastructure/auth/auth.service';
 import { ActivatedRoute } from '@angular/router';
 import { EquipmentService } from '../../equipment/equipment.service';
+import { StakeholdersService } from '../../stakeholders/stakeholders.service';
 
 @Component({
   selector: 'app-company-profile',
@@ -68,7 +69,12 @@ export class CompanyProfileComponent implements OnInit {
   }
   selectedEquipmentType: string = '';
 
-  constructor(private companyService: CompanyService, private authService: AuthService, private route: ActivatedRoute, private equipmentService: EquipmentService) { }
+  selectedEquipments: Equipment[] = [];
+  predefinedAppointments: Appointment[] = [];
+  equipmentToReserve: Equipment[] = [];
+  selectedAppointment: Appointment | undefined;
+
+  constructor(private companyService: CompanyService, private authService: AuthService, private route: ActivatedRoute, private equipmentService: EquipmentService, private stakeholdersService: StakeholdersService) { }
 
   ngOnInit(): void {
     this.route.params.subscribe(params => {
@@ -82,6 +88,29 @@ export class CompanyProfileComponent implements OnInit {
     this.authService.user$.subscribe(user => {
       this.user = user;
     });
+    this.stakeholdersService.getUser(this.user.id).subscribe({
+      next: (result: User) => {
+        this.user = result;
+          console.log(result);
+        },
+        error: () => {
+        }
+       })
+  }
+
+  isSelected(equipment: Equipment): boolean {
+    return this.selectedEquipments.includes(equipment);
+  }
+
+  toggleSelection(equipment: Equipment): void {
+    const existingIndex = this.selectedEquipments.findIndex(selected => selected.id === equipment.id);
+
+    if (existingIndex > -1) {
+      this.selectedEquipments = this.selectedEquipments.filter(selected => selected.id !== equipment.id);
+    } else {
+      this.selectedEquipments = [...this.selectedEquipments, equipment];
+    }
+    console.log(this.selectedEquipments);
   }
 
   getCompanyById(id: number): void {
@@ -271,6 +300,33 @@ export class CompanyProfileComponent implements OnInit {
     }
     else {
       this.equipmentList = this.searchedEquipment.filter(e => this.getEquipmentTypeString(e.type) == this.equipmentType);
+    }
+  }
+
+  selectAppointment(appointment: Appointment) {
+    this.selectedAppointment = appointment;
+  }
+
+  reserveEquipment(equipment: Equipment[]){
+    this.companyService.getCompanyAppointments(this.companyId).subscribe(
+      (result: any) => {
+        this.predefinedAppointments = result;
+        console.log(this.selectedAppointment);
+      }
+    )
+  }
+
+  reserveEquipmentConfirmation(equipment: Equipment[]){
+    console.log(this.selectedAppointment)
+    if(this.selectedAppointment != undefined){
+      this.selectedAppointment.customerName = this.user.name;
+      this.selectedAppointment.customerSurname = this.user.surname;
+      this.selectedAppointment.equipment = equipment;
+      this.selectedAppointment.scheduled = true;
+      console.log(this.selectedAppointment)
+      this.companyService.reserveEquipment(this.selectedAppointment).subscribe({
+        next: () => { }
+      })
     }
   }
 }
