@@ -205,6 +205,28 @@
                   </button>
                 </div>
               </div>
+              <div class="row">
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th scope="col">#</th>
+                      <th scope="col">Admin Name</th>
+                      <th scope="col">Admin Surname</th>
+                      <th scope="col">Date and time</th>
+                      <th scope="col">Duration</th>
+                    </tr>
+                  </thead>
+                  <tbody class="table-group-divider">
+                    <tr *ngFor="let appointment of predefinedCompanyAppointments; let i = index">
+                      <th scope="row">{{ i + 1 }}</th>
+                      <td>{{ appointment.adminName }}</td>
+                      <td>{{ appointment.adminSurname }}</td>
+                      <td>{{ appointment.start | date: 'shortTime' }} {{ appointment.start | date: 'mediumDate' }}</td>
+                      <td>{{ appointment.duration}}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
           </div>
     </div>
 </div>

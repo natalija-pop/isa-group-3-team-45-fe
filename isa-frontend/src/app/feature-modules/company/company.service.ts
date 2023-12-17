@@ -52,7 +52,6 @@ export class CompanyService {
   }
 
   //appointment
-
   getRecommendedAppointments(companyId: number, selectedDate: Date | null): Observable<Appointment[]> {
     return this.http.get<Appointment[]>(`${environment.apiHost}appointment/getRecommendedAppointments/${companyId}?selectedDate=${selectedDate}`);
   }
@@ -63,6 +62,10 @@ export class CompanyService {
 
   reserveEquipment(appointment: Appointment): Observable<Appointment> {
     return this.http.put<Appointment>(environment.apiHost + 'appointment/reserveAppointment/' + appointment.id, appointment);
+  }
+
+  getAllCompanyAppointments(): Observable<PagedResults<Appointment>> {
+    return this.http.get<PagedResults<Appointment>>(environment.apiHost + 'appointment/getAll');
   }
 
   createPredefinedAppointment(appointment: Appointment): Observable<Appointment> {
