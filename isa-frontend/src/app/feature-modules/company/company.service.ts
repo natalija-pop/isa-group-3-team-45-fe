@@ -52,16 +52,33 @@ export class CompanyService {
   }
 
   //appointment
-
-  getRecommendedAppointments(companyId: number, selectedDate: Date | null) : Observable<Appointment[]> {
+  getRecommendedAppointments(companyId: number, selectedDate: Date | null): Observable<Appointment[]> {
     return this.http.get<Appointment[]>(`${environment.apiHost}appointment/getRecommendedAppointments/${companyId}?selectedDate=${selectedDate}`);
   }
 
-  getCompanyAppointments(companyId : number): Observable<PagedResults<Appointment>>{
+  getCompanyAppointments(companyId: number): Observable<PagedResults<Appointment>> {
     return this.http.get<PagedResults<Appointment>>(`${environment.apiHost}appointment/getCompanyAppointments/${companyId}`);
   }
 
   reserveEquipment(appointment: Appointment): Observable<Appointment> {
     return this.http.put<Appointment>(environment.apiHost + 'appointment/reserveAppointment/' + appointment.id, appointment);
+  }
+
+  getAllCompanyAppointments(): Observable<PagedResults<Appointment>> {
+    return this.http.get<PagedResults<Appointment>>(environment.apiHost + 'appointment/getAll');
+  }
+
+  createPredefinedAppointment(appointment: Appointment): Observable<Appointment> {
+    return this.http.post<Appointment>(environment.apiHost + 'appointment', appointment);
+  }
+
+  checkAppointmentValidity(date: Date, companyId: number, adminName: string, adminSurname: string): Observable<boolean> {
+    const requestBody = {
+      date,
+      companyId,
+      adminName,
+      adminSurname
+    };
+    return this.http.post<boolean>(`${environment.apiHost}appointment/checkValidity`, requestBody);
   }
 }

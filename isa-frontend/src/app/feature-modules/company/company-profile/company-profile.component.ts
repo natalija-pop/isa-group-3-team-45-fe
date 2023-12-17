@@ -16,9 +16,8 @@ import { StakeholdersService } from '../../stakeholders/stakeholders.service';
 })
 export class CompanyProfileComponent implements OnInit {
 
-  selectedNavItem: 'description' | 'companyInfo' | 'equipment' | 'admins' = 'description';
-
   appointments: Appointment[] = [];
+  selectedNavItem: 'description' | 'companyInfo' | 'equipment' | 'admins' | 'appointments' = 'description';
 
   company: Company = {
     id: 0,
@@ -72,6 +71,8 @@ export class CompanyProfileComponent implements OnInit {
   }
   selectedEquipmentType: string = '';
   selectedDate: Date | null = null;
+  allAppointments: Appointment[] = [];
+  predefinedCompanyAppointments: Appointment[] = [];
 
   selectedEquipments: Equipment[] = [];
   predefinedAppointments: Appointment[] = [];
@@ -92,14 +93,17 @@ export class CompanyProfileComponent implements OnInit {
     this.authService.user$.subscribe(user => {
       this.user = user;
     });
+
     this.stakeholdersService.getUser(this.user.id).subscribe({
       next: (result: User) => {
         this.user = result;
-          console.log(result);
-        },
-        error: () => {
-        }
-       })
+        console.log(result);
+      },
+      error: () => {
+      }
+    })
+
+    this.getPredefinedCompanyAppointments();
   }
 
   isSelected(equipment: Equipment): boolean {
@@ -173,6 +177,10 @@ export class CompanyProfileComponent implements OnInit {
 
   showAdmins() {
     this.selectedNavItem = 'admins';
+  }
+
+  showAppointments() {
+    this.selectedNavItem = 'appointments';
   }
 
   switchMode(newMode: boolean) {
@@ -319,11 +327,12 @@ export class CompanyProfileComponent implements OnInit {
     }
   }
 
+
   selectAppointment(appointment: Appointment) {
     this.selectedAppointment = appointment;
   }
 
-  reserveEquipment(equipment: Equipment[]){
+  reserveEquipment(equipment: Equipment[]) {
     this.companyService.getCompanyAppointments(this.companyId).subscribe(
       (result: any) => {
         this.predefinedAppointments = result;
@@ -332,9 +341,9 @@ export class CompanyProfileComponent implements OnInit {
     )
   }
 
-  reserveEquipmentConfirmation(equipment: Equipment[]){
+  reserveEquipmentConfirmation(equipment: Equipment[]) {
     console.log(this.selectedAppointment)
-    if(this.selectedAppointment != undefined){
+    if (this.selectedAppointment != undefined) {
       this.selectedAppointment.customerName = this.user.name;
       this.selectedAppointment.customerSurname = this.user.surname;
       this.selectedAppointment.equipment = equipment;
@@ -344,5 +353,72 @@ export class CompanyProfileComponent implements OnInit {
         next: () => { }
       })
     }
+  }
+
+  appointmentForm = new FormGroup({
+    date: new FormControl('', [Validators.required]),
+    time: new FormControl('', [Validators.required]),
+    duration: new FormControl({ value: '60', disabled: true }, [Validators.required]),
+    adminName: new FormControl('', [Validators.required]),
+    adminSurname: new FormControl('', [Validators.required]),
+  })
+
+  createPredefinedAppointment() {
+    console.log(this.appointmentForm.value.time);
+    const dateTimeString = `${this.appointmentForm.value.date}T${this.appointmentForm.value.time}:00`;
+    const selectedDateTime = new Date(dateTimeString);
+    console.log(selectedDateTime);
+
+    const openingTime = new Date(`2000-01-01T${this.company.workingHours.openingHours}`);
+    const closingTime = new Date(`2000-01-01T${this.company.workingHours.closingHours}`);
+    const appointmentTime = new Date(`2000-01-01T${this.appointmentForm.value.time}:00`);
+    const appointmentDuration = 60 * 60 * 1000;
+    const appointmentEndTime = new Date(appointmentTime.getTime() + appointmentDuration);
+
+    console.log(appointmentEndTime);
+    console.log(closingTime);
+
+    if (this.appointmentForm.value.time &&
+      (appointmentTime >= openingTime && appointmentEndTime <= closingTime)) {
+      const appointment: Appointment = {
+        start: selectedDateTime,
+        duration: 60 || "",
+        adminName: this.appointmentForm.value.adminName || "",
+        adminSurname: this.appointmentForm.value.adminSurname || "",
+        companyId: this.companyId,
+        scheduled: false,
+      };
+
+      this.companyService.checkAppointmentValidity(selectedDateTime, this.companyId, this.appointmentForm.value.adminName || "", this.appointmentForm.value.adminSurname || "").subscribe(
+        (isValid: boolean) => {
+          if (isValid) {
+            alert('You successfully defined appointment!');
+            this.companyService.createPredefinedAppointment(appointment).subscribe({
+              next: (result) => {
+                console.log(result);
+                this.getPredefinedCompanyAppointments();
+              },
+              error: (err) => {
+                console.log(err);
+              }
+            });
+          } else {
+            alert('Appointment has already been taken and defined by you.');
+          }
+        }
+      );
+    }
+    else {
+      alert('Time must be in company working hours range.');
+    }
+  }
+
+  getPredefinedCompanyAppointments() {
+    this.companyService.getAllCompanyAppointments().subscribe((result: any) => {
+      this.allAppointments = result;
+      this.predefinedCompanyAppointments = this.allAppointments.filter(appointment =>
+        appointment.companyId === this.companyId && !appointment.scheduled
+      );
+    })
   }
 }

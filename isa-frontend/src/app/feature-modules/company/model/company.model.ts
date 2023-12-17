@@ -28,13 +28,13 @@ export interface WorkingHours {
 }
 
 export interface Appointment {
-    id: number,
+    id?: number,
     start: Date,
     duration: number,
     adminName: string,
     adminSurname: string,
     customerName?: string,
-    customerSurname?: string
+    customerSurname?: string,
     companyId: number,
     scheduled: boolean,
     equipment?: Equipment[]
