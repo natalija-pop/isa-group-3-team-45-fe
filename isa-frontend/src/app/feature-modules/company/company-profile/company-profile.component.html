@@ -103,9 +103,6 @@
                 </div>
               </div>
             </div>
-            <div class="col-md-4 mb-3 d-flex align-items-end justify-content-end" data-bs-toggle="modal" data-bs-target="#additionalAppointmentModal">
-              <button (click)="scheduleAdditionalAppointment()" class="btn btn-primary">Schedule additional appointment</button>
-            </div>
             <div class="text-end">
               <div>
                 <button (click)="reserveEquipment(selectedEquipments)" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#reserveEquipmentModal">Reserve</button>
@@ -263,7 +260,7 @@
         </div>
       </div>
       <div class="modal-footer">
-        <button  class="btn btn-primary">Schedule</button>
+        <button (click)="scheduleAdditionalAppointment(selectedEquipments)" class="btn btn-primary" data-bs-dismiss="modal">Schedule</button>
       </div>
     </div>
   </div>
@@ -421,6 +418,7 @@
               </tbody>
             </table>
             <div class="modal-footer me-4">
+              <button  class="btn btn-secondary me-auto" data-bs-toggle="modal" data-bs-target="#additionalAppointmentModal" >Schedule additional appointment</button>
               <button type="submit" (click)="reserveEquipmentConfirmation(selectedEquipments)" data-bs-dismiss="modal" [disabled]="!selectedAppointment" class="btn btn-primary">Reserve</button>
             </div>
           </div>

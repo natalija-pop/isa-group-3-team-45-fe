@@ -81,7 +81,8 @@ export class CompanyProfileComponent implements OnInit {
   equipmentToReserve: Equipment[] = [];
   selectedAppointment: Appointment | undefined;
 
-  constructor(private companyService: CompanyService, private authService: AuthService, private route: ActivatedRoute, private equipmentService: EquipmentService, private stakeholdersService: StakeholdersService) { }
+
+  constructor( private companyService: CompanyService, private authService: AuthService, private route: ActivatedRoute, private equipmentService: EquipmentService, private stakeholdersService: StakeholdersService) { }
 
   ngOnInit(): void {
     this.route.params.subscribe(params => {
@@ -123,9 +124,34 @@ export class CompanyProfileComponent implements OnInit {
     console.log(this.selectedEquipments);
   }
 
-  scheduleAdditionalAppointment(): void {
-    this.appointments = [];
-    this.selectedDate = null;
+  scheduleAdditionalAppointment(equipment: Equipment[]): void {
+    if(this.selectedAppointment != undefined){
+      const start = new Date(this.selectedAppointment.start)
+      const year = start.getFullYear();
+      const month = ('0' + (start.getMonth() + 1)).slice(-2);
+      const day = ('0' + start.getDate()).slice(-2);
+
+      const hours = ('0' + start.getHours()).slice(-2);
+      const minutes = ('0' + start.getMinutes()).slice(-2);
+
+      const dateTimeString = `${year}-${month}-${day}T${hours}:${minutes}:00`;
+      var newAppointment: Appointment = {
+        start: new Date(dateTimeString),
+        duration: this.selectedAppointment.duration,
+        adminName: this.selectedAppointment.adminName,
+        adminSurname: this.selectedAppointment.adminSurname,
+        customerName: this.user.name,
+        customerSurname: this.user.surname,
+        companyId: this.selectedAppointment.companyId,
+        scheduled: true, 
+        equipment: equipment
+      };
+
+      console.log(newAppointment)
+      this.companyService.createAdditionalAppointment(newAppointment).subscribe({
+        next: () => {}
+      })
+    }
   }
 
   onDateChange(): void {
@@ -133,7 +159,6 @@ export class CompanyProfileComponent implements OnInit {
       this.appointments = result;
     })
   }
-
 
   getCompanyById(id: number): void {
     this.companyService.getCompanyById(id).subscribe((result: any) => {
@@ -358,14 +383,12 @@ export class CompanyProfileComponent implements OnInit {
     )
   }
 
-  reserveEquipmentConfirmation(equipment: Equipment[]) {
-    console.log(this.selectedAppointment)
-    if (this.selectedAppointment != undefined) {
+  reserveEquipmentConfirmation(equipment: Equipment[]){
+    if(this.selectedAppointment != undefined){
       this.selectedAppointment.customerName = this.user.name;
       this.selectedAppointment.customerSurname = this.user.surname;
       this.selectedAppointment.equipment = equipment;
       this.selectedAppointment.scheduled = true;
-      console.log(this.selectedAppointment)
       this.companyService.reserveEquipment(this.selectedAppointment).subscribe({
         next: () => { }
       })
