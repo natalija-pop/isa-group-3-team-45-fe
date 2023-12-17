@@ -41,6 +41,7 @@
             <p class="card-text">Address: {{ company.address.street }} {{ company.address.number }}, {{ company.address.city }}, {{ company.address.country }}</p>
             <p class="card-text"><strong>Rating: {{ company.rating }}</strong> </p>
             <p class="card-text"><strong>Working hours: {{ company.workingHours.openingHours + "-" + company.workingHours.closingHours }}</strong> </p>
+            <a [attr.href]="'http://localhost:4200/company-profile/' + company.id" class="card-link col">Discover more</a>
           </div>
         </div>
       </div>

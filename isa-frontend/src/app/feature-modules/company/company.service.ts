@@ -60,12 +60,12 @@ export class CompanyService {
     return this.http.get<PagedResults<Appointment>>(`${environment.apiHost}appointment/getCompanyAppointments/${companyId}`);
   }
 
-  reserveEquipment(appointment: Appointment): Observable<Appointment> {
-    return this.http.put<Appointment>(environment.apiHost + 'appointment/reserveAppointment/' + appointment.id, appointment);
+  reserveEquipment(appointment: Appointment, userEmail: string): Observable<Appointment> {
+    return this.http.put<Appointment>(environment.apiHost + `appointment/reserveAppointment?userEmail=${userEmail}`, appointment);
   }
 
-  createAdditionalAppointment(appointment: Appointment): Observable<Appointment> {
-    return this.http.post<Appointment>(environment.apiHost + 'appointment/additionalAppointment', appointment);
+  createAdditionalAppointment(appointment: Appointment, userEmail: string): Observable<Appointment> {
+    return this.http.post<Appointment>(environment.apiHost + `appointment/additionalAppointment?userEmail=${userEmail}`, appointment);
   }
 
 
