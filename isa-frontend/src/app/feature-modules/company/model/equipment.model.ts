@@ -1,10 +1,14 @@
 import { Company } from "./company.model";
 
 export interface Equipment {
+    id?: number,
     name: string,
     description: string,
     type: EquipmentType,
-    company: Company
+    quantity: number,
+    reservedQuantity: number,
+    companyId: number,
+    company?: Company
 }
 
 export enum EquipmentType {

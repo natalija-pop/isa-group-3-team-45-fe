@@ -1,25 +1,4 @@
-.nav-link {
-    cursor: pointer;
-  }
-
-.form-item {
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    width: 80%;
-    margin: auto;
-    padding: 12px;
-  }
-  .form-item label {
-    text-align: left;
-    font-weight: 600;
-    margin-bottom: 6px;
-  }
-  .form-item-error {
-    color: red;
-  }
-
-  body {
+body {
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
@@ -27,15 +6,31 @@
     background-color: #f4f4f4;
   }
   
-  .add-admin {
+  form {
     background-color: #fff;
     padding: 25px;
     border-radius: 5px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    width: 40%;
+    width: 35%;
     margin: auto;
   }
-
+  
+  .address-flex-box{
+    margin-top: 40px;
+    margin-bottom: 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+  }
+  
+  .adress-fields{
+    width: 65%;
+  }
+  
+  .switch-btn{
+    margin-bottom: 5px;
+  }
+  
   .form-group {
     margin-bottom: 15px;
   }
@@ -60,25 +55,19 @@
     margin-top: 4px;
   }
   
-  .add-admin-btns {
+  button {
     padding: 10px 15px;
     border: none;
     border-radius: 3px;
+    background-color: #007bff;
     color: #fff;
     cursor: pointer;
     transition: background-color 0.3s ease;
+    width: 100%;
   }
-
+  
   button:hover {
     background-color: #0056b3;
-  }
-
-  .positive-btn{
-    background-color: #198754;
-  }
-
-  .negative-btn{
-    background-color: #6c757d;
   }
   
   .has-error input, .has-error textarea {
@@ -95,27 +84,9 @@
     text-align: center; 
   }
   
-  .error-message {
-    color: red;
-    margin-top: 5px;
+  .correct-message {
+    color: green;
+    margin-top: 10px;
+    text-align: center;
   }
-
-  .form-btns{
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    gap: 10px;
-  }
-
-  .form-btns button{
-    width: 120px;
-  }
-
-  .add-icon-size{
-    font-size: 30px;
-  }
-
-  .delete-icon-size{
-    font-size: 17px;
-  }
-
+  

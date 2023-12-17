@@ -1,41 +1,61 @@
 <div>
+  <div id="first-step" *ngIf="firstStep">
     <h1>Register company: </h1>
-    <div id="first-step" [style.visibility]="firstStep ? 'visible' : 'hidden'" [style.position]="'relative'">
-        <form [formGroup]="companyForm">
-            <div>
-                <div class="form-item">
-                    <label>Name: </label>
-                    <input type="text" name="name" formControlName="name"/>
-                </div>
-                <div class="form-item">
-                    <label>Description: </label>
-                    <input type="text" name="description" formControlName="description"/>
-                </div>
-                <div class="form-item">
-                    <label>Address:</label>
-                    <div class="form-item">
-                        <label>Street: </label>
-                        <input type="text" name="street" formControlName="street"/>
-                    </div>
-                    <div class="form-item">
-                        <label>Number: </label>
-                        <input type="text" name="number" formControlName="number"/>
-                    </div>
-                    <div class="form-item">
-                        <label>City: </label>
-                        <input type="text" name="city" formControlName="city"/>
-                    </div>
-                    <div class="form-item">
-                        <label>Country: </label>
-                        <input type="text" name="country" formControlName="country"/>
-                    </div>
-                </div>
-                <div class="label-item">
-                    <label (click)="switchPage()">Next</label>
-                </div>
-            </div>
-        </form>
-    <div id="second-step" [style.visibility]="!firstStep ? 'visible' : 'hidden'" [style.position]="'relative'">
+      <form [formGroup]="companyForm">
+          <div>
+              <div class="form-item">
+                  <label>Name: </label>
+                  <input type="text" name="name" formControlName="name"/>
+              </div>
+              <div class="form-item">
+                  <label>Description: </label>
+                  <input type="text" name="description" formControlName="description"/>
+              </div>
+              <div class="form-item address-flex-box">
+                  <div class="address-label">
+                      <label>Address:</label>
+                  </div>
+                  <div class="adress-fields">
+                      <div class="form-item">
+                          <label>Street: </label>
+                          <input type="text" name="street" formControlName="street"/>
+                      </div>
+                      <div class="form-item">
+                          <label>Number: </label>
+                          <input type="text" name="number" formControlName="number"/>
+                      </div>
+                      <div class="form-item">
+                          <label>City: </label>
+                          <input type="text" name="city" formControlName="city"/>
+                      </div>
+                      <div class="form-item">
+                          <label>Country: </label>
+                          <input type="text" name="country" formControlName="country"/>
+                      </div>
+                  </div>
+              </div>
+              <div class="label-item">
+                  <div class="form-item">
+                    <label>Opening hours: </label>
+                    <input type="time" name="openingHours" formControlName="openingHours"/>
+                  </div>
+                  <div class="form-item">
+                    <label>Closing hours: </label>
+                    <input type="time" name="closingHours" formControlName="closingHours"/>
+                  </div>
+                  <div class="form-item">
+                    <label>Weekends: </label>
+                    <input type="checkbox" name="weekends" formControlName="weekends"/>
+                  </div>
+              </div>
+              <div class="label-item">
+                  <button (click)="switchPage()">Next</button>
+              </div>
+          </div>
+      </form>
+  </div>
+    <div id="second-step" *ngIf="!firstStep">
+      <h1>Register company admin:</h1>
         <form [formGroup]="adminForm">
             <div>
                 <div class="form-group"  [ngClass]="{ 'has-error': adminForm.get('name')?.invalid && (adminForm.get('name')?.dirty || adminForm.get('name')?.touched) }">
@@ -91,11 +111,12 @@
                   <textarea id="companyInformation" formControlName="companyInformation"  required></textarea>
                 </div>
               </div>
+              <div class="label-item">
+                <button class="switch-btn" (click)="switchPage()">Previous</button>
+                <button class="switch-btn" (click)="registerCompany()">Submit</button>
+            </div>
         </form>
-        <div class="label-item">
-            <label (click)="switchPage()">Previous</label>
-            <label (click)="registerCompany()">Submit</label>
-        </div>
+        
     </div>
     <div *ngIf="adminForm.invalid || companyForm.invalid" class="invalid-message">
         Some fields are invalid. Please fill all required fields correctly.

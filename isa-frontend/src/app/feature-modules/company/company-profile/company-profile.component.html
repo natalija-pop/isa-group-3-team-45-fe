@@ -7,7 +7,7 @@
       <strong>Rating:  {{company.rating}}  <i class="bi bi-star-fill"></i></strong>
     </div>
     <div class="col-2 text-end">
-      <button class="btn btn-light border border-dark" data-bs-toggle="modal" data-bs-target="#editCompanyModal">
+      <button class="btn btn-light border border-dark" *ngIf="user && user.role == 1" data-bs-toggle="modal" data-bs-target="#editCompanyModal">
         <span class="me-2">Edit</span>
         <i class="bi bi-pencil-fill"></i>
       </button>
@@ -27,6 +27,9 @@
             <li class="nav-item">
               <a class="nav-link" [class.active]="selectedNavItem === 'admins'" (click)="showAdmins()">Company admins</a>
             </li>
+            <li class="nav-item">
+              <a class="nav-link" [class.active]="selectedNavItem === 'appointments'" (click)="showAppointments()">Appointments</a>
+            </li>
           </ul>
     </div>
 
@@ -44,33 +47,87 @@
             <div class=".col-6 mt-2">
                 {{company.address.country}}
             </div>
+            <xp-map [company]="company"></xp-map>
         </div>
         <div *ngIf="selectedNavItem === 'equipment'" class="row">
+          <div class="container mt-2">
+            <div class="row">
+                <div class="col-8">
+                  <div class="row mt-2 justify-content-end">
+                    <div class="col-md-4 mb-3">
+                      <label for="name" class="form-label">Name:</label>
+                      <input type="text" id="searchKeyword" [(ngModel)]="searchKeyword" name="searchKeyword" class="form-control" placeholder="Enter equipment name">
+                    </div>
+                    <div class="col-md-4 mb-3">
+                      <label for="type" class="form-label">Type:</label>
+                      <select id="type" name="type" [(ngModel)]="equipmentType" class="form-control" (change)="filterEquipmentByType()">
+                        <option value="All">Reset filter</option>
+                        <option value="Mask">Mask</option>
+                        <option value="Sterile">Sterile</option>
+                        <option value="Surgical">Surgical</option>
+                        <option value="Instrument">Instrument</option>
+                      </select>
+                    </div>
+                    <div class="col-md-4 mb-3 d-flex align-items-end justify-content-end">
+                      <button (click)="searchCompanyEquipment()" class="btn btn-primary">Search</button>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-4 d-flex align-items-end justify-content-end">
+                  <button *ngIf="user && user.role == 1" type="button" class="btn" data-bs-toggle="modal" data-bs-target="#equipmentModal">
+                      <i class="bi bi-plus-square add-icon-size"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
             <div *ngFor="let equipment of equipmentList" class="col-md-4">
-              <div class="card border-dark mb-3" style="max-width: 30rem; max-height: 30rem;">
-                <div class="card-header">{{ getEquipmentTypeString(equipment.type) }}</div>
+              <div class="card border-dark mb-3" style="max-width: 30rem; max-height: 30rem;" [class.selected]="isSelected(equipment)"  [ngStyle]="isSelected(equipment) ? {'border': '2px solid #007bff'} : {}">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                  <div>{{ getEquipmentTypeString(equipment.type) }}</div>
+                  <div>
+                    <button *ngIf="user && user.role == 1" type="button" class="btn" (click)="editButtonClicked(equipment)" data-bs-toggle="modal" data-bs-target="#editEquipmentModal">
+                      <i class="bi bi-pencil-square"></i>
+                    </button>
+                    <button *ngIf="user && user.role == 1" type="button" class="btn" (click)="deleteEquipment(equipment)">
+                      <i class="bi bi-trash delete-icon-size"></i>
+                    </button>
+                    <button *ngIf="user.id != 0 && user.role == 0 && equipment.quantity != equipment.reservedQuantity" type="button" class="btn" (click)="toggleSelection(equipment)">
+                      <i class="bi bi-cart-plus"></i>
+                    </button>
+                  </div>
+                </div>
                 <div class="card-body">
                   <h5 class="card-title">{{ equipment.name }}</h5>
                   <p class="card-text">{{ equipment.description }}</p>
                 </div>
+                <p></p>
+              </div>
+            </div>
+            <div class="text-end">
+              <div>
+                <button *ngIf="user.id != 0 && user.role == 0" (click)="reserveEquipment(selectedEquipments)" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#reserveEquipmentModal">Reserve</button>
               </div>
             </div>
           </div>
           <div *ngIf="selectedNavItem === 'admins'" class="row">
-            <div *ngFor="let admin of admins" class="col-md-4">
-              <div class="card border-dark mb-3" style="max-width: 30rem; max-height: 30rem;">
-                <div class="card-header">{{ admin.email }}</div>
-                <div class="card-body">
-                  <p class="card-text">{{ admin.name }} {{ admin.surname }}</p>
-                  <p class="card-text">{{ admin.phone }}</p>
-                  <p class="card-text">{{ admin.profession }}</p>
+            <div  *ngIf="!addAdmin">
+              <button class="add-admin-btns positive-btn" (click)="this.addAdmin = true" *ngIf="user && user.role == 2" >Add new admin</button>
+            </div>
+            <div *ngIf="!addAdmin">
+              <div *ngFor="let admin of admins" class="col-md-4" style="margin-top: 10px;">
+                <div class="card border-dark mb-3" style="max-width: 30rem; max-height: 30rem;">
+                  <div class="card-header">{{ admin.email }}</div>
+                  <div class="card-body">
+                    <p class="card-text">{{ admin.name }} {{ admin.surname }}</p>
+                    <p class="card-text">{{ admin.phone }}</p>
+                    <p class="card-text">{{ admin.profession }}</p>
+                  </div>
                 </div>
               </div>
             </div>
             <div class="label-item">
-              <label (click)="this.addAdmin = true" >Add new admin</label>
-              <div id="second-step" [style.visibility]=" addAdmin ? 'visible' : 'hidden'">
-                <form [formGroup]="adminForm">
+              <div *ngIf="addAdmin && user.role == 2 && user">
+                <form [formGroup]="adminForm" class="add-admin">
                     <div>
                         <div class="form-group"  [ngClass]="{ 'has-error': adminForm.get('name')?.invalid && (adminForm.get('name')?.dirty || adminForm.get('name')?.touched) }">
                           <label for="name">Name</label>
@@ -125,15 +182,90 @@
                           <textarea id="companyInformation" formControlName="companyInformation"  required></textarea>
                         </div>
                       </div>
+                      <div  *ngIf="addAdmin" class="form-btns">
+                        <div>
+                          <button class="add-admin-btns negative-btn" (click)="this.addAdmin = false">Cancel</button>
+                        </div>
+                        <div>
+                          <button class="add-admin-btns positive-btn" (click)="createNewAdmin()">Submit</button>
+                        </div>
+                      </div>
                 </form>
-                <div class="label-item">
-                    <label (click)="createNewAdmin()">Submit</label>
-                </div>
             </div>
             </div>
           </div>
+          <div *ngIf="selectedNavItem === 'appointments'" class="row">
+              <div class="row">
+                <div class="col-12 d-flex align-items-end justify-content-end">
+                  <button *ngIf="user && user.role == 1" type="button" class="btn" data-bs-toggle="modal" data-bs-target="#predefinedAppointmentModal">
+                      <i class="bi bi-plus-square add-icon-size"></i>
+                  </button>
+                </div>
+              </div>
+              <div class="row">
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th scope="col">#</th>
+                      <th scope="col">Admin Name</th>
+                      <th scope="col">Admin Surname</th>
+                      <th scope="col">Date and time</th>
+                      <th scope="col">Duration</th>
+                      <th scope="col">Customer name</th>
+                      <th scope="col">Customer surname</th>
+                    </tr>
+                  </thead>
+                  <tbody class="table-group-divider">
+                    <tr *ngFor="let appointment of predefinedCompanyAppointments; let i = index">
+                      <th scope="row">{{ i + 1 }}</th>
+                      <td>{{ appointment.adminName }}</td>
+                      <td>{{ appointment.adminSurname }}</td>
+                      <td>{{ appointment.start | date: 'shortTime' }} {{ appointment.start | date: 'mediumDate' }}</td>
+                      <td>{{ appointment.duration}}</td>
+                      <td>{{ appointment.customerName}}</td>
+                      <td>{{ appointment.customerSurname}}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+          </div>
     </div>
 </div>
+
+<div class="modal fade" id="additionalAppointmentModal" tabindex="-1" aria-labelledby="additionalAppointmentModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header ft-5">
+        <h1 class="modal-title fs-5" id="additionalAppointmentModalLabel">Schedule extraordinary appointment</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="mb-3">
+          <label for="appointmentDate" class="form-label">Enter the date</label>
+          <input type="date" class="form-control" id="appointmentDate" [(ngModel)]="selectedDate" (change)="onDateChange()">
+        </div>
+        <div *ngIf="appointments.length > 0">
+          <h2 class="mt-3">Appointments for {{ selectedDate | date:'mediumDate' }}</h2>
+          <ul class="list-group">
+            <li *ngFor="let appointment of appointments" class="list-group-item" (click)="selectAppointment(appointment)"
+              [class.active]="appointment === selectedAppointment">
+              <div class="d-flex justify-content-between">
+                <div>
+                  <h5 class="mb-0">{{ appointment.adminName }} {{ appointment.adminSurname }}</h5>
+                  <p class="text-muted">{{ appointment.start | date:'shortTime' }}</p>
+                </div>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button (click)="scheduleAdditionalAppointment(selectedEquipments)" class="btn btn-primary" data-bs-dismiss="modal">Schedule</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <div class="modal fade" id="editCompanyModal" tabindex="-1" aria-labelledby="editCompanyModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -174,5 +306,166 @@
         </form>
       </div>
     </div>
+  </div>
+</div>
+
+<div class="modal fade" id="equipmentModal" tabindex="-1" aria-labelledby="equipmentModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+      <div class="modal-content">
+          <div class="modal-header">
+              <h2 class="modal-title" id="equipmentModalLabel">Add equipment</h2>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+              <form [formGroup]="equipmentForm">
+
+                  <div class="mb-3">
+                      <label for="name" class="form-label">Name:</label>
+                      <input type="text" class="form-control" formControlName="name" id="equipmentName" name="equipmentName" placeholder="Enter equipment name">
+                  </div>
+
+                  <div class="mb-3">
+                      <label for="description" class="form-label">Description:</label>
+                      <textarea class="form-control" formControlName="description" id="description" name="description" rows="3"
+                          placeholder="Enter equipment description"></textarea>
+                  </div>
+
+                  <div class="mb-3">
+                    <label for="name" class="form-label">Quantity:</label>
+                    <input type="number" class="form-control" formControlName="quantity" id="quantity" name="quantity" placeholder="Enter quantity">
+                  </div>
+
+                  <div class="mb-3">
+                      <label for="type" class="form-label">Type:</label>
+                      <select class="form-select" id="type" name="type" formControlName="type">
+                          <option value="instrument">Instrument</option>
+                          <option value="surgical">Surgical</option>
+                          <option value="sterile">Sterile</option>
+                          <option value="mask">Mask</option>
+                      </select>
+                  </div>
+
+                  <div class="modal-footer me-4">
+                    <button type="submit" (click)="createEquipment()" class="btn btn-primary">Submit</button>
+                  </div>
+              </form>
+          </div>
+      </div>
+  </div>
+</div>
+
+<div class="modal fade" id="editEquipmentModal" tabindex="-1" aria-labelledby="editEquipmentModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header ft-5">
+        <h1 class="modal-title fs-5" id="editEquipmentModalLabel">Edit equipment</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="form-item">
+            <label>Name:</label>
+            <input type="text" [(ngModel)]="selectedEquipment.name" name="name"/>
+          </div>
+          <div class="form-item">
+            <label>Description:</label>
+            <input type="text" [(ngModel)]="selectedEquipment.description" name="description"/>
+          </div>
+          <div class="form-item">
+            <label>Quantity:</label>
+            <input type="number" [(ngModel)]="selectedEquipment.quantity" name="quantity"/>
+          </div>
+          <div class="form-item mb-3">
+            <label for="type" class="form-label">Type:</label>
+            <select class="form-select" id="type" name="type" [(ngModel)]="selectedEquipmentType">
+                <option [ngValue]="selectedEquipmentType" disabled selected style="display: none;">{{ selectedEquipmentType }}</option>
+                <option value="Instrument">Instrument</option>
+                <option value="Surgical">Surgical</option>
+                <option value="Sterile">Sterile</option>
+                <option value="Mask">Mask</option>
+            </select>
+          </div>
+          <div class="modal-footer me-4">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-success" (click)="updateEquipment() ">Apply</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="reserveEquipmentModal" tabindex="-1" aria-labelledby="reserveEquipmentModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+      <div class="modal-content">
+          <div class="modal-header">
+              <h2 class="modal-title" id="reserveEquipmentModalLabel">Reserve equipment</h2>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            Selected equipment for reservation: 
+            <ul>
+              <li *ngFor="let equipment of selectedEquipments">{{ equipment.name }}</li>
+            </ul>
+
+            <!-- Prikaz Predefined appointments -->
+            <p>Predefined appointments:</p>
+            <table class="table">
+              <tbody>
+                  <tr *ngFor="let appointment of predefinedAppointments" (click)="selectAppointment(appointment)" [ngStyle]="{'border': selectedAppointment === appointment ? '2px solid blue' : 'none'}">
+                      <td>{{ appointment.start | date:'short' }}</td>
+                  </tr>
+              </tbody>
+            </table>
+            <div class="modal-footer me-4">
+              <button  class="btn btn-secondary me-auto" data-bs-toggle="modal" data-bs-target="#additionalAppointmentModal" >Schedule additional appointment</button>
+              <button type="submit" (click)="reserveEquipmentConfirmation(selectedEquipments)" data-bs-dismiss="modal" [disabled]="!selectedAppointment" class="btn btn-primary">Reserve</button>
+            </div>
+          </div>
+      </div>
+  </div>
+</div>
+
+<div class="modal fade" id="predefinedAppointmentModal" tabindex="-1" aria-labelledby="predefinedAppointmentModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+      <div class="modal-content">
+          <div class="modal-header">
+              <h2 class="modal-title" id="predefinedAppointmentModalLabel">Add predefined appointment</h2>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+              <form [formGroup]="appointmentForm">
+
+                  <div class="mb-3">
+                      <label for="name" class="form-label">Name:</label>
+                      <input type="text" class="form-control" formControlName="adminName" id="adminName" name="adminName" placeholder="Enter your name">
+                  </div>
+
+                  <div class="mb-3">
+                      <label for="description" class="form-label">Surname:</label>
+                      <input type="text" class="form-control" formControlName="adminSurname" id="adminSurname" name="adminSurname" placeholder="Enter your surname">
+                  </div>
+
+                  <div class="mb-3">
+                    <label for="date" class="form-label">Date:</label>
+                    <input type="date" id="datepicker" formControlName="date" name="date"/>
+                  </div>
+
+                  <div class="mb-3">
+                    <label for="time" class="form-label">Time:</label>
+                    <input type="text" class="form-control" formControlName="time" id="time" name="time" placeholder="HH:mm">
+                  </div>
+
+                  <div class="mb-3">
+                    <label for="time" class="form-label">Duration:</label>
+                    <input type="text" class="form-control" formControlName="duration" value="60" id="duration" name="duration">
+                  </div>
+
+                  <div class="modal-footer me-4">
+                    <button type="submit" (click)="createPredefinedAppointment()" class="btn btn-primary">Submit</button>
+                  </div>
+              </form>
+          </div>
+      </div>
   </div>
 </div>
