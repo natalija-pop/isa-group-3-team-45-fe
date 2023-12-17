@@ -51,6 +51,12 @@ export class CompanyService {
     return this.http.get<Equipment[]>(`${environment.apiHost}company/getCompanyEquipmentSearchResults/${companyId}?searchKeyword=${searchKeyword}`);
   }
 
+  //appointment
+
+  getRecommendedAppointments(companyId: number, selectedDate: Date | null) : Observable<Appointment[]> {
+    return this.http.get<Appointment[]>(`${environment.apiHost}appointment/getRecommendedAppointments/${companyId}?selectedDate=${selectedDate}`);
+  }
+
   getCompanyAppointments(companyId : number): Observable<PagedResults<Appointment>>{
     return this.http.get<PagedResults<Appointment>>(`${environment.apiHost}appointment/getCompanyAppointments/${companyId}`);
   }

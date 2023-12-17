@@ -17,6 +17,9 @@ import { StakeholdersService } from '../../stakeholders/stakeholders.service';
 export class CompanyProfileComponent implements OnInit {
 
   selectedNavItem: 'description' | 'companyInfo' | 'equipment' | 'admins' = 'description';
+
+  appointments: Appointment[] = [];
+
   company: Company = {
     id: 0,
     name: '',
@@ -68,6 +71,7 @@ export class CompanyProfileComponent implements OnInit {
     companyId: 0,
   }
   selectedEquipmentType: string = '';
+  selectedDate: Date | null = null;
 
   selectedEquipments: Equipment[] = [];
   predefinedAppointments: Appointment[] = [];
@@ -112,6 +116,18 @@ export class CompanyProfileComponent implements OnInit {
     }
     console.log(this.selectedEquipments);
   }
+
+  scheduleAdditionalAppointment(): void {
+    this.appointments = [];
+    this.selectedDate = null;
+  }
+
+  onDateChange(): void {
+    this.companyService.getRecommendedAppointments(this.companyId, this.selectedDate).subscribe((result: Appointment[]) => {
+      this.appointments = result;
+    })
+  }
+
 
   getCompanyById(id: number): void {
     this.companyService.getCompanyById(id).subscribe((result: any) => {
