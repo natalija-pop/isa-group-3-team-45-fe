@@ -1,4 +1,5 @@
 import { User } from "src/app/infrastructure/auth/model/user.model"
+import { Equipment } from "./equipment.model"
 
 export interface Company {
     id: number,
@@ -27,11 +28,14 @@ export interface WorkingHours {
 }
 
 export interface Appointment {
+    id: number,
     start: Date,
     duration: number,
     adminName: string,
     adminSurname: string,
     customerName?: string,
     customerSurname?: string
-    companyId: number
+    companyId: number,
+    scheduled: boolean,
+    equipment?: Equipment[]
 }

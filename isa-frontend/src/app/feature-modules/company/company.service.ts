@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { PagedResults } from 'src/app/shared/model/paged.results.model';
-import { Company } from './model/company.model';
+import { Appointment, Company } from './model/company.model';
 import { environment } from 'src/env/environment';
 import { CompanyProfileComponent } from './company-profile/company-profile.component';
 import { User } from 'src/app/infrastructure/auth/model/user.model';
@@ -49,5 +49,13 @@ export class CompanyService {
 
   getCompanyEquipmentSearchResults(companyId: number, searchKeyword?: string): Observable<Equipment[]> {
     return this.http.get<Equipment[]>(`${environment.apiHost}company/getCompanyEquipmentSearchResults/${companyId}?searchKeyword=${searchKeyword}`);
+  }
+
+  getCompanyAppointments(companyId : number): Observable<PagedResults<Appointment>>{
+    return this.http.get<PagedResults<Appointment>>(`${environment.apiHost}appointment/getCompanyAppointments/${companyId}`);
+  }
+
+  reserveEquipment(appointment: Appointment): Observable<Appointment> {
+    return this.http.put<Appointment>(environment.apiHost + 'appointment/reserveAppointment/' + appointment.id, appointment);
   }
 }
