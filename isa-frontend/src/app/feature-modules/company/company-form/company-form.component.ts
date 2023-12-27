@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { AuthService } from 'src/app/infrastructure/auth/auth.service';
 import { CompanyService } from '../company.service';
 import { Company } from '../model/company.model';
-import { User } from 'src/app/infrastructure/auth/model/user.model';
+import { CompanyAdmin } from 'src/app/infrastructure/auth/model/user.model';
 import { AbstractControl, FormControl, FormGroup, Validators } from '@angular/forms';
 
 @Component({
@@ -33,11 +33,6 @@ export class CompanyFormComponent {
     email: new FormControl('', [Validators.required, Validators.email, Validators.pattern('[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$')]),
     password: new FormControl('', [Validators.required, Validators.minLength(6)]),
     passwordConfirmation: new FormControl('', [Validators.required, Validators.minLength(6)]),
-    city: new FormControl('', [Validators.required]),
-    country: new FormControl('', [Validators.required]),
-    phone: new FormControl('', [Validators.required, Validators.pattern('[0-9]+')]),
-    profession: new FormControl('', [Validators.required]),
-    companyInformation: new FormControl('', [Validators.required]),
   }, { validators: this.passwordMatchValidator })
 
   passwordMatchValidator(group: AbstractControl) {
@@ -45,8 +40,6 @@ export class CompanyFormComponent {
     const passwordConfirmation = group.get('passwordConfirmation')?.value;
     return password === passwordConfirmation ? null : { passwordMismatch: true };
   }
-
-
 
   switchPage() {
     this.firstStep = !this.firstStep;
@@ -75,18 +68,14 @@ export class CompanyFormComponent {
       workCalendar: []
     }
 
-    const admin: User = {
+    const admin: CompanyAdmin = {
       id: 0,
       name: this.adminForm.value.name || "",
       surname: this.adminForm.value.surname || "",
       email: this.adminForm.value.email || "",
       password: this.adminForm.value.password || "",
-      city: this.adminForm.value.city || "",
-      country: this.adminForm.value.country || "",
-      phone: this.adminForm.value.phone || "",
-      profession: this.adminForm.value.profession || "",
-      companyInformation: this.adminForm.value.companyInformation || "",
       isActivated: true,
+      companyId: 0,
       role: 1
     };
 

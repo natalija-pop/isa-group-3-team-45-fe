@@ -13,9 +13,20 @@ export interface User {
     isActivated?: boolean;
 }
 
+export interface CompanyAdmin{
+    id: number;
+    role: UserRole;
+    email: string;
+    password?: string;
+    name?: string;
+    surname?: string;
+    isActivated?: boolean;
+    companyId: number;
+}
+
 
 export enum UserRole {
-    Employee = 0,
+    employee = 0,
     companyadministrator,
     systemadministrator
 }

@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CompanyService } from '../company.service';
 import { Appointment, Company } from '../model/company.model';
 import { Equipment, EquipmentType } from '../model/equipment.model';
-import { User } from 'src/app/infrastructure/auth/model/user.model';
+import { CompanyAdmin, User } from 'src/app/infrastructure/auth/model/user.model';
 import { AbstractControl, FormControl, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from 'src/app/infrastructure/auth/auth.service';
 import { ActivatedRoute } from '@angular/router';
@@ -53,7 +53,7 @@ export class CompanyProfileComponent implements OnInit {
     companyInformation: "",
     isActivated: false
   };
-  admins: User[] = [];
+  admins: CompanyAdmin[] = [];
   equipmentList: Equipment[] = [];
   addAdmin: boolean = false;
   editMode: boolean = false;
@@ -226,11 +226,6 @@ export class CompanyProfileComponent implements OnInit {
     email: new FormControl('', [Validators.required, Validators.email, Validators.pattern('[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$')]),
     password: new FormControl('', [Validators.required, Validators.minLength(6)]),
     passwordConfirmation: new FormControl('', [Validators.required, Validators.minLength(6)]),
-    city: new FormControl('', [Validators.required]),
-    country: new FormControl('', [Validators.required]),
-    phone: new FormControl('', [Validators.required, Validators.pattern('[0-9]+')]),
-    profession: new FormControl('', [Validators.required]),
-    companyInformation: new FormControl('', [Validators.required]),
   }, { validators: this.passwordMatchValidator })
 
   passwordMatchValidator(group: AbstractControl) {
@@ -239,19 +234,15 @@ export class CompanyProfileComponent implements OnInit {
     return password === passwordConfirmation ? null : { passwordMismatch: true };
   }
 
-  createNewAdmin(): void {
-    const admin: User = {
+  registerNewAdmin(): void {
+    const admin: CompanyAdmin = {
       id: 0,
       name: this.adminForm.value.name || "",
       surname: this.adminForm.value.surname || "",
       email: this.adminForm.value.email || "",
       password: this.adminForm.value.password || "",
-      city: this.adminForm.value.city || "",
-      country: this.adminForm.value.country || "",
-      phone: this.adminForm.value.phone || "",
-      profession: this.adminForm.value.profession || "",
-      companyInformation: this.adminForm.value.companyInformation || "",
       isActivated: true,
+      companyId: this.company.id,
       role: 1
     };
 
@@ -260,6 +251,8 @@ export class CompanyProfileComponent implements OnInit {
         next: (result: any) => {
           console.log(result);
           this.admins.push(result);
+          alert('Registration of new company admin successfull');
+          this.addAdmin = false;
         },
         error: (err) => {
           console.log(err);
