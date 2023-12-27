@@ -45,30 +45,9 @@
       </div>
 
       <div class="form-item">
-        <label>Profession:</label>
-        <input [disabled]="!editMode" type="text" [(ngModel)]="user.profession" name="profession"/>
-      </div>
-      <div class="form-item">
         <label>Email:</label>
         <input [disabled]=true type="text" [(ngModel)]="user.email" name="email"/>
       </div>
-      <div class="form-item">
-        <label>City:</label>
-        <input [disabled]="!editMode" type="text" [(ngModel)]="user.city" name="city"/>
-      </div>
-      <div class="form-item">
-        <label>Country:</label>
-        <input [disabled]="!editMode" type="text" [(ngModel)]="user.country" name="country"/>
-      </div>
-      <div class="form-item">
-        <label>Phone:</label>
-        <input [disabled]="!editMode" type="text" [(ngModel)]="user.phone" name="phone"/>
-      </div>
-      <div class="form-item">
-        <label>Company:</label>
-        <input [disabled]="!editMode" type="text" [(ngModel)]="user.companyInformation" name="companyInformation"/>
-      </div>
-  
       <div class="label-item">
         <label class="undo" *ngIf="editMode" (click)="switchMode(false)">Undo</label>
       </div>
