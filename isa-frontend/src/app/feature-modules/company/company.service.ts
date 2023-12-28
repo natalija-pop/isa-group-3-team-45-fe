@@ -34,16 +34,16 @@ export class CompanyService {
     return this.http.get<PagedResults<Company>>(environment.apiHost + 'company/getAll');
   }
 
-  getCompanyAdmins(companyId: number): Observable<User[]> {
-    return this.http.get<User[]>(environment.apiHost + 'company/get-company-admins/' + companyId);
+  getCompanyAdmins(companyId: number): Observable<CompanyAdmin[]> {
+    return this.http.get<CompanyAdmin[]>(environment.apiHost + 'company/get-company-admins/' + companyId);
   }
 
   createCompany(company: Company): Observable<Company> {
     return this.http.post<Company>(environment.apiHost + 'company', company);
   }
 
-  createCompanyAdmin(companyId: number, admin: CompanyAdmin): Observable<User> {
-    return this.http.post<User>(environment.apiHost + 'users/register-company-admin', admin);
+  createCompanyAdmin(companyId: number, admin: CompanyAdmin): Observable<CompanyAdmin> {
+    return this.http.post<CompanyAdmin>(environment.apiHost + 'users/register-company-admin', admin);
   }
 
   getCompanyEquipmentSearchResults(companyId: number, searchKeyword?: string): Observable<Equipment[]> {

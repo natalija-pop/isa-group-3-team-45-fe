@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from 'src/app/infrastructure/auth/auth.service';
-import { User } from 'src/app/infrastructure/auth/model/user.model';
+import { Employee, User } from 'src/app/infrastructure/auth/model/user.model';
 import { StakeholdersService } from '../stakeholders.service';
 
 @Component({
@@ -15,7 +15,7 @@ export class UserProfileComponent implements OnInit {
 
   constructor(private authService: AuthService, private service: StakeholdersService) {}
   
-  user: User = {
+  employee: Employee = {
     id: 0,
     role: 0,
     email: "",
@@ -27,6 +27,16 @@ export class UserProfileComponent implements OnInit {
     phone: "",
     profession: "",
     companyInformation: "",
+    isActivated: false
+  };
+
+  user: User = {
+    id: 0,
+    role: 0,
+    email: "",
+    password: "",
+    name: "",
+    surname: "",
     isActivated: false
   };
   category: string = 'Silver';
@@ -43,8 +53,8 @@ export class UserProfileComponent implements OnInit {
     });
 
      this.service.getUser(this.userId).subscribe({
-      next: (result: User) => {
-        this.user = result;
+      next: (result: any) => {
+        this.employee = result;
           console.log(result);
         },
         error: () => {

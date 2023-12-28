@@ -3,11 +3,11 @@
     <form >
       <div class="form-item">
         <label>First name:</label>
-        <input [disabled]="!editMode" type="text" [(ngModel)]="user.name" name="name"/>
+        <input [disabled]="!editMode" type="text" [(ngModel)]="employee.name" name="name"/>
       </div>
       <div class="form-item">
         <label>Last name:</label>
-        <input [disabled]="!editMode" type="text" [(ngModel)]="user.surname" name="surname"/>
+        <input [disabled]="!editMode" type="text" [(ngModel)]="employee.surname" name="surname"/>
       </div>
       <div *ngIf="editMode">
         <label
@@ -41,32 +41,32 @@
 
       <div class="form-item">
         <label>Old password:</label>
-        <input [disabled]=true type="password" [(ngModel)]="user.password" name="oldPassword" />
+        <input [disabled]=true type="password" [(ngModel)]="employee.password" name="oldPassword" />
       </div>
 
       <div class="form-item">
         <label>Profession:</label>
-        <input [disabled]="!editMode" type="text" [(ngModel)]="user.profession" name="profession"/>
+        <input [disabled]="!editMode" type="text" [(ngModel)]="employee.profession" name="profession"/>
       </div>
       <div class="form-item">
         <label>Email:</label>
-        <input [disabled]=true type="text" [(ngModel)]="user.email" name="email"/>
+        <input [disabled]=true type="text" [(ngModel)]="employee.email" name="email"/>
       </div>
       <div class="form-item">
         <label>City:</label>
-        <input [disabled]="!editMode" type="text" [(ngModel)]="user.city" name="city"/>
+        <input [disabled]="!editMode" type="text" [(ngModel)]="employee.city" name="city"/>
       </div>
       <div class="form-item">
         <label>Country:</label>
-        <input [disabled]="!editMode" type="text" [(ngModel)]="user.country" name="country"/>
+        <input [disabled]="!editMode" type="text" [(ngModel)]="employee.country" name="country"/>
       </div>
       <div class="form-item">
         <label>Phone:</label>
-        <input [disabled]="!editMode" type="text" [(ngModel)]="user.phone" name="phone"/>
+        <input [disabled]="!editMode" type="text" [(ngModel)]="employee.phone" name="phone"/>
       </div>
       <div class="form-item">
         <label>Company:</label>
-        <input [disabled]="!editMode" type="text" [(ngModel)]="user.companyInformation" name="companyInformation"/>
+        <input [disabled]="!editMode" type="text" [(ngModel)]="employee.companyInformation" name="companyInformation"/>
       </div>
       <div class="form-item">
         <label>Penalty points:</label>

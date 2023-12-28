@@ -20,11 +20,6 @@ export class ActivateUserComponent implements OnInit{
     password: "",
     name: "",
     surname: "",
-    city: "",
-    country: "",
-    phone: "",
-    profession: "",
-    companyInformation: "",
     isActivated: false
   };
   userId: number = 0;

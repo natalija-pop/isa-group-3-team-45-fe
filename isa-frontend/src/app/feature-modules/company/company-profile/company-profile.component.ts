@@ -46,11 +46,6 @@ export class CompanyProfileComponent implements OnInit {
     password: "",
     name: "",
     surname: "",
-    city: "",
-    country: "",
-    phone: "",
-    profession: "",
-    companyInformation: "",
     isActivated: false
   };
   admins: CompanyAdmin[] = [];
