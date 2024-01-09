@@ -52,7 +52,7 @@ export class UserProfileComponent implements OnInit {
       this.userId = user.id;
     });
 
-     this.service.getUser(this.userId).subscribe({
+     this.service.getEmployee(this.userId).subscribe({
       next: (result: any) => {
         this.employee = result;
           console.log(result);
@@ -71,11 +71,11 @@ export class UserProfileComponent implements OnInit {
   }
 
   saveChanges(){
-    console.log(this.user);
+    console.log(this.employee);
     if(this.newPassword !== '' && (this.newPassword === this.repeatedNewPassword)){
       this.user.password = this.newPassword;
     }
-       this.service.updateUser(this.user).subscribe({
+       this.service.updateEmployee(this.employee).subscribe({
          next: () => {}
        })
        this.switchMode(false);

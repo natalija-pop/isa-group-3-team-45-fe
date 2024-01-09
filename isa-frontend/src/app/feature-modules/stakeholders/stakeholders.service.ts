@@ -11,11 +11,19 @@ export class StakeholdersService {
 
   constructor(private http: HttpClient) { }
 
-  getUser(id: number): Observable<Employee>{
-    return this.http.get<User>(environment.apiHost + 'employee/get-profile/' + id);
+  getEmployee(id: number) : Observable<Employee>{
+    return this.http.get<Employee>(environment.apiHost + 'employee/get-profile/' + id);
   }
 
-  updateUser(user: Employee): Observable<Employee>{
-    return this.http.put<User>(environment.apiHost + 'employee/update-profile', user);
+  updateEmployee(user: Employee): Observable<Employee>{
+    return this.http.put<Employee>(environment.apiHost + 'employee/update-profile', user);
+  }
+
+  getUser(id: number): Observable<User>{
+    return this.http.get<User>(environment.apiHost + 'user/get/' + id);
+  }
+
+  updateUser(user: User): Observable<User>{
+    return this.http.put<User>(environment.apiHost + 'user/' + user.id, user);
   }
 }
