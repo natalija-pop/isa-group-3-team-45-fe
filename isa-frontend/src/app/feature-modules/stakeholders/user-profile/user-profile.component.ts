@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from 'src/app/infrastructure/auth/auth.service';
-import { User } from 'src/app/infrastructure/auth/model/user.model';
+import { Employee, User } from 'src/app/infrastructure/auth/model/user.model';
 import { StakeholdersService } from '../stakeholders.service';
 
 @Component({
@@ -15,7 +15,7 @@ export class UserProfileComponent implements OnInit {
 
   constructor(private authService: AuthService, private service: StakeholdersService) {}
   
-  user: User = {
+  employee: Employee = {
     id: 0,
     role: 0,
     email: "",
@@ -27,6 +27,16 @@ export class UserProfileComponent implements OnInit {
     phone: "",
     profession: "",
     companyInformation: "",
+    isActivated: false
+  };
+
+  user: User = {
+    id: 0,
+    role: 0,
+    email: "",
+    password: "",
+    name: "",
+    surname: "",
     isActivated: false
   };
   category: string = 'Silver';
@@ -42,9 +52,9 @@ export class UserProfileComponent implements OnInit {
       this.userId = user.id;
     });
 
-     this.service.getUser(this.userId).subscribe({
-      next: (result: User) => {
-        this.user = result;
+     this.service.getEmployee(this.userId).subscribe({
+      next: (result: any) => {
+        this.employee = result;
           console.log(result);
         },
         error: () => {
@@ -61,11 +71,11 @@ export class UserProfileComponent implements OnInit {
   }
 
   saveChanges(){
-    console.log(this.user);
+    console.log(this.employee);
     if(this.newPassword !== '' && (this.newPassword === this.repeatedNewPassword)){
       this.user.password = this.newPassword;
     }
-       this.service.updateUser(this.user).subscribe({
+       this.service.updateEmployee(this.employee).subscribe({
          next: () => {}
        })
        this.switchMode(false);

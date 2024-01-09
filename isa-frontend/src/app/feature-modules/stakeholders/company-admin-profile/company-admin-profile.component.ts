@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { AuthService } from 'src/app/infrastructure/auth/auth.service';
 import { StakeholdersService } from '../stakeholders.service';
-import { User } from 'src/app/infrastructure/auth/model/user.model';
+import { CompanyAdmin } from 'src/app/infrastructure/auth/model/user.model';
 
 @Component({
   selector: 'app-company-admin-profile',
@@ -15,19 +15,15 @@ export class CompanyAdminProfileComponent {
 
   constructor(private authService: AuthService, private service: StakeholdersService) {}
   
-  user: User = {
+  user: CompanyAdmin = {
     id: 0,
     role: 0,
     email: "",
     password: "",
     name: "",
     surname: "",
-    city: "",
-    country: "",
-    phone: "",
-    profession: "",
-    companyInformation: "",
-    isActivated: false
+    isActivated: false,
+    companyId: 0
   };
   newPassword: string = '';
   repeatedNewPassword: string = '';
@@ -41,7 +37,7 @@ export class CompanyAdminProfileComponent {
     });
 
      this.service.getUser(this.userId).subscribe({
-      next: (result: User) => {
+      next: (result: any) => {
         this.user = result;
           console.log(result);
         },

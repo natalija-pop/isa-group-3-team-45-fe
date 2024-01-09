@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { User } from 'src/app/infrastructure/auth/model/user.model';
+import { Employee, User } from 'src/app/infrastructure/auth/model/user.model';
 import { environment } from 'src/env/environment';
 
 @Injectable({
@@ -10,6 +10,14 @@ import { environment } from 'src/env/environment';
 export class StakeholdersService {
 
   constructor(private http: HttpClient) { }
+
+  getEmployee(id: number) : Observable<Employee>{
+    return this.http.get<Employee>(environment.apiHost + 'employee/get-profile/' + id);
+  }
+
+  updateEmployee(user: Employee): Observable<Employee>{
+    return this.http.put<Employee>(environment.apiHost + 'employee/update-profile', user);
+  }
 
   getUser(id: number): Observable<User>{
     return this.http.get<User>(environment.apiHost + 'user/get/' + id);

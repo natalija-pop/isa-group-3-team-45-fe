@@ -46,11 +46,6 @@ export class CompanyProfileComponent implements OnInit {
     password: "",
     name: "",
     surname: "",
-    city: "",
-    country: "",
-    phone: "",
-    profession: "",
-    companyInformation: "",
     isActivated: false
   };
   admins: CompanyAdmin[] = [];
@@ -392,9 +387,7 @@ export class CompanyProfileComponent implements OnInit {
   appointmentForm = new FormGroup({
     date: new FormControl('', [Validators.required]),
     time: new FormControl('', [Validators.required]),
-    duration: new FormControl({ value: '60', disabled: true }, [Validators.required]),
-    adminName: new FormControl('', [Validators.required]),
-    adminSurname: new FormControl('', [Validators.required]),
+    duration: new FormControl({ value: '60', disabled: true }, [Validators.required])
   })
 
   createPredefinedAppointment() {
@@ -417,13 +410,13 @@ export class CompanyProfileComponent implements OnInit {
       const appointment: Appointment = {
         start: selectedDateTime,
         duration: 60 || "",
-        adminName: this.appointmentForm.value.adminName || "",
-        adminSurname: this.appointmentForm.value.adminSurname || "",
+        adminName: this.user.name || "",
+        adminSurname: this.user.surname || "",
         companyId: this.companyId,
         scheduled: false,
       };
 
-      this.companyService.checkAppointmentValidity(selectedDateTime, this.companyId, this.appointmentForm.value.adminName || "", this.appointmentForm.value.adminSurname || "").subscribe(
+      this.companyService.checkAppointmentValidity(selectedDateTime, this.companyId, this.user.name || "", this.user.surname || "").subscribe(
         (isValid: boolean) => {
           if (isValid) {
             alert('You successfully defined appointment!');

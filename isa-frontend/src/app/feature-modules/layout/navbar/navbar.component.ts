@@ -16,11 +16,6 @@ export class NavbarComponent implements OnInit{
     password: "",
     name: "",
     surname: "",
-    city: "",
-    country: "",
-    phone: "",
-    profession: "",
-    companyInformation: "",
     isActivated: false
   }; 
   constructor(private authService : AuthService) {}
