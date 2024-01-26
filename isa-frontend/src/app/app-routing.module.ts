@@ -14,6 +14,7 @@ import { AllEquipmentPageComponent } from './feature-modules/equipment/all-equip
 import { ChangePasswordComponent } from './feature-modules/stakeholders/change-password/change-password.component';
 import { SysAdminRegistrationComponent } from './infrastructure/auth/sys-admin-registration/sys-admin-registration.component';
 import { WorkCalendarComponent } from './feature-modules/company/work-calendar/work-calendar.component';
+import { BarcodesPageComponent } from './feature-modules/company/barcodes-page/barcodes-page.component';
 
 const routes: Routes = [
   {path: '', component: HomeComponent},
@@ -28,7 +29,8 @@ const routes: Routes = [
   {path: 'all-equipment', component: AllEquipmentPageComponent},
   {path: 'change-password', component: ChangePasswordComponent},
   {path: 'register-sys-admin', component: SysAdminRegistrationComponent},
-  {path: 'work-calendar/:id', component: WorkCalendarComponent}
+  {path: 'work-calendar/:id', component: WorkCalendarComponent},
+  {path: 'barcodes-page', component: BarcodesPageComponent}
 ];
 
 @NgModule({
