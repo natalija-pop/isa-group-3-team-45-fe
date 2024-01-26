@@ -105,7 +105,10 @@
             </div>
             <div class="text-end">
               <div>
-                <button *ngIf="user.id != 0 && user.role == 0" (click)="reserveEquipment(selectedEquipments)" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#reserveEquipmentModal">Reserve</button>
+                <button *ngIf="user.id != 0 && user.role == 0 && user.penaltyPoints !== undefined && user.penaltyPoints < 3"
+                         (click)="reserveEquipment(selectedEquipments)" 
+                         class="btn btn-primary"
+                         data-bs-toggle="modal" data-bs-target="#reserveEquipmentModal">Reserve</button>
               </div>
             </div>
           </div>

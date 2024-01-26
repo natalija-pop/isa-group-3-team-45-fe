@@ -27,7 +27,8 @@ export class UserProfileComponent implements OnInit {
     phone: "",
     profession: "",
     companyInformation: "",
-    isActivated: false
+    isActivated: false,
+    penaltyPoints: 0,
   };
 
   user: User = {
@@ -37,10 +38,10 @@ export class UserProfileComponent implements OnInit {
     password: "",
     name: "",
     surname: "",
-    isActivated: false
+    isActivated: false,
+    penaltyPoints: 0,
   };
   category: string = 'Silver';
-  penaltyPoints: number = 4;
   newPassword: string = '';
   repeatedNewPassword: string = '';
   userId: number = 0;

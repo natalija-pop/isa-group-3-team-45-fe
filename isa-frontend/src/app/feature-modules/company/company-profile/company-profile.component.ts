@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CompanyService } from '../company.service';
-import { Appointment, Company } from '../model/company.model';
+import { Appointment, AppointmentStatus, Company } from '../model/company.model';
 import { Equipment, EquipmentType } from '../model/equipment.model';
 import { CompanyAdmin, User } from 'src/app/infrastructure/auth/model/user.model';
 import { AbstractControl, FormControl, FormGroup, Validators } from '@angular/forms';
@@ -8,6 +8,7 @@ import { AuthService } from 'src/app/infrastructure/auth/auth.service';
 import { ActivatedRoute } from '@angular/router';
 import { EquipmentService } from '../../equipment/equipment.service';
 import { StakeholdersService } from '../../stakeholders/stakeholders.service';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-company-profile',
@@ -46,7 +47,8 @@ export class CompanyProfileComponent implements OnInit {
     password: "",
     name: "",
     surname: "",
-    isActivated: false
+    isActivated: false,
+    penaltyPoints: 0,
   };
   admins: CompanyAdmin[] = [];
   equipmentList: Equipment[] = [];
@@ -76,6 +78,8 @@ export class CompanyProfileComponent implements OnInit {
   equipmentToReserve: Equipment[] = [];
   selectedAppointment: Appointment | undefined;
 
+  base64ImageStrings: string[] = [];
+  dataUri: string[] = [];
 
   constructor( private companyService: CompanyService, private authService: AuthService, private route: ActivatedRoute, private equipmentService: EquipmentService, private stakeholdersService: StakeholdersService) { }
 
@@ -102,6 +106,7 @@ export class CompanyProfileComponent implements OnInit {
     })
 
     this.getPredefinedCompanyAppointments();
+    this.getBarcodeImages();
   }
 
   isSelected(equipment: Equipment): boolean {
@@ -135,10 +140,12 @@ export class CompanyProfileComponent implements OnInit {
         duration: this.selectedAppointment.duration,
         adminName: this.selectedAppointment.adminName,
         adminSurname: this.selectedAppointment.adminSurname,
+        adminId: this.selectedAppointment.adminId,
         customerName: this.user.name,
         customerSurname: this.user.surname,
+        customerId: this.user.id,
         companyId: this.selectedAppointment.companyId,
-        scheduled: true, 
+        status: 1, 
         equipment: equipment
       };
 
@@ -195,6 +202,13 @@ export class CompanyProfileComponent implements OnInit {
 
   showEquipment() {
     this.selectedNavItem = 'equipment';
+    setTimeout(() => {
+        if (this.user && this.user.penaltyPoints !== undefined) {
+            if (this.user.penaltyPoints >= 3) {
+                alert(`You have ${this.user.penaltyPoints} penalty points. You cannot reserve equipment.`);
+            }
+        }
+    }, 100);
   }
 
   showAdmins() {
@@ -375,8 +389,9 @@ export class CompanyProfileComponent implements OnInit {
     if(this.selectedAppointment != undefined){
       this.selectedAppointment.customerName = this.user.name;
       this.selectedAppointment.customerSurname = this.user.surname;
+      this.selectedAppointment.customerId = this.user.id;
       this.selectedAppointment.equipment = equipment;
-      this.selectedAppointment.scheduled = true;
+      this.selectedAppointment.status = 1;
       
       this.companyService.reserveEquipment(this.selectedAppointment, this.user.email).subscribe({
         next: () => { }
@@ -412,8 +427,9 @@ export class CompanyProfileComponent implements OnInit {
         duration: 60 || "",
         adminName: this.user.name || "",
         adminSurname: this.user.surname || "",
+        adminId: this.user.id,
         companyId: this.companyId,
-        scheduled: false,
+        status: 0,
       };
 
       this.companyService.checkAppointmentValidity(selectedDateTime, this.companyId, this.user.name || "", this.user.surname || "").subscribe(
@@ -450,5 +466,23 @@ export class CompanyProfileComponent implements OnInit {
       )
         .sort((a, b) => new Date(a.start).getTime() - new Date(b.start).getTime());
     })
+  }
+
+  getBarcodeImages(): void {
+    this.companyService.getBarcodeImages(this.user.id).subscribe({
+      next: (data) => {
+        const dataURIs: string[] = [];
+
+      data.forEach((base64ImageString: string) => {
+        const dataURI = 'data:image/png;base64,' + base64ImageString;
+        dataURIs.push(dataURI);
+      });
+
+      this.dataUri = dataURIs;
+    },
+      error: (error) => {
+        console.error('Error fetching barcode images:', error);
+      }
+    });
   }
 }

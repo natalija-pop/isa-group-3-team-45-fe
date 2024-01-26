@@ -6,6 +6,7 @@ export interface User {
     name?: string;
     surname?: string;
     isActivated?: boolean;
+    penaltyPoints?: number;
 }
 
 export interface CompanyAdmin{
@@ -32,6 +33,7 @@ export interface Employee{
     profession?: string;
     companyInformation?: string;
     isActivated?: boolean;
+    penaltyPoints?: number;
 }
 
 

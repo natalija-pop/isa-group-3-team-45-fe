@@ -33,9 +33,18 @@ export interface Appointment {
     duration: number,
     adminName: string,
     adminSurname: string,
+    adminId: number,
     customerName?: string,
     customerSurname?: string,
+    customerId?: number,
     companyId: number,
-    scheduled: boolean,
+    status: AppointmentStatus,
     equipment?: Equipment[]
+}
+
+export enum AppointmentStatus {
+    predefined = 0,
+    scheduled,
+    canceled,
+    processed
 }

@@ -26,4 +26,9 @@ export class StakeholdersService {
   updateUser(user: User): Observable<User>{
     return this.http.put<User>(environment.apiHost + 'user/' + user.id, user);
   }
+
+  //brisanje penala svakog 1. u mesecu
+  clearPenaltyPoints(): Observable<boolean> {
+    return this.http.post<boolean>(environment.apiHost + 'user/clearAll', {});
+  }
 }

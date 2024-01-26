@@ -19,7 +19,8 @@ export class LoginComponent implements OnInit {
     password: "",
     name: "",
     surname: "",
-    isActivated: false
+    isActivated: false,
+    penaltyPoints: 0,
   };
 
   constructor(
