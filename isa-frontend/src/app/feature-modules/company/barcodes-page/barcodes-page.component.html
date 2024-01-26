@@ -1,0 +1,27 @@
+<div class="container">
+    <h2 class="text-center mt-4 mb-5" >QR receipts</h2>
+    <div class="row mt-4 justify-content-end">
+        <div class="col-md-4 mb-3">
+            <label for="rating" class="form-label">Status:</label>
+            <select id="rating" name="status" [(ngModel)]="status" class="form-control" (change)="filterBarcodesByStatus()">
+              <option value="1">Scheduled</option>
+              <option value="2">Canceled</option>
+              <option value="3">Processed</option>
+            </select>
+          </div>
+    </div>
+    <div class="row">
+      <div class="col-md-3" *ngFor="let barcode of dataUri; let i = index">
+        <div class="card mb-2" *ngIf="Appointments.length > i">
+          <img class="card-img-top" [src]="barcode" alt="Barcode Image" style="width: 300px; height: auto;">
+          <div class="card-body" *ngIf="Appointments.length > i">
+            <p class="card-text">Start Date: {{ Appointments[i].start | date:'yyyy-MM-dd HH:mm' }}</p>
+            <p class="card-text">Duration: {{ Appointments[i].duration }}</p>
+            <p class="card-text">Admin: {{ Appointments[i].adminName + ' ' + Appointments[i].adminSurname }}</p>
+            <p class="card-text">Status: {{  getStatusString(Appointments[i].status) }}</p>
+            <!-- Add more appointment details here as needed -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

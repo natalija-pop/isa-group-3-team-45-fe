@@ -8,6 +8,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { CompanyFormComponent } from './company-form/company-form.component';
 import { WorkCalendarComponent } from './work-calendar/work-calendar.component';
 import { SharedModule } from 'src/app/shared/shared.module';
+import { BarcodesPageComponent } from './barcodes-page/barcodes-page.component';
 
 
 
@@ -17,6 +18,7 @@ import { SharedModule } from 'src/app/shared/shared.module';
     CompaniesPageComponent,
     CompanyFormComponent,
     WorkCalendarComponent,
+    BarcodesPageComponent,
   ],
   imports: [
     CommonModule,
