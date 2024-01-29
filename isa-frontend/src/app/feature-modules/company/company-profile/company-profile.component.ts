@@ -9,6 +9,7 @@ import { ActivatedRoute } from '@angular/router';
 import { EquipmentService } from '../../equipment/equipment.service';
 import { StakeholdersService } from '../../stakeholders/stakeholders.service';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-company-profile',
@@ -18,7 +19,7 @@ import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 export class CompanyProfileComponent implements OnInit {
 
   appointments: Appointment[] = [];
-  selectedNavItem: 'description' | 'companyInfo' | 'equipment' | 'admins' | 'appointments' = 'description';
+  selectedNavItem: 'description' | 'companyInfo' | 'equipment' | 'admins' | 'appointments' | 'customers' = 'description';
 
   company: Company = {
     id: 0,
@@ -89,6 +90,9 @@ export class CompanyProfileComponent implements OnInit {
 
   selectedEquipments: Equipment[] = [];
   predefinedAppointments: Appointment[] = [];
+  scheduledAndProccesedAppointments: Appointment[] = [];
+  uniqueCustomerIds: number[] = [];
+  customers: User[] = [];
   equipmentToReserve: Equipment[] = [];
   selectedAppointment: Appointment | undefined;
 
@@ -134,6 +138,7 @@ export class CompanyProfileComponent implements OnInit {
 
     this.getPredefinedCompanyAppointments();
     this.getBarcodeImages();
+    // this.getCompanyCustomers();
   }
 
   isSelected(equipment: Equipment): boolean {
@@ -245,6 +250,10 @@ export class CompanyProfileComponent implements OnInit {
 
   showAppointments() {
     this.selectedNavItem = 'appointments';
+  }
+
+  showCustomers() {
+    this.selectedNavItem = 'customers';
   }
 
   switchMode(newMode: boolean) {
@@ -496,6 +505,18 @@ export class CompanyProfileComponent implements OnInit {
         appointment.adminSurname === this.user.surname
       )
         .sort((a, b) => new Date(a.start).getTime() - new Date(b.start).getTime());
+
+      this.scheduledAndProccesedAppointments = this.allAppointments.filter(appointment =>
+        (appointment.status === 1 || appointment.status === 3) &&
+        appointment.companyId === this.companyId)
+      this.uniqueCustomerIds = [...new Set(this.scheduledAndProccesedAppointments.map(appointment => appointment.customerId))]
+        .filter(customerId => customerId !== undefined) as number[];
+
+      if (this.uniqueCustomerIds.length > 0) {
+        this.stakeholdersService.getUsersByIds(this.uniqueCustomerIds).subscribe((result: any) => {
+          this.customers = result;
+        })
+      }
     })
   }
 

@@ -23,6 +23,10 @@ export class StakeholdersService {
     return this.http.get<User>(environment.apiHost + 'user/get/' + id);
   }
 
+  getUsersByIds(userIds: number[]): Observable<User[]> {
+    return this.http.post<User[]>(environment.apiHost + 'user/getUsersByIds/', userIds);
+  }
+
   updateUser(user: User): Observable<User> {
     return this.http.put<User>(environment.apiHost + 'user/' + user.id, user);
   }
