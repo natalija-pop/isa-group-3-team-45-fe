@@ -1,0 +1,33 @@
+<html lang="en">
+<head>
+  <title>Reservations</title>
+</head>
+<body>
+
+  <div class="container">
+    <h1 class="mt-5">Reservations</h1>
+    <div class="row mt-4">
+      <div class="col-md-12">
+        <div *ngFor="let appointment of scheduledCompanyAppointments" class="card mb-3">
+          <div class="card-body">
+            <h5 class="card-title"></h5>
+            <p class="card-text fs-5"><strong>Customer: {{ appointment.customerName  }} {{ appointment.customerSurname }}</strong></p>
+            <p class="card-text">Time and date: {{ appointment.start | date: 'shortTime' }} &nbsp;&nbsp;{{ appointment.start | date: 'mediumDate' }}</p>
+            <p>Reserved equipment: </p>
+            <ul>
+                <li *ngFor="let equipment of appointment.equipment">
+                  {{ equipment.name }}
+                </li>
+            </ul>
+
+            <button class="btn btn-primary position-absolute bottom-0 mb-3 me-3 end-0" (click)="completeReservation(appointment)">
+                Complete reservation
+              </button>
+        </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>

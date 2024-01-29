@@ -90,11 +90,15 @@ export class CompanyService {
     return this.http.post<boolean>(`${environment.apiHost}appointment/checkValidity`, requestBody);
   }
 
+  markAppointmentAsProcessed(appointment: Appointment, userEmail: string): Observable<Appointment> {
+    return this.http.put<Appointment>(environment.apiHost + `appointment/markAppointmentAsProcessed?userEmail=${userEmail}`, appointment);
+  }
+
   checkIfEquipmentCanBeDeleted(equipmentId: number) {
     return this.http.get<boolean>(`${environment.apiHost}appointment/checkIfEquipmentIsReserved/${equipmentId}`);
   }
 
-  getBarcodeImages(userId: number) : Observable<string[]> {
+  getBarcodeImages(userId: number): Observable<string[]> {
     return this.http.get<string[]>(`${environment.apiHost}appointment/barcode/${userId}`);
   }
 }

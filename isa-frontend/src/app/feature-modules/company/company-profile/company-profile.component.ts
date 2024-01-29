@@ -40,6 +40,7 @@ export class CompanyProfileComponent implements OnInit {
     },
     workCalendar: []
   }
+
   user: User = {
     id: 0,
     role: 0,
@@ -48,7 +49,19 @@ export class CompanyProfileComponent implements OnInit {
     name: "",
     surname: "",
     isActivated: false,
+    penaltyPoints: 0
+  };
+
+  companyAdmin: CompanyAdmin = {
+    id: 0,
+    role: 0,
+    email: "",
+    password: "",
+    name: "",
+    surname: "",
+    isActivated: false,
     penaltyPoints: 0,
+    companyId: 0
   };
   admins: CompanyAdmin[] = [];
   equipmentList: Equipment[] = [];
@@ -81,7 +94,7 @@ export class CompanyProfileComponent implements OnInit {
   base64ImageStrings: string[] = [];
   dataUri: string[] = [];
 
-  constructor( private companyService: CompanyService, private authService: AuthService, private route: ActivatedRoute, private equipmentService: EquipmentService, private stakeholdersService: StakeholdersService) { }
+  constructor(private companyService: CompanyService, private authService: AuthService, private route: ActivatedRoute, private equipmentService: EquipmentService, private stakeholdersService: StakeholdersService) { }
 
   ngOnInit(): void {
     this.route.params.subscribe(params => {
@@ -105,6 +118,19 @@ export class CompanyProfileComponent implements OnInit {
       }
     })
 
+    if (this.user && this.user.role === 1) {
+      this.stakeholdersService.getCompanyAdmin(this.user.id).subscribe({
+        next: (result: CompanyAdmin) => {
+          if (this.companyAdmin.companyId !== null) {
+            this.companyAdmin = result;
+            console.log(result);
+          }
+        },
+        error: () => {
+        }
+      })
+    }
+
     this.getPredefinedCompanyAppointments();
     this.getBarcodeImages();
   }
@@ -125,7 +151,7 @@ export class CompanyProfileComponent implements OnInit {
   }
 
   scheduleAdditionalAppointment(equipment: Equipment[]): void {
-    if(this.selectedAppointment != undefined){
+    if (this.selectedAppointment != undefined) {
       const start = new Date(this.selectedAppointment.start)
       const year = start.getFullYear();
       const month = ('0' + (start.getMonth() + 1)).slice(-2);
@@ -145,13 +171,13 @@ export class CompanyProfileComponent implements OnInit {
         customerSurname: this.user.surname,
         customerId: this.user.id,
         companyId: this.selectedAppointment.companyId,
-        status: 1, 
+        status: 1,
         equipment: equipment
       };
 
       console.log(newAppointment)
       this.companyService.createAdditionalAppointment(newAppointment, this.user.email).subscribe({
-        next: () => {}
+        next: () => { }
       })
     }
   }
@@ -203,11 +229,11 @@ export class CompanyProfileComponent implements OnInit {
   showEquipment() {
     this.selectedNavItem = 'equipment';
     setTimeout(() => {
-        if (this.user && this.user.penaltyPoints !== undefined) {
-            if (this.user.penaltyPoints >= 3) {
-                alert(`You have ${this.user.penaltyPoints} penalty points. You cannot reserve equipment.`);
-            }
+      if (this.user && this.user.penaltyPoints !== undefined) {
+        if (this.user.penaltyPoints >= 3) {
+          alert(`You have ${this.user.penaltyPoints} penalty points. You cannot reserve equipment.`);
         }
+      }
     }, 100);
   }
 
@@ -385,14 +411,14 @@ export class CompanyProfileComponent implements OnInit {
     )
   }
 
-  reserveEquipmentConfirmation(equipment: Equipment[]){
-    if(this.selectedAppointment != undefined){
+  reserveEquipmentConfirmation(equipment: Equipment[]) {
+    if (this.selectedAppointment != undefined) {
       this.selectedAppointment.customerName = this.user.name;
       this.selectedAppointment.customerSurname = this.user.surname;
       this.selectedAppointment.customerId = this.user.id;
       this.selectedAppointment.equipment = equipment;
       this.selectedAppointment.status = 1;
-      
+
       this.companyService.reserveEquipment(this.selectedAppointment, this.user.email).subscribe({
         next: () => { }
       })
@@ -473,13 +499,13 @@ export class CompanyProfileComponent implements OnInit {
       next: (data) => {
         const dataURIs: string[] = [];
 
-      data.forEach((base64ImageString: string) => {
-        const dataURI = 'data:image/png;base64,' + base64ImageString;
-        dataURIs.push(dataURI);
-      });
+        data.forEach((base64ImageString: string) => {
+          const dataURI = 'data:image/png;base64,' + base64ImageString;
+          dataURIs.push(dataURI);
+        });
 
-      this.dataUri = dataURIs;
-    },
+        this.dataUri = dataURIs;
+      },
       error: (error) => {
         console.error('Error fetching barcode images:', error);
       }
