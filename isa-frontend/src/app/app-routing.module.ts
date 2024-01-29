@@ -15,22 +15,24 @@ import { ChangePasswordComponent } from './feature-modules/stakeholders/change-p
 import { SysAdminRegistrationComponent } from './infrastructure/auth/sys-admin-registration/sys-admin-registration.component';
 import { WorkCalendarComponent } from './feature-modules/company/work-calendar/work-calendar.component';
 import { BarcodesPageComponent } from './feature-modules/company/barcodes-page/barcodes-page.component';
+import { ReservationsPageComponent } from './feature-modules/company/reservations-page/reservations-page.component';
 
 const routes: Routes = [
-  {path: '', component: HomeComponent},
-  {path: 'company-profile/:id', component: CompanyProfileComponent},
-  {path: 'user-profile', component: UserProfileComponent, canActivate: [AuthGuard]},
-  {path: 'login', component: LoginComponent},
-  {path: 'register', component: RegistrationComponent},
-  {path: 'activate', component: ActivateUserComponent},
-  {path: 'companies-page', component: CompaniesPageComponent},
-  {path: 'register-company', component: CompanyFormComponent},
-  {path: 'company-admin-profile', component: CompanyAdminProfileComponent},
-  {path: 'all-equipment', component: AllEquipmentPageComponent},
-  {path: 'change-password', component: ChangePasswordComponent},
-  {path: 'register-sys-admin', component: SysAdminRegistrationComponent},
-  {path: 'work-calendar/:id', component: WorkCalendarComponent},
-  {path: 'barcodes-page', component: BarcodesPageComponent}
+  { path: '', component: HomeComponent },
+  { path: 'company-profile/:id', component: CompanyProfileComponent },
+  { path: 'user-profile', component: UserProfileComponent, canActivate: [AuthGuard] },
+  { path: 'login', component: LoginComponent },
+  { path: 'register', component: RegistrationComponent },
+  { path: 'activate', component: ActivateUserComponent },
+  { path: 'companies-page', component: CompaniesPageComponent },
+  { path: 'register-company', component: CompanyFormComponent },
+  { path: 'company-admin-profile', component: CompanyAdminProfileComponent },
+  { path: 'all-equipment', component: AllEquipmentPageComponent },
+  { path: 'change-password', component: ChangePasswordComponent },
+  { path: 'register-sys-admin', component: SysAdminRegistrationComponent },
+  { path: 'work-calendar/:id', component: WorkCalendarComponent },
+  { path: 'barcodes-page', component: BarcodesPageComponent },
+  { path: 'reservations-page', component: ReservationsPageComponent }
 ];
 
 @NgModule({

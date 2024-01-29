@@ -9,7 +9,7 @@ export interface User {
     penaltyPoints?: number;
 }
 
-export interface CompanyAdmin{
+export interface CompanyAdmin {
     id: number;
     role: UserRole;
     email: string;
@@ -17,10 +17,11 @@ export interface CompanyAdmin{
     name?: string;
     surname?: string;
     isActivated?: boolean;
+    penaltyPoints?: number;
     companyId: number;
 }
 
-export interface Employee{
+export interface Employee {
     id: number;
     role: UserRole;
     email: string;
