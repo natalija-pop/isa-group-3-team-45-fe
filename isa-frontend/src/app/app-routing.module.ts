@@ -16,6 +16,7 @@ import { SysAdminRegistrationComponent } from './infrastructure/auth/sys-admin-r
 import { WorkCalendarComponent } from './feature-modules/company/work-calendar/work-calendar.component';
 import { BarcodesPageComponent } from './feature-modules/company/barcodes-page/barcodes-page.component';
 import { ReservationsPageComponent } from './feature-modules/company/reservations-page/reservations-page.component';
+import { UsersProcessedReservationsComponent } from './feature-modules/company/users-processed-reservations/users-processed-reservations.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -32,7 +33,8 @@ const routes: Routes = [
   { path: 'register-sys-admin', component: SysAdminRegistrationComponent },
   { path: 'work-calendar/:id', component: WorkCalendarComponent },
   { path: 'barcodes-page', component: BarcodesPageComponent },
-  { path: 'reservations-page', component: ReservationsPageComponent }
+  { path: 'reservations-page', component: ReservationsPageComponent },
+  { path: 'users-processed-reservations', component: UsersProcessedReservationsComponent}
 ];
 
 @NgModule({

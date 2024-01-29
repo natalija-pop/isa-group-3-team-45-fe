@@ -63,6 +63,10 @@ export class CompanyService {
     return this.http.get<Appointment[]>(`${environment.apiHost}appointment/getCustomerAppointments/${customerId}`);
   }
 
+  getCustomerProcessedAppointments(customerId: number): Observable<Appointment[]> {
+    return this.http.get<Appointment[]>(`${environment.apiHost}appointment/getCustomerProcessedAppointments/${customerId}`);
+  }
+
   reserveEquipment(appointment: Appointment, userEmail: string): Observable<Appointment> {
     return this.http.put<Appointment>(environment.apiHost + `appointment/reserveAppointment?userEmail=${userEmail}`, appointment);
   }
