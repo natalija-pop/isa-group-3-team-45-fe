@@ -14,7 +14,6 @@ export class UsersProcessedReservationsComponent implements OnInit{
 
   Appointments: Appointment[] = [];
   sortedAppointments: Appointment[] = [];
-  scheduledCompanyAppointments: Appointment[] = [];
   user: User = {
     id: 0,
     role: 0,
@@ -26,7 +25,9 @@ export class UsersProcessedReservationsComponent implements OnInit{
     penaltyPoints: 0
   };
 
-  sortDirection: string = '';
+  sortDirectionDate: string = '';
+  sortDirectionPrice: string = '';
+
 
   ngOnInit(): void {
     this.authService.user$.subscribe(user => {
@@ -40,6 +41,7 @@ export class UsersProcessedReservationsComponent implements OnInit{
     this.companyService.getCustomerProcessedAppointments(this.user.id).subscribe({
       next :(data) => {
         this.Appointments = data;
+        this.getAppointmentsPrice(this.Appointments);
         this.sortedAppointments = this.Appointments;
         console.log(this.sortedAppointments); 
       },
@@ -49,17 +51,45 @@ export class UsersProcessedReservationsComponent implements OnInit{
     });
   }
 
-  sortAppointments(): void {
+  getAppointmentsPrice(appointments: Appointment[]): void {
+    appointments.forEach(appointment => {
+      appointment.price = this.calculateAppointmentPrice(appointment);
+    });
+  }
+  
+  calculateAppointmentPrice(appointment: Appointment): number {
+    let totalPrice = 0;
+    appointment.equipment?.forEach(equipment => {
+      totalPrice += equipment.price;
+    });
+    return totalPrice;
+  }
+
+  sortAppointmentsDate(): void {
     this.sortedAppointments = [...this.Appointments];
     this.sortedAppointments.sort((a, b) => {
       const dateA = new Date(a.start).getTime();
       const dateB = new Date(b.start).getTime();
-      return (this.sortDirection === 'asc') ? dateA - dateB : dateB - dateA;
+      return (this.sortDirectionDate === 'asc') ? dateA - dateB : dateB - dateA;
     });
   }
 
-  onSortChange(): void {
-    this.sortAppointments();
+  onSortDateChange(): void {
+    this.sortAppointmentsDate();
+  }
+
+  sortAppointmentsPrice(): void {
+    this.sortedAppointments = [...this.Appointments];
+
+    if (this.sortDirectionPrice === 'asc') {
+      this.sortedAppointments.sort((a, b) => a.price - b.price);
+    } else if (this.sortDirectionPrice === 'desc') {
+      this.sortedAppointments.sort((a, b) => b.price - a.price);
+    }
+  }
+
+  onSortPriceChange(): void {
+    this.sortAppointmentsPrice();
   }
 
 }

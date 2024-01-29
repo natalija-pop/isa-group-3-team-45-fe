@@ -4,10 +4,16 @@
       <div class="row mt-3">
         <div class="col-md-6 offset-md-6 text-end mb-3">
           <div class="d-inline-flex align-items-center">
-            <label for="sortDirection" class="form-label me-1" style="min-width: 150px;">Sort by date:</label>
-            <select id="sortDirection" [(ngModel)]="sortDirection" (change)="onSortChange()" class="form-select"
+            <label for="sortDirection" class="form-label me-2" style="min-width: 150px;">Sort by:</label>
+            <select id="sortDirection" [(ngModel)]="sortDirectionDate" (change)="onSortDateChange()" class="form-select me-2"
                     style="background-color: #f8f9fa; color: #495057;">
-              <option value="" disabled selected hidden style="font-weight: 200;">Select option</option>
+              <option value="" disabled selected hidden style="font-weight: 200;">Date</option>
+              <option value="asc" style="font-weight: 600;" >Ascending</option>
+              <option value="desc" style="font-weight: 600;">Descending</option>
+            </select>
+            <select id="sortDirection" [(ngModel)]="sortDirectionPrice" (change)="onSortPriceChange()" class="form-select"
+                    style="background-color: #f8f9fa; color: #495057;">
+              <option value="" disabled selected hidden style="font-weight: 200;">Price</option>
               <option value="asc" style="font-weight: 600;" >Ascending</option>
               <option value="desc" style="font-weight: 600;">Descending</option>
             </select>
@@ -19,13 +25,14 @@
           <div class="card-body">
             <h5 class="card-title"></h5>
             <p class="card-text fs-5"><strong>Admin: {{ appointment.adminName }} {{ appointment.adminSurname }}</strong></p>
-            <p class="card-text">Date of procurement: &nbsp; {{ appointment.start | date: 'mediumDate' }} &nbsp;&nbsp; {{ appointment.start | date: 'shortTime' }}</p>
+            <p class="card-text">Date: &nbsp; {{ appointment.start | date: 'mediumDate' }} &nbsp;&nbsp; {{ appointment.start | date: 'shortTime' }}</p>
             <p>Reserved equipment: </p>
             <ul>
               <li *ngFor="let equipment of appointment.equipment">
                 {{ equipment.name }}
               </li>
             </ul>
+            <p class="card-text">Total price: &nbsp;  {{ appointment.price }}$</p>
           </div>
         </div>
       </div>

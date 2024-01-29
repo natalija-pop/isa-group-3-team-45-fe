@@ -11,6 +11,7 @@ import { SharedModule } from 'src/app/shared/shared.module';
 import { BarcodesPageComponent } from './barcodes-page/barcodes-page.component';
 import { ReservationsPageComponent } from './reservations-page/reservations-page.component';
 import { UsersProcessedReservationsComponent } from './users-processed-reservations/users-processed-reservations.component';
+import { UsersScheduledReservationsComponent } from './users-scheduled-reservations/users-scheduled-reservations.component';
 
 
 
@@ -23,6 +24,7 @@ import { UsersProcessedReservationsComponent } from './users-processed-reservati
     BarcodesPageComponent,
     ReservationsPageComponent,
     UsersProcessedReservationsComponent,
+    UsersScheduledReservationsComponent,
   ],
   imports: [
     CommonModule,

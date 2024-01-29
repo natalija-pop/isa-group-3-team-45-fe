@@ -80,6 +80,7 @@ export class CompanyProfileComponent implements OnInit {
     quantity: 0,
     reservedQuantity: 0,
     companyId: 0,
+    price: 0,
   }
   selectedEquipmentType: string = '';
   selectedDate: Date | null = null;
@@ -172,7 +173,8 @@ export class CompanyProfileComponent implements OnInit {
         customerId: this.user.id,
         companyId: this.selectedAppointment.companyId,
         status: 1,
-        equipment: equipment
+        equipment: equipment,
+        price: this.selectedAppointment.price,
       };
 
       console.log(newAppointment)
@@ -300,7 +302,8 @@ export class CompanyProfileComponent implements OnInit {
     name: new FormControl('', [Validators.required]),
     description: new FormControl('', [Validators.required]),
     quantity: new FormControl(0, [Validators.required]),
-    type: new FormControl('', [Validators.required])
+    type: new FormControl('', [Validators.required]),
+    price: new FormControl(0, [Validators.required]),
   })
 
   createEquipment(): void {
@@ -310,7 +313,8 @@ export class CompanyProfileComponent implements OnInit {
       type: this.getEquipmentTypeEnum(this.equipmentForm.value.type || ""),
       quantity: this.equipmentForm.value.quantity || 0,
       reservedQuantity: 0,
-      companyId: this.companyId
+      companyId: this.companyId,
+      price: this.equipmentForm.value.price || 0,
     };
 
     if (this.equipmentForm.valid) {
@@ -456,6 +460,7 @@ export class CompanyProfileComponent implements OnInit {
         adminId: this.user.id,
         companyId: this.companyId,
         status: 0,
+        price: 0,
       };
 
       this.companyService.checkAppointmentValidity(selectedDateTime, this.companyId, this.user.name || "", this.user.surname || "").subscribe(

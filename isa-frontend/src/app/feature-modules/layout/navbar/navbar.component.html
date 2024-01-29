@@ -11,7 +11,7 @@
           Appointments
         </a>
         <ul class="dropdown-menu " aria-labelledby="navbarDropdown">
-          <li><a class="dropdown-item" href="#" >Scheduled</a></li>
+          <li><a class="dropdown-item" [routerLink]="['users-scheduled-reservations']" >Scheduled</a></li>
           <li><a class="dropdown-item" [routerLink]="['barcodes-page']">QR Receipts</a></li>
           <li><a class="dropdown-item" [routerLink]="['users-processed-reservations']" >History of processed reservations</a></li>
         </ul>

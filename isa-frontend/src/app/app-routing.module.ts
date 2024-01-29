@@ -17,6 +17,7 @@ import { WorkCalendarComponent } from './feature-modules/company/work-calendar/w
 import { BarcodesPageComponent } from './feature-modules/company/barcodes-page/barcodes-page.component';
 import { ReservationsPageComponent } from './feature-modules/company/reservations-page/reservations-page.component';
 import { UsersProcessedReservationsComponent } from './feature-modules/company/users-processed-reservations/users-processed-reservations.component';
+import { UsersScheduledReservationsComponent } from './feature-modules/company/users-scheduled-reservations/users-scheduled-reservations.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -34,7 +35,8 @@ const routes: Routes = [
   { path: 'work-calendar/:id', component: WorkCalendarComponent },
   { path: 'barcodes-page', component: BarcodesPageComponent },
   { path: 'reservations-page', component: ReservationsPageComponent },
-  { path: 'users-processed-reservations', component: UsersProcessedReservationsComponent}
+  { path: 'users-processed-reservations', component: UsersProcessedReservationsComponent},
+  { path: 'users-scheduled-reservations', component: UsersScheduledReservationsComponent}
 ];
 
 @NgModule({
