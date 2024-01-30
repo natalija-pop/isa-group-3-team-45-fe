@@ -29,7 +29,8 @@ export class ReservationsPageComponent implements OnInit {
     customerId: 0,
     companyId: 0,
     status: 0,
-    equipment: []
+    equipment: [],
+    price: 0
   };
 
   showModal: boolean = false;
