@@ -50,6 +50,14 @@ export class CompanyService {
     return this.http.get<Equipment[]>(`${environment.apiHost}company/getCompanyEquipmentSearchResults/${companyId}?searchKeyword=${searchKeyword}`);
   }
 
+  checkDeletionPenaltyInCurrentMonth(userId: number): any {
+    return this.http.get<boolean>(`${environment.apiHost}user/deletion-penalty/${userId}`);
+  }
+
+  clearPenaltyPointsForUser(userId: number): Observable<User> {
+    return this.http.post<User>(`${environment.apiHost}user/clear-penalty-points/${userId}`, {});
+  }
+
   //appointment
   getRecommendedAppointments(companyId: number, selectedDate: Date | null): Observable<Appointment[]> {
     return this.http.get<Appointment[]>(`${environment.apiHost}appointment/getRecommendedAppointments/${companyId}?selectedDate=${selectedDate}`);
