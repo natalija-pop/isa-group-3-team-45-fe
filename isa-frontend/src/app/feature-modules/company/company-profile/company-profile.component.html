@@ -7,7 +7,7 @@
       <strong>Rating:  {{company.rating}}  <i class="bi bi-star-fill"></i></strong>
     </div>
     <div class="col-2 text-end">
-      <button class="btn btn-light border border-dark" *ngIf="user && user.role == 1" data-bs-toggle="modal" data-bs-target="#editCompanyModal">
+      <button class="btn btn-light border border-dark" *ngIf="user && user.role == 1" data-bs-toggle="modal" data-bs-target="#editCompanyModal" (click)="editCompanyModalOpen">
         <span class="me-2">Edit</span>
         <i class="bi bi-pencil-fill"></i>
       </button>
@@ -50,7 +50,8 @@
             <div class=".col-6 mt-2">
                 {{company.address.country}}
             </div>
-            <xp-map [company]="company"></xp-map>
+            <xp-map [company]="company" (latitude)="GetLatitude($event)" 
+            (longitude)="GetLongitude($event)" class="map-container"></xp-map>
         </div>
         <div *ngIf="selectedNavItem === 'equipment'" class="row">
           <div class="container mt-2">
@@ -262,14 +263,15 @@
 </div>
 
 <div class="modal fade" id="editCompanyModal" tabindex="-1" aria-labelledby="editCompanyModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
+  <div class="modal-dialog modal-xl">
     <div class="modal-content">
       <div class="modal-header ft-5">
         <h1 class="modal-title fs-5" id="editCompanyModalLabel">Edit company</h1>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
-      <div class="modal-body">
-        <form >
+      <div class="modal-body row">
+        <div class="col-md-6">
+        <form >   
           <div class="form-item">
             <label>Name:</label>
             <input type="text" [(ngModel)]="company.name" name="name"/>
@@ -294,11 +296,16 @@
             <label>Country:</label>
             <input type="text" [(ngModel)]="company.address.country" name="country"/>
           </div>
-          <div class="modal-footer me-4">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            <button type="button" class="btn btn-success" (click)="saveChanges() ">Apply</button>
-          </div>
         </form>
+      </div>
+      <div class="col-md-6" id="map-modal">
+        <xp-map [company]="company" (latitude)="GetLatitude($event)" 
+        (longitude)="GetLongitude($event)" class="map-container"></xp-map>
+      </div>
+      <div class="modal-footer me-4">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-success" (click)="saveChanges() ">Apply</button>
+      </div>
       </div>
     </div>
   </div>

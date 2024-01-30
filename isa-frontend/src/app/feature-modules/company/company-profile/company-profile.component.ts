@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output, ViewChild } from '@angular/core';
 import { CompanyService } from '../company.service';
 import { Appointment, AppointmentStatus, Company } from '../model/company.model';
 import { Equipment, EquipmentType } from '../model/equipment.model';
@@ -10,6 +10,8 @@ import { EquipmentService } from '../../equipment/equipment.service';
 import { StakeholdersService } from '../../stakeholders/stakeholders.service';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { Observable } from 'rxjs';
+import { MapComponent } from 'src/app/shared/map/map.component';
+import * as $ from 'jquery';
 
 @Component({
   selector: 'app-company-profile',
@@ -17,11 +19,12 @@ import { Observable } from 'rxjs';
   styleUrls: ['./company-profile.component.css']
 })
 export class CompanyProfileComponent implements OnInit {
+  @ViewChild('xpMap') xpMap: MapComponent | undefined;
 
   appointments: Appointment[] = [];
   selectedNavItem: 'description' | 'companyInfo' | 'equipment' | 'admins' | 'appointments' | 'customers' = 'description';
 
-  company: Company = {
+  @Output() company: Company = {
     id: 0,
     name: '',
     description: '',
@@ -98,6 +101,7 @@ export class CompanyProfileComponent implements OnInit {
 
   base64ImageStrings: string[] = [];
   dataUri: string[] = [];
+  applyMapContainerStyles: boolean = true;
 
   constructor(private companyService: CompanyService, private authService: AuthService, private route: ActivatedRoute, private equipmentService: EquipmentService, private stakeholdersService: StakeholdersService) { }
 
@@ -138,7 +142,34 @@ export class CompanyProfileComponent implements OnInit {
 
     this.getPredefinedCompanyAppointments();
     this.getBarcodeImages();
-    // this.getCompanyCustomers();
+  }
+
+  positionForm = new FormGroup({
+    longitude: new FormControl(-1, [Validators.required]),
+    latitude: new FormControl(-1, [Validators.required])
+  })
+
+  GetLatitude(latitude: number) {
+    console.log(latitude);
+    this.positionForm.get('latitude')?.patchValue(latitude);
+    this.company.address.latitude = Number(this.positionForm.value.latitude);
+  }
+
+
+  GetLongitude(longitude: number) {
+    console.log(longitude);
+    this.positionForm.get('longitude')?.patchValue(longitude);
+    this.company.address.longitude = Number(this.positionForm.value.longitude)
+  }
+
+
+  editCompanyModalOpen() {
+    $('#editCompanyModal').on('shown.bs.modal', () => {
+      if (this.xpMap) {
+        this.xpMap.refreshMap();
+      }
+    });
+    this.getCompanyById(this.companyId);
   }
 
   isSelected(equipment: Equipment): boolean {

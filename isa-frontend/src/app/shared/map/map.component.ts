@@ -1,4 +1,4 @@
-import { Component, AfterViewInit, Output, EventEmitter, Input, SimpleChanges } from '@angular/core';
+import { Component, AfterViewInit, Output, EventEmitter, Input, SimpleChanges, OnInit } from '@angular/core';
 import * as L from 'leaflet';
 import { Company } from 'src/app/feature-modules/company/model/company.model';
 
@@ -63,8 +63,6 @@ export class MapComponent implements AfterViewInit {
     this.markers.push(marker);
 
     tiles.addTo(this.map);
-    const geocoderControl = new (L as any).Control.Geocoder();
-    geocoderControl.addTo(this.map);
     this.registerOnClick();
   }
 
@@ -78,6 +76,15 @@ export class MapComponent implements AfterViewInit {
       );
       new L.Marker([lat, lng]).addTo(this.map);
     });
+  }
+
+  refreshMap() {
+    let DefaultIcon = L.icon({
+      iconUrl: 'https://unpkg.com/leaflet@1.6.0/dist/images/marker-icon.png',
+    });
+
+    L.Marker.prototype.options.icon = DefaultIcon;
+    this.initMap();
   }
 
   ngAfterViewInit(): void {
