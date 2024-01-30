@@ -47,5 +47,6 @@ export enum AppointmentStatus {
     predefined = 0,
     scheduled,
     canceled,
-    processed
+    processed,
+    expired
 }

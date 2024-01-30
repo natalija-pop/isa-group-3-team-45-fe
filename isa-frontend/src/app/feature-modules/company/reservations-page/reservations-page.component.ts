@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CompanyService } from '../company.service';
-import { Appointment } from '../model/company.model';
+import { Appointment, AppointmentStatus } from '../model/company.model';
 import { StakeholdersService } from '../../stakeholders/stakeholders.service';
 import { CompanyAdmin, User } from 'src/app/infrastructure/auth/model/user.model';
 import { AuthService } from 'src/app/infrastructure/auth/auth.service';
@@ -14,8 +14,26 @@ export class ReservationsPageComponent implements OnInit {
 
   constructor(private companyService: CompanyService, private authService: AuthService, private stakeholdersService: StakeholdersService) { }
 
+  appointmentQrCode: File | null = null;
+  customerEmail: string = "";
   appointments: Appointment[] = [];
-  scheduledCompanyAppointments: Appointment[] = [];
+  qrCodeAppointment: Appointment = {
+    id: 0,
+    start: new Date(),
+    duration: 0,
+    adminName: '',
+    adminSurname: '',
+    adminId: 0,
+    customerName: '',
+    customerSurname: '',
+    customerId: 0,
+    companyId: 0,
+    status: 0,
+    equipment: [],
+    price: 0
+  };
+
+  showModal: boolean = false;
   user: User = {
     id: 0,
     role: 0,
@@ -56,20 +74,60 @@ export class ReservationsPageComponent implements OnInit {
         }
       })
     }
-
-    this.getScheduledCompanyAppointments();
+    this.getMyReservedAppointments();
   }
 
-  getScheduledCompanyAppointments() {
-    this.companyService.getAllCompanyAppointments().subscribe((result: any) => {
-      this.appointments = result;
-      this.scheduledCompanyAppointments = this.appointments.filter(appointment =>
-        appointment.companyId === this.companyAdmin.companyId &&
-        appointment.status === 1
-      )
-        .sort((a, b) => new Date(a.start).getTime() - new Date(b.start).getTime());
+  getAppointmentStatusString(type: AppointmentStatus): string {
+    switch (type) {
+      case AppointmentStatus.predefined : return 'Predefined';
+      case AppointmentStatus.scheduled : return 'Scheduled';
+      case AppointmentStatus.canceled : return 'Canceled';
+      case AppointmentStatus.expired : return 'Expired';
+      case AppointmentStatus.processed : return "Processed";
+      default: return '';
+    }
+  }
 
-    })
+  hideModal(): void{
+    this.showModal = false;
+  }
+
+  onQrCodeSelected(event: any): void {
+    const fileList: FileList | null = event.target.files;
+    if (fileList && fileList.length > 0) {
+      this.appointmentQrCode = fileList[0];
+    } else {
+      this.appointmentQrCode = null;
+    }
+  }
+
+  uploadQrCode(): void{
+    if(this.appointmentQrCode == null){
+      alert("No QR code uploaded!");
+      return;
+    }
+    this.companyService.ReadQrCode(this.appointmentQrCode).subscribe(
+      (result: any) => {
+        if(result == undefined || result == null){
+          return;
+        }
+        this.qrCodeAppointment = result;
+        this.showModal = true;
+      },
+      (error: any) => {
+        console.error('Error while uploading QR code:', error);
+        console.log(error);
+      }
+    )
+  }
+
+  getMyReservedAppointments(){
+    this.companyService.getReservedByCompanyAdmin(this.user.id).subscribe(
+      (result: any) => {
+          this.appointments = result;
+          this.appointments.sort((a, b) => new Date(a.start).getTime() - new Date(b.start).getTime());
+      }
+    );
   }
 
   completeReservation(appointment: Appointment) {
@@ -79,18 +137,30 @@ export class ReservationsPageComponent implements OnInit {
     if (appointment.customerId !== undefined) {
       this.stakeholdersService.getUser(appointment.customerId).subscribe({
         next: (result: User) => {
-          this.user = result;
-          console.log(result);
+          this.customerEmail = result.email;
+          console.log(this.customerEmail);
 
-          this.companyService.markAppointmentAsProcessed(appointment, this.user.email).subscribe(
+          this.companyService.markAppointmentAsProcessed(appointment, this.customerEmail).subscribe(
             (result: any) => {
-              alert('Reservation is finished!');
-              this.getScheduledCompanyAppointments();
+              let processedAppointment = result;
+              if(processedAppointment.id == 0){
+                alert("Oops! Something went wrong!")
+                return;
+              }
+              else{
+                let elementIndex = this.appointments.findIndex(x => x.id == result.id);
+                this.appointments[elementIndex] = result;
+                if(this.showModal){
+                  this.hideModal();
+                }
+                return;
+              }
             }
           )
 
         },
-        error: () => {
+        error: (err) => {
+          console.log(err);
         }
       })
     }

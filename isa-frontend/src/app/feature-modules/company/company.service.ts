@@ -83,6 +83,9 @@ export class CompanyService {
     return this.http.post<Appointment>(environment.apiHost + `appointment/additionalAppointment?userEmail=${userEmail}`, appointment);
   }
 
+  getReservedByCompanyAdmin(companyAdminId: number): Observable<Appointment>{
+    return this.http.get<Appointment>(environment.apiHost + 'appointment/getReservedByCompanyAdmin/' + companyAdminId);
+  }
 
   getAllCompanyAppointments(): Observable<PagedResults<Appointment>> {
     return this.http.get<PagedResults<Appointment>>(environment.apiHost + 'appointment/getAll');
@@ -116,5 +119,11 @@ export class CompanyService {
 
   getBarcodeImages(userId: number): Observable<string[]> {
     return this.http.get<string[]>(`${environment.apiHost}appointment/barcode/${userId}`);
+  }
+
+  ReadQrCode(qrCodeFilePath: File): Observable<Appointment>{
+    let formData = new FormData();
+    formData.append('qrCodeFile', qrCodeFilePath, qrCodeFilePath.name);  
+    return this.http.post<Appointment>(environment.apiHost + 'appointment/barcode/read', formData);
   }
 }

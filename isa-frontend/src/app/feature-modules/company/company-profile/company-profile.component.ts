@@ -184,7 +184,10 @@ export class CompanyProfileComponent implements OnInit {
 
       console.log(newAppointment)
       this.companyService.createAdditionalAppointment(newAppointment, this.user.email).subscribe({
-        next: () => { }
+        next: () => { },
+        error: (err) => {
+          alert('Error scheduling appointment: ' + err.message || 'Unknown error');
+        }
       })
     }
   }
@@ -416,12 +419,15 @@ export class CompanyProfileComponent implements OnInit {
   }
 
   reserveEquipment(equipment: Equipment[]) {
-    this.companyService.getCompanyAppointments(this.companyId).subscribe(
-      (result: any) => {
+    this.companyService.getCompanyAppointments(this.companyId).subscribe({
+      next: (result : any) => {
         this.predefinedAppointments = result;
         console.log(this.selectedAppointment);
+      },
+      error: (err) => {
+        alert('Error reserving appointment: ' + err.message || 'Uknown error');
       }
-    )
+    });
   }
 
   reserveEquipmentConfirmation(equipment: Equipment[]) {
@@ -493,13 +499,14 @@ export class CompanyProfileComponent implements OnInit {
       this.companyService.checkAppointmentValidity(selectedDateTime, this.companyId, this.user.name || "", this.user.surname || "").subscribe(
         (isValid: boolean) => {
           if (isValid) {
-            alert('You successfully defined appointment!');
-            this.companyService.createPredefinedAppointment(appointment).subscribe({
+              this.companyService.createPredefinedAppointment(appointment).subscribe({
               next: (result) => {
+                alert('You successfully defined appointment!');
                 console.log(result);
                 this.getPredefinedCompanyAppointments();
               },
               error: (err) => {
+                alert("Error creating appointment: "  + err.message || 'Unknown error');
                 console.log(err);
               }
             });
