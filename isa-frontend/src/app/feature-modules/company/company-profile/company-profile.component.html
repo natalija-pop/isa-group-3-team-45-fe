@@ -414,6 +414,8 @@
               <tbody>
                   <tr *ngFor="let appointment of predefinedAppointments" (click)="selectAppointment(appointment)" [ngStyle]="{'border': selectedAppointment === appointment ? '2px solid blue' : 'none'}">
                       <td>{{ appointment.start | date:'short' }}</td>
+                      <td>{{ appointment.adminName }}</td>
+                      <td>{{ appointment.adminSurname }}</td>
                   </tr>
               </tbody>
             </table>

@@ -24,6 +24,7 @@ export class UsersScheduledReservationsComponent implements OnInit{
     isActivated: false,
     penaltyPoints: 0
   };
+  selectedAppointment: Appointment | undefined;
 
   sortDirection: string = '';
 
@@ -46,5 +47,39 @@ export class UsersScheduledReservationsComponent implements OnInit{
     });
   }
 
+  cancelAppointmentConfirm(){
+    //this.selectedAppointment = appointment;
+    if(this.selectedAppointment != null){
+      this.selectedAppointment.customerName = undefined;
+      this.selectedAppointment.customerSurname = undefined;
+      this.selectedAppointment.customerId = undefined;
+      this.selectedAppointment.status = 0;
 
+      console.log(this.selectedAppointment);
+      this.companyService.cancelAppointment(this.selectedAppointment, this.user.id).subscribe({
+        next: () => { 
+          this.getProcessedAppointments();
+        }
+      })
+
+    }
+
+  }
+
+  cancelAppointment(appointment: Appointment){
+    this.selectedAppointment = appointment;
+  }
+
+
+  getPenaltyPoints(): number {
+    if(this.selectedAppointment){
+      const appointmentDate = new Date(this.selectedAppointment.start);
+      const currentDate = new Date();
+      const timeDifference = appointmentDate.getTime() - currentDate.getTime();
+      const hoursDifference = Math.abs(timeDifference / (1000 * 3600));
+    
+      return hoursDifference <= 24 ? 2 : 1;
+    }
+    return 0;
+  }
 }

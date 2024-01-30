@@ -75,6 +75,10 @@ export class CompanyService {
     return this.http.put<Appointment>(environment.apiHost + `appointment/reserveAppointment?userEmail=${userEmail}`, appointment);
   }
 
+  cancelAppointment(appointment: Appointment, userId: number): Observable<Appointment> {
+    return this.http.put<Appointment>(environment.apiHost + `appointment/cancelAppointment?userId=${userId}`, appointment);
+  }
+
   createAdditionalAppointment(appointment: Appointment, userEmail: string): Observable<Appointment> {
     return this.http.post<Appointment>(environment.apiHost + `appointment/additionalAppointment?userEmail=${userEmail}`, appointment);
   }
@@ -104,6 +108,10 @@ export class CompanyService {
 
   checkIfEquipmentCanBeDeleted(equipmentId: number) {
     return this.http.get<boolean>(`${environment.apiHost}appointment/checkIfEquipmentIsReserved/${equipmentId}`);
+  }
+
+  checkIfSameAppintment(appointmentId: number, userId : number) {
+    return this.http.get<boolean>(`${environment.apiHost}appointment/checkIfSameAppintment/${appointmentId}?userId=${userId}`);
   }
 
   getBarcodeImages(userId: number): Observable<string[]> {

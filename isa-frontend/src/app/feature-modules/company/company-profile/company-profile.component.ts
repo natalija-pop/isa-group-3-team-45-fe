@@ -425,6 +425,9 @@ export class CompanyProfileComponent implements OnInit {
   }
 
   reserveEquipmentConfirmation(equipment: Equipment[]) {
+
+    
+
     if (this.selectedAppointment != undefined) {
       this.selectedAppointment.customerName = this.user.name;
       this.selectedAppointment.customerSurname = this.user.surname;
@@ -432,9 +435,24 @@ export class CompanyProfileComponent implements OnInit {
       this.selectedAppointment.equipment = equipment;
       this.selectedAppointment.status = 1;
 
-      this.companyService.reserveEquipment(this.selectedAppointment, this.user.email).subscribe({
-        next: () => { }
-      })
+      if(this.selectedAppointment.id){
+        this.companyService.checkIfSameAppintment(this.selectedAppointment.id, this.user.id).subscribe(
+          (canBeReserved: boolean) => {
+            if (canBeReserved) {
+              alert('You successfully reserved equipment!');
+              if(this.selectedAppointment){
+                this.companyService.reserveEquipment(this.selectedAppointment, this.user.email).subscribe({
+                  next: () => { }
+                })
+              }
+            } else {
+              alert('You already have appointment in same company at same time. Reservation is not possible.');
+            }
+          }
+        );
+        
+      }
+      
     }
   }
 
