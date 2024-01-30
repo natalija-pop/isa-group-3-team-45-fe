@@ -9,6 +9,7 @@ import { ActivatedRoute } from '@angular/router';
 import { EquipmentService } from '../../equipment/equipment.service';
 import { StakeholdersService } from '../../stakeholders/stakeholders.service';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-company-profile',
@@ -18,7 +19,7 @@ import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 export class CompanyProfileComponent implements OnInit {
 
   appointments: Appointment[] = [];
-  selectedNavItem: 'description' | 'companyInfo' | 'equipment' | 'admins' | 'appointments' = 'description';
+  selectedNavItem: 'description' | 'companyInfo' | 'equipment' | 'admins' | 'appointments' | 'customers' = 'description';
 
   company: Company = {
     id: 0,
@@ -80,6 +81,7 @@ export class CompanyProfileComponent implements OnInit {
     quantity: 0,
     reservedQuantity: 0,
     companyId: 0,
+    price: 0,
   }
   selectedEquipmentType: string = '';
   selectedDate: Date | null = null;
@@ -88,6 +90,9 @@ export class CompanyProfileComponent implements OnInit {
 
   selectedEquipments: Equipment[] = [];
   predefinedAppointments: Appointment[] = [];
+  scheduledAndProccesedAppointments: Appointment[] = [];
+  uniqueCustomerIds: number[] = [];
+  customers: User[] = [];
   equipmentToReserve: Equipment[] = [];
   selectedAppointment: Appointment | undefined;
 
@@ -133,6 +138,7 @@ export class CompanyProfileComponent implements OnInit {
 
     this.getPredefinedCompanyAppointments();
     this.getBarcodeImages();
+    // this.getCompanyCustomers();
   }
 
   isSelected(equipment: Equipment): boolean {
@@ -172,7 +178,8 @@ export class CompanyProfileComponent implements OnInit {
         customerId: this.user.id,
         companyId: this.selectedAppointment.companyId,
         status: 1,
-        equipment: equipment
+        equipment: equipment,
+        price: this.selectedAppointment.price,
       };
 
       console.log(newAppointment)
@@ -248,6 +255,10 @@ export class CompanyProfileComponent implements OnInit {
     this.selectedNavItem = 'appointments';
   }
 
+  showCustomers() {
+    this.selectedNavItem = 'customers';
+  }
+
   switchMode(newMode: boolean) {
     this.editMode = newMode;
   }
@@ -303,7 +314,8 @@ export class CompanyProfileComponent implements OnInit {
     name: new FormControl('', [Validators.required]),
     description: new FormControl('', [Validators.required]),
     quantity: new FormControl(0, [Validators.required]),
-    type: new FormControl('', [Validators.required])
+    type: new FormControl('', [Validators.required]),
+    price: new FormControl(0, [Validators.required]),
   })
 
   createEquipment(): void {
@@ -313,7 +325,8 @@ export class CompanyProfileComponent implements OnInit {
       type: this.getEquipmentTypeEnum(this.equipmentForm.value.type || ""),
       quantity: this.equipmentForm.value.quantity || 0,
       reservedQuantity: 0,
-      companyId: this.companyId
+      companyId: this.companyId,
+      price: this.equipmentForm.value.price || 0,
     };
 
     if (this.equipmentForm.valid) {
@@ -418,6 +431,9 @@ export class CompanyProfileComponent implements OnInit {
   }
 
   reserveEquipmentConfirmation(equipment: Equipment[]) {
+
+    
+
     if (this.selectedAppointment != undefined) {
       this.selectedAppointment.customerName = this.user.name;
       this.selectedAppointment.customerSurname = this.user.surname;
@@ -425,9 +441,24 @@ export class CompanyProfileComponent implements OnInit {
       this.selectedAppointment.equipment = equipment;
       this.selectedAppointment.status = 1;
 
-      this.companyService.reserveEquipment(this.selectedAppointment, this.user.email).subscribe({
-        next: () => { }
-      })
+      if(this.selectedAppointment.id){
+        this.companyService.checkIfSameAppintment(this.selectedAppointment.id, this.user.id).subscribe(
+          (canBeReserved: boolean) => {
+            if (canBeReserved) {
+              alert('You successfully reserved equipment!');
+              if(this.selectedAppointment){
+                this.companyService.reserveEquipment(this.selectedAppointment, this.user.email).subscribe({
+                  next: () => { }
+                })
+              }
+            } else {
+              alert('You already have appointment in same company at same time. Reservation is not possible.');
+            }
+          }
+        );
+        
+      }
+      
     }
   }
 
@@ -462,6 +493,7 @@ export class CompanyProfileComponent implements OnInit {
         adminId: this.user.id,
         companyId: this.companyId,
         status: 0,
+        price: 0,
       };
 
       this.companyService.checkAppointmentValidity(selectedDateTime, this.companyId, this.user.name || "", this.user.surname || "").subscribe(
@@ -498,6 +530,18 @@ export class CompanyProfileComponent implements OnInit {
         appointment.adminSurname === this.user.surname
       )
         .sort((a, b) => new Date(a.start).getTime() - new Date(b.start).getTime());
+
+      this.scheduledAndProccesedAppointments = this.allAppointments.filter(appointment =>
+        (appointment.status === 1 || appointment.status === 3) &&
+        appointment.companyId === this.companyId)
+      this.uniqueCustomerIds = [...new Set(this.scheduledAndProccesedAppointments.map(appointment => appointment.customerId))]
+        .filter(customerId => customerId !== undefined) as number[];
+
+      if (this.uniqueCustomerIds.length > 0) {
+        this.stakeholdersService.getUsersByIds(this.uniqueCustomerIds).subscribe((result: any) => {
+          this.customers = result;
+        })
+      }
     })
   }
 

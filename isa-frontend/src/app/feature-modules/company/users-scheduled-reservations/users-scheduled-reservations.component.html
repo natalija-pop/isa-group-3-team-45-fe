@@ -1,0 +1,42 @@
+<div class="container">
+    <h1 class="mt-5">Scheduled appointments</h1>
+    <div class="row mt-4">
+      <div class="row mt-3">
+      </div>
+      <div class="col-md-12">
+        <div *ngFor="let appointment of Appointments" class="card mb-3">
+          <div class="card-body">
+            <h5 class="card-title"></h5>
+            <p class="card-text fs-5"><strong>Admin: {{ appointment.adminName }} {{ appointment.adminSurname }}</strong></p>
+            <p class="card-text">Date of procurement: &nbsp; {{ appointment.start | date: 'mediumDate' }} &nbsp;&nbsp; {{ appointment.start | date: 'shortTime' }}</p>
+            <p>Reserved equipment: </p>
+            <ul>
+              <li *ngFor="let equipment of appointment.equipment">
+                {{ equipment.name }}
+              </li>
+            </ul>
+            <button class="btn btn-danger btn-sm float-end" (click)="cancelAppointment(appointment)" 
+            data-bs-toggle="modal" data-bs-target="#cancelAppointmentModal">Cancel</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+
+  <div class="modal fade" id="cancelAppointmentModal" tabindex="-1" aria-labelledby="cancelAppointmentModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title" id="cancelAppointmentModalLabel">Cancel appointment</h2>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              If you cancel this appointment, you'll get {{ getPenaltyPoints() }} penalty {{ getPenaltyPoints() === 1 ? ' point' : ' points' }}.
+              <div class="modal-footer me-4">
+                <button type="submit" (click)="cancelAppointmentConfirm()" data-bs-dismiss="modal" class="btn btn-primary">Confirm</button>
+              </div>
+            </div>
+        </div>
+    </div>
+  </div>
