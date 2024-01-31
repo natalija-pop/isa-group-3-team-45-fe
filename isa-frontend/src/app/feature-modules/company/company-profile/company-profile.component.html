@@ -1,17 +1,24 @@
 <div class="container mt-4">
   <div class="row">
-    <div class="col-6">
+    <div class="col-5">
       <h1>{{company.name}}</h1>
     </div>
     <div class="col-4 d-flex align-items-center">
       <strong>Rating:  {{company.rating}}  <i class="bi bi-star-fill"></i></strong>
     </div>
-    <div class="col-2 text-end">
-      <button class="btn btn-light border border-dark" *ngIf="user && user.role == 1" data-bs-toggle="modal" data-bs-target="#editCompanyModal">
-        <span class="me-2">Edit</span>
-        <i class="bi bi-pencil-fill"></i>
-      </button>
-    </div>
+    <div class="col-1" *ngIf="companyAdmin.companyId === companyId">
+        <button class="btn btn-light border border-dark" *ngIf="user && user.role == 1"
+        (click)="navigateToEditCompanyProfile(companyId)">
+          <span class="me-2">Edit</span>
+          <i class="bi bi-pencil-fill"></i>
+        </button>
+      </div>
+      <div class="col-2" *ngIf="companyAdmin.companyId === companyId">
+        <button class="btn btn-light border border-dark" *ngIf="user && user.role == 1"
+        (click)="navigateToWorkCalendar(companyId)">
+          <span class="me-2">Work calendar</span>
+        </button>
+      </div>
   </div>
     <div class="row mt-4">
         <ul class="nav nav-underline">
@@ -77,7 +84,7 @@
                   </div>
                 </div>
                 <div class="col-4 d-flex align-items-end justify-content-end">
-                  <button *ngIf="user && user.role == 1" type="button" class="btn" data-bs-toggle="modal" data-bs-target="#equipmentModal">
+                  <button *ngIf="companyAdmin.companyId === companyId" type="button" class="btn" data-bs-toggle="modal" data-bs-target="#equipmentModal">
                       <i class="bi bi-plus-square add-icon-size"></i>
                   </button>
                 </div>
@@ -88,10 +95,10 @@
                 <div class="card-header d-flex justify-content-between align-items-center">
                   <div>{{ getEquipmentTypeString(equipment.type) }}</div>
                   <div>
-                    <button *ngIf="user && user.role == 1" type="button" class="btn" (click)="editButtonClicked(equipment)" data-bs-toggle="modal" data-bs-target="#editEquipmentModal">
+                    <button *ngIf="companyAdmin.companyId === companyId" type="button" class="btn" (click)="editButtonClicked(equipment)" data-bs-toggle="modal" data-bs-target="#editEquipmentModal">
                       <i class="bi bi-pencil-square"></i>
                     </button>
-                    <button *ngIf="user && user.role == 1" type="button" class="btn" (click)="deleteEquipment(equipment)">
+                    <button *ngIf="companyAdmin.companyId === companyId" type="button" class="btn" (click)="deleteEquipment(equipment)">
                       <i class="bi bi-trash delete-icon-size"></i>
                     </button>
                     <button *ngIf="user.id != 0 && user.role == 0 && equipment.quantity != equipment.reservedQuantity" type="button" class="btn" (click)="toggleSelection(equipment)">
@@ -178,7 +185,7 @@
           <div *ngIf="selectedNavItem === 'appointments'" class="row">
               <div class="row">
                 <div class="col-12 d-flex align-items-end justify-content-end">
-                  <button *ngIf="user && user.role == 1" type="button" class="btn" data-bs-toggle="modal" data-bs-target="#predefinedAppointmentModal">
+                  <button *ngIf="companyAdmin.companyId === companyId" type="button" class="btn" data-bs-toggle="modal" data-bs-target="#predefinedAppointmentModal">
                       <i class="bi bi-plus-square add-icon-size"></i>
                   </button>
                 </div>
@@ -256,49 +263,6 @@
       </div>
       <div class="modal-footer">
         <button (click)="scheduleAdditionalAppointment(selectedEquipments)" class="btn btn-primary" data-bs-dismiss="modal">Schedule</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="modal fade" id="editCompanyModal" tabindex="-1" aria-labelledby="editCompanyModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header ft-5">
-        <h1 class="modal-title fs-5" id="editCompanyModalLabel">Edit company</h1>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <form >
-          <div class="form-item">
-            <label>Name:</label>
-            <input type="text" [(ngModel)]="company.name" name="name"/>
-          </div>
-          <div class="form-item">
-            <label>Description:</label>
-            <input type="text" [(ngModel)]="company.description" name="description"/>
-          </div>
-          <div class="form-item">
-            <label>Street:</label>
-            <input type="text" [(ngModel)]="company.address.street" name="street"/>
-          </div>
-          <div class="form-item">
-            <label>Number:</label>
-            <input type="text" [(ngModel)]="company.address.number" name="number"/>
-          </div>
-          <div class="form-item">
-            <label>City:</label>
-            <input type="text" [(ngModel)]="company.address.city" name="city"/>
-          </div>
-          <div class="form-item">
-            <label>Country:</label>
-            <input type="text" [(ngModel)]="company.address.country" name="country"/>
-          </div>
-          <div class="modal-footer me-4">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            <button type="button" class="btn btn-success" (click)="saveChanges() ">Apply</button>
-          </div>
-        </form>
       </div>
     </div>
   </div>

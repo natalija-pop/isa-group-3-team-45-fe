@@ -10,6 +10,7 @@ import { EquipmentService } from '../../equipment/equipment.service';
 import { StakeholdersService } from '../../stakeholders/stakeholders.service';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { Observable } from 'rxjs';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-company-profile',
@@ -99,7 +100,7 @@ export class CompanyProfileComponent implements OnInit {
   base64ImageStrings: string[] = [];
   dataUri: string[] = [];
 
-  constructor(private companyService: CompanyService, private authService: AuthService, private route: ActivatedRoute, private equipmentService: EquipmentService, private stakeholdersService: StakeholdersService) { }
+  constructor(private companyService: CompanyService, private authService: AuthService, private route: ActivatedRoute, private equipmentService: EquipmentService, private stakeholdersService: StakeholdersService, private router: Router) { }
 
   ngOnInit(): void {
     this.route.params.subscribe(params => {
@@ -138,7 +139,14 @@ export class CompanyProfileComponent implements OnInit {
 
     this.getPredefinedCompanyAppointments();
     this.getBarcodeImages();
-    // this.getCompanyCustomers();
+  }
+
+  navigateToEditCompanyProfile(companyId: number): void {
+    this.router.navigate(['/edit-company-profile', companyId]);
+  }
+
+  navigateToWorkCalendar(companyId: number): void {
+    this.router.navigate(['/work-calendar', companyId]);
   }
 
   isSelected(equipment: Equipment): boolean {
@@ -420,7 +428,7 @@ export class CompanyProfileComponent implements OnInit {
 
   reserveEquipment(equipment: Equipment[]) {
     this.companyService.getCompanyAppointments(this.companyId).subscribe({
-      next: (result : any) => {
+      next: (result: any) => {
         this.predefinedAppointments = result;
         console.log(this.selectedAppointment);
       },
@@ -432,7 +440,7 @@ export class CompanyProfileComponent implements OnInit {
 
   reserveEquipmentConfirmation(equipment: Equipment[]) {
 
-    
+
 
     if (this.selectedAppointment != undefined) {
       this.selectedAppointment.customerName = this.user.name;
@@ -441,12 +449,12 @@ export class CompanyProfileComponent implements OnInit {
       this.selectedAppointment.equipment = equipment;
       this.selectedAppointment.status = 1;
 
-      if(this.selectedAppointment.id){
+      if (this.selectedAppointment.id) {
         this.companyService.checkIfSameAppintment(this.selectedAppointment.id, this.user.id).subscribe(
           (canBeReserved: boolean) => {
             if (canBeReserved) {
               alert('You successfully reserved equipment!');
-              if(this.selectedAppointment){
+              if (this.selectedAppointment) {
                 this.companyService.reserveEquipment(this.selectedAppointment, this.user.email).subscribe({
                   next: () => { }
                 })
@@ -456,9 +464,9 @@ export class CompanyProfileComponent implements OnInit {
             }
           }
         );
-        
+
       }
-      
+
     }
   }
 
@@ -499,14 +507,14 @@ export class CompanyProfileComponent implements OnInit {
       this.companyService.checkAppointmentValidity(selectedDateTime, this.companyId, this.user.name || "", this.user.surname || "").subscribe(
         (isValid: boolean) => {
           if (isValid) {
-              this.companyService.createPredefinedAppointment(appointment).subscribe({
+            this.companyService.createPredefinedAppointment(appointment).subscribe({
               next: (result) => {
                 alert('You successfully defined appointment!');
                 console.log(result);
                 this.getPredefinedCompanyAppointments();
               },
               error: (err) => {
-                alert("Error creating appointment: "  + err.message || 'Unknown error');
+                alert("Error creating appointment: " + err.message || 'Unknown error');
                 console.log(err);
               }
             });
