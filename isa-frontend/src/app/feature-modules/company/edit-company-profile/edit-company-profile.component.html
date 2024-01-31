@@ -1,0 +1,42 @@
+<div class="profile-form">
+    <h1>Edit company</h1>
+    <form >
+          <div class="form-item">
+            <label>Name:</label>
+            <input type="text" [(ngModel)]="company.name" name="name"/>
+          </div>
+          <div class="form-item">
+            <label>Description:</label>
+            <input type="text" [(ngModel)]="company.description" name="description"/>
+          </div>
+          <div class="form-item">
+            <label>Street:</label>
+            <input type="text" [(ngModel)]="company.address.street" name="street"/>
+          </div>
+          <div class="form-item">
+            <label>Number:</label>
+            <input type="text" [(ngModel)]="company.address.number" name="number"/>
+          </div>
+          <div class="form-item">
+            <label>City:</label>
+            <input type="text" [(ngModel)]="company.address.city" name="city"/>
+          </div>
+          <div class="form-item">
+            <label>Country:</label>
+            <input type="text" [(ngModel)]="company.address.country" name="country"/>
+          </div>
+          <div class="mt-5" style="margin-left: 7%;">
+            <xp-map id="map-edit" [company]="company" (latitude)="GetLatitude($event)" 
+            (longitude)="GetLongitude($event)" ></xp-map>
+          </div>
+      <div class="label-item">
+        <label class="undo" (click)="switchMode(false)">Undo</label>
+      </div>
+  
+      <div class="mb-4">
+        <button mb-6 type="button" class="btn btn-success" (click)="saveChanges() ">Apply</button>
+      </div>
+    </form>
+  </div>
+
+
