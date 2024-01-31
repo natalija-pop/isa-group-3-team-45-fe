@@ -8,8 +8,6 @@ import { AuthService } from 'src/app/infrastructure/auth/auth.service';
 import { ActivatedRoute } from '@angular/router';
 import { EquipmentService } from '../../equipment/equipment.service';
 import { StakeholdersService } from '../../stakeholders/stakeholders.service';
-import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
-import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
 
 @Component({

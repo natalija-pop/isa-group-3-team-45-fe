@@ -18,6 +18,7 @@ import { BarcodesPageComponent } from './feature-modules/company/barcodes-page/b
 import { ReservationsPageComponent } from './feature-modules/company/reservations-page/reservations-page.component';
 import { UsersProcessedReservationsComponent } from './feature-modules/company/users-processed-reservations/users-processed-reservations.component';
 import { UsersScheduledReservationsComponent } from './feature-modules/company/users-scheduled-reservations/users-scheduled-reservations.component';
+import { PositionSimulatorComponent } from './feature-modules/simulators/position-simulator/position-simulator/position-simulator.component';
 import { EditCompanyProfileComponent } from './feature-modules/company/edit-company-profile/edit-company-profile.component';
 
 const routes: Routes = [
@@ -37,6 +38,9 @@ const routes: Routes = [
   { path: 'work-calendar/:id', component: WorkCalendarComponent },
   { path: 'barcodes-page', component: BarcodesPageComponent },
   { path: 'reservations-page', component: ReservationsPageComponent },
+  { path: 'users-processed-reservations', component: UsersProcessedReservationsComponent},
+  { path: 'users-scheduled-reservations', component: UsersScheduledReservationsComponent},
+  {path: 'position-simulator', component: PositionSimulatorComponent},
   { path: 'users-processed-reservations', component: UsersProcessedReservationsComponent },
   { path: 'users-scheduled-reservations', component: UsersScheduledReservationsComponent }
 ];
