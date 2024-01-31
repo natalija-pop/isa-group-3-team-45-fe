@@ -18,6 +18,8 @@
       </li>
       <li class="nav-item" *ngIf="user && user.role === 1">
         <a class="nav-link" href="/reservations-page">Reservations</a>
+      </li>
+      <li class="nav-item" *ngIf="user && user.role === 1">
         <a class="nav-link" [routerLink]="['position-simulator']" >Start position simulator</a>
       </li>
       <li class="nav-item">

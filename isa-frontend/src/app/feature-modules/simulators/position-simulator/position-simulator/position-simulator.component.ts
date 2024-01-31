@@ -53,7 +53,7 @@ export class PositionSimulatorComponent implements OnInit, AfterViewInit{
   
 
   ngAfterViewInit(): void {
-    this.map = L.map('mapDiv').setView([0, 0], 13);
+    this.map = L.map('mapDiv').setView([45.267136, 19.833549], 13);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '© OpenStreetMap contributors',
     }).addTo(this.map);
