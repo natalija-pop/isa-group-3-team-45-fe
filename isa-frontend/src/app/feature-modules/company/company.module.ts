@@ -13,6 +13,7 @@ import { ReservationsPageComponent } from './reservations-page/reservations-page
 import { UsersProcessedReservationsComponent } from './users-processed-reservations/users-processed-reservations.component';
 import { UsersScheduledReservationsComponent } from './users-scheduled-reservations/users-scheduled-reservations.component';
 import { EditCompanyProfileComponent } from './edit-company-profile/edit-company-profile.component';
+import { ContractPageComponent } from './contract-page/contract-page.component';
 
 
 
@@ -27,6 +28,7 @@ import { EditCompanyProfileComponent } from './edit-company-profile/edit-company
     UsersProcessedReservationsComponent,
     UsersScheduledReservationsComponent,
     EditCompanyProfileComponent,
+    ContractPageComponent,
   ],
   imports: [
     CommonModule,
