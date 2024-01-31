@@ -41,10 +41,12 @@ export class CompaniesPageComponent implements OnInit{
         subscribe((result: any) => {
           if(result === false)
             {
-              this.companyService.clearPenaltyPointsForUser(this.user.id).
+              if(this.user.email !== ""){
+                this.companyService.clearPenaltyPointsForUser(this.user.id).
                 subscribe(result => {
                   console.log('Penalty points cleared!');
                 });
+              }
             }   
         })  
     }
