@@ -1,17 +1,29 @@
-import { Component} from '@angular/core';
+import { Component, OnInit} from '@angular/core';
 import { Position } from '../position.model';
 import { RoutingService } from '../routing.service';
 import { ActivationMessage } from '../activationMessage.model';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormControl, FormGroup} from '@angular/forms';
+import { SignalRService } from '../signal-r.service';
 
 @Component({
   selector: 'app-position-simulator',
   templateUrl: './position-simulator.component.html',
   styleUrls: ['./position-simulator.component.css']
 })
-export class PositionSimulatorComponent{
+export class PositionSimulatorComponent implements OnInit{
   
-  constructor(private routingService: RoutingService) {}
+  constructor(private routingService: RoutingService, private signarRService: SignalRService) {}
+  
+  ngOnInit(): void {
+    this.signarRService.stopSimulation$.subscribe((message) => {
+      console.log('Stopping simulation. Delivery finished: ', message);
+    });
+
+    this.signarRService.newPosition$.subscribe((message) => {
+      console.log('Position updated. Current position: ', message);
+      this.currentPosition = message;
+    })
+  }
   
   private map: any;
   startPoint: Position = {
@@ -63,4 +75,6 @@ export class PositionSimulatorComponent{
         error: (err) => alert('Error: ' + err.message)
       });
   }
+
+
 }

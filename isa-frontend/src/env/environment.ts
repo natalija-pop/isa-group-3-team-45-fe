@@ -5,5 +5,5 @@ export const environment = {
   
 export const wss = {
   production: false,
-  apiHost: 'wss:://localhost:44310/'
+  apiHost: 'wss://localhost:44310/'
 }
