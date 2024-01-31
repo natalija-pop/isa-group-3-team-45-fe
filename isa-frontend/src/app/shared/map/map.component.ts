@@ -1,4 +1,4 @@
-import { Component, AfterViewInit, Output, EventEmitter, Input, SimpleChanges } from '@angular/core';
+import { Component, AfterViewInit, Output, EventEmitter, Input, SimpleChanges, OnInit, OnDestroy } from '@angular/core';
 import * as L from 'leaflet';
 import { Company } from 'src/app/feature-modules/company/model/company.model';
 
@@ -7,7 +7,7 @@ import { Company } from 'src/app/feature-modules/company/model/company.model';
   templateUrl: './map.component.html',
   styleUrls: ['./map.component.css'],
 })
-export class MapComponent implements AfterViewInit {
+export class MapComponent implements AfterViewInit, OnDestroy {
 
   private map: any;
   @Output() longitude: EventEmitter<number> = new EventEmitter<number>();
@@ -63,8 +63,6 @@ export class MapComponent implements AfterViewInit {
     this.markers.push(marker);
 
     tiles.addTo(this.map);
-    const geocoderControl = new (L as any).Control.Geocoder();
-    geocoderControl.addTo(this.map);
     this.registerOnClick();
   }
 
@@ -73,11 +71,30 @@ export class MapComponent implements AfterViewInit {
       const coord = e.latlng;
       const lat = coord.lat;
       const lng = coord.lng;
+
+      this.latitude.emit(lat);
+      this.longitude.emit(lng);
+
       console.log(
         'You clicked the map at latitude: ' + lat + ' and longitude: ' + lng
       );
-      new L.Marker([lat, lng]).addTo(this.map);
+
+      this.clearMarkers();
+
+      const redIcon = L.icon({
+        iconUrl: 'https://icons.veryicon.com/png/System/Small%20%26%20Flat/map%20marker.png',
+        iconSize: [31, 41],
+        iconAnchor: [13, 41],
+      });
+
+      const marker = new L.Marker([lat, lng], { icon: redIcon }).addTo(this.map);
+      this.markers.push(marker);
     });
+  }
+
+  clearMarkers(): void {
+    this.markers.forEach(marker => marker.remove());
+    this.markers = [];
   }
 
   ngAfterViewInit(): void {
@@ -88,4 +105,24 @@ export class MapComponent implements AfterViewInit {
     L.Marker.prototype.options.icon = DefaultIcon;
     this.initMap();
   }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['company'] && !changes['company.firstChange']) {
+      this.resetMap();
+      this.initMap();
+    }
+  }
+
+  resetMap(): void {
+    if (this.map) {
+      this.map.remove();
+    }
+
+    this.markers = [];
+  }
+
+  ngOnDestroy(): void {
+    this.resetMap();
+  }
+
 }

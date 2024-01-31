@@ -19,10 +19,12 @@ import { ReservationsPageComponent } from './feature-modules/company/reservation
 import { UsersProcessedReservationsComponent } from './feature-modules/company/users-processed-reservations/users-processed-reservations.component';
 import { UsersScheduledReservationsComponent } from './feature-modules/company/users-scheduled-reservations/users-scheduled-reservations.component';
 import { PositionSimulatorComponent } from './feature-modules/simulators/position-simulator/position-simulator/position-simulator.component';
+import { EditCompanyProfileComponent } from './feature-modules/company/edit-company-profile/edit-company-profile.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
   { path: 'company-profile/:id', component: CompanyProfileComponent },
+  { path: 'edit-company-profile/:id', component: EditCompanyProfileComponent },
   { path: 'user-profile', component: UserProfileComponent, canActivate: [AuthGuard] },
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegistrationComponent },
@@ -38,7 +40,9 @@ const routes: Routes = [
   { path: 'reservations-page', component: ReservationsPageComponent },
   { path: 'users-processed-reservations', component: UsersProcessedReservationsComponent},
   { path: 'users-scheduled-reservations', component: UsersScheduledReservationsComponent},
-  {path: 'position-simulator', component: PositionSimulatorComponent}
+  {path: 'position-simulator', component: PositionSimulatorComponent},
+  { path: 'users-processed-reservations', component: UsersProcessedReservationsComponent },
+  { path: 'users-scheduled-reservations', component: UsersScheduledReservationsComponent }
 ];
 
 @NgModule({
