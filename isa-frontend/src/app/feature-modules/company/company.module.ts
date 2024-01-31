@@ -8,6 +8,12 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { CompanyFormComponent } from './company-form/company-form.component';
 import { WorkCalendarComponent } from './work-calendar/work-calendar.component';
 import { SharedModule } from 'src/app/shared/shared.module';
+import { BarcodesPageComponent } from './barcodes-page/barcodes-page.component';
+import { ReservationsPageComponent } from './reservations-page/reservations-page.component';
+import { UsersProcessedReservationsComponent } from './users-processed-reservations/users-processed-reservations.component';
+import { UsersScheduledReservationsComponent } from './users-scheduled-reservations/users-scheduled-reservations.component';
+import { EditCompanyProfileComponent } from './edit-company-profile/edit-company-profile.component';
+import { ContractPageComponent } from './contract-page/contract-page.component';
 
 
 
@@ -17,6 +23,12 @@ import { SharedModule } from 'src/app/shared/shared.module';
     CompaniesPageComponent,
     CompanyFormComponent,
     WorkCalendarComponent,
+    BarcodesPageComponent,
+    ReservationsPageComponent,
+    UsersProcessedReservationsComponent,
+    UsersScheduledReservationsComponent,
+    EditCompanyProfileComponent,
+    ContractPageComponent,
   ],
   imports: [
     CommonModule,

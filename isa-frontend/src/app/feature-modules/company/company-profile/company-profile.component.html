@@ -1,17 +1,24 @@
 <div class="container mt-4">
   <div class="row">
-    <div class="col-6">
+    <div class="col-5">
       <h1>{{company.name}}</h1>
     </div>
     <div class="col-4 d-flex align-items-center">
       <strong>Rating:  {{company.rating}}  <i class="bi bi-star-fill"></i></strong>
     </div>
-    <div class="col-2 text-end">
-      <button class="btn btn-light border border-dark" *ngIf="user && user.role == 1" data-bs-toggle="modal" data-bs-target="#editCompanyModal">
-        <span class="me-2">Edit</span>
-        <i class="bi bi-pencil-fill"></i>
-      </button>
-    </div>
+    <div class="col-1" *ngIf="companyAdmin.companyId === companyId">
+        <button class="btn btn-light border border-dark" *ngIf="user && user.role == 1"
+        (click)="navigateToEditCompanyProfile(companyId)">
+          <span class="me-2">Edit</span>
+          <i class="bi bi-pencil-fill"></i>
+        </button>
+      </div>
+      <div class="col-2" *ngIf="companyAdmin.companyId === companyId">
+        <button class="btn btn-light border border-dark" *ngIf="user && user.role == 1"
+        (click)="navigateToWorkCalendar(companyId)">
+          <span class="me-2">Work calendar</span>
+        </button>
+      </div>
   </div>
     <div class="row mt-4">
         <ul class="nav nav-underline">
@@ -29,6 +36,9 @@
             </li>
             <li class="nav-item">
               <a class="nav-link" [class.active]="selectedNavItem === 'appointments'" (click)="showAppointments()">Appointments</a>
+            </li>
+            <li class="nav-item" *ngIf="companyAdmin.companyId === companyId">
+              <a class="nav-link" [class.active]="selectedNavItem === 'customers'" (click)="showCustomers()">Customers</a>
             </li>
           </ul>
     </div>
@@ -74,7 +84,7 @@
                   </div>
                 </div>
                 <div class="col-4 d-flex align-items-end justify-content-end">
-                  <button *ngIf="user && user.role == 1" type="button" class="btn" data-bs-toggle="modal" data-bs-target="#equipmentModal">
+                  <button *ngIf="companyAdmin.companyId === companyId" type="button" class="btn" data-bs-toggle="modal" data-bs-target="#equipmentModal">
                       <i class="bi bi-plus-square add-icon-size"></i>
                   </button>
                 </div>
@@ -85,10 +95,10 @@
                 <div class="card-header d-flex justify-content-between align-items-center">
                   <div>{{ getEquipmentTypeString(equipment.type) }}</div>
                   <div>
-                    <button *ngIf="user && user.role == 1" type="button" class="btn" (click)="editButtonClicked(equipment)" data-bs-toggle="modal" data-bs-target="#editEquipmentModal">
+                    <button *ngIf="companyAdmin.companyId === companyId" type="button" class="btn" (click)="editButtonClicked(equipment)" data-bs-toggle="modal" data-bs-target="#editEquipmentModal">
                       <i class="bi bi-pencil-square"></i>
                     </button>
-                    <button *ngIf="user && user.role == 1" type="button" class="btn" (click)="deleteEquipment(equipment)">
+                    <button *ngIf="companyAdmin.companyId === companyId" type="button" class="btn" (click)="deleteEquipment(equipment)">
                       <i class="bi bi-trash delete-icon-size"></i>
                     </button>
                     <button *ngIf="user.id != 0 && user.role == 0 && equipment.quantity != equipment.reservedQuantity" type="button" class="btn" (click)="toggleSelection(equipment)">
@@ -105,7 +115,10 @@
             </div>
             <div class="text-end">
               <div>
-                <button *ngIf="user.id != 0 && user.role == 0" (click)="reserveEquipment(selectedEquipments)" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#reserveEquipmentModal">Reserve</button>
+                <button *ngIf="user.id != 0 && user.role == 0 && user.penaltyPoints !== undefined && user.penaltyPoints < 3"
+                         (click)="reserveEquipment(selectedEquipments)" 
+                         class="btn btn-primary"
+                         data-bs-toggle="modal" data-bs-target="#reserveEquipmentModal">Reserve</button>
               </div>
             </div>
           </div>
@@ -119,8 +132,6 @@
                   <div class="card-header">{{ admin.email }}</div>
                   <div class="card-body">
                     <p class="card-text">{{ admin.name }} {{ admin.surname }}</p>
-                    <p class="card-text">{{ admin.phone }}</p>
-                    <p class="card-text">{{ admin.profession }}</p>
                   </div>
                 </div>
               </div>
@@ -158,36 +169,13 @@
                             Passwords do not match.
                           </div>
                         </div>
-                        <div class="form-group" [ngClass]="{ 'has-error': adminForm.get('city')?.invalid && (adminForm.get('city')?.dirty || adminForm.get('city')?.touched) }">
-                          <label for="city">City</label>
-                          <input id="city" formControlName="city" type="text" required>
-                        </div>
-                        <div class="form-group" [ngClass]="{ 'has-error': adminForm.get('country')?.invalid && (adminForm.get('country')?.dirty || adminForm.get('country')?.touched) }">
-                          <label for="country">Country</label>
-                          <input id="country" formControlName="country" type="text"  required>
-                        </div>
-                        <div class="form-group" [ngClass]="{ 'has-error': adminForm.get('phone')?.invalid && (adminForm.get('phone')?.dirty || adminForm.get('phone')?.touched) }">
-                          <label for="phone">Phone</label>
-                          <input id="phone" formControlName="phone" type="tel"  required>
-                          <div *ngIf="adminForm.get('phone')?.invalid && adminForm.get('phone')?.touched" class="error-message">
-                            Phone must contain only numbers.
-                          </div>
-                        </div>
-                        <div class="form-group" [ngClass]="{ 'has-error': adminForm.get('profession')?.invalid && (adminForm.get('profession')?.dirty || adminForm.get('profession')?.touched) }">
-                          <label for="profession">Profession</label>
-                          <input id="profession" formControlName="profession" type="text" required>
-                        </div>
-                        <div class="form-group" [ngClass]="{ 'has-error': adminForm.get('companyInformation')?.invalid && (adminForm.get('companyInformation')?.dirty || adminForm.get('companyInformation')?.touched) }">
-                          <label for="companyInformation">Company Information</label>
-                          <textarea id="companyInformation" formControlName="companyInformation"  required></textarea>
-                        </div>
                       </div>
                       <div  *ngIf="addAdmin" class="form-btns">
                         <div>
                           <button class="add-admin-btns negative-btn" (click)="this.addAdmin = false">Cancel</button>
                         </div>
                         <div>
-                          <button class="add-admin-btns positive-btn" (click)="createNewAdmin()">Submit</button>
+                          <button class="add-admin-btns positive-btn" (click)="registerNewAdmin()">Submit</button>
                         </div>
                       </div>
                 </form>
@@ -197,7 +185,7 @@
           <div *ngIf="selectedNavItem === 'appointments'" class="row">
               <div class="row">
                 <div class="col-12 d-flex align-items-end justify-content-end">
-                  <button *ngIf="user && user.role == 1" type="button" class="btn" data-bs-toggle="modal" data-bs-target="#predefinedAppointmentModal">
+                  <button *ngIf="companyAdmin.companyId === companyId" type="button" class="btn" data-bs-toggle="modal" data-bs-target="#predefinedAppointmentModal">
                       <i class="bi bi-plus-square add-icon-size"></i>
                   </button>
                 </div>
@@ -229,6 +217,20 @@
                 </table>
               </div>
           </div>
+          <div *ngIf="selectedNavItem === 'customers'" class="row">
+              <div *ngFor="let customer of customers" class="col-md-4">
+                <div class="card border-dark mb-3" style="max-width: 30rem; max-height: 30rem;">
+                  <div class="card-header d-flex justify-content-between align-items-center">
+                    <div>{{customer.email}}</div>
+                  </div>
+                  <div class="card-body">
+                    <h5 class="card-title">{{ customer.name }} {{customer.surname}}</h5>
+                    <p class="card-text">Penalty points: {{ customer.penaltyPoints }}</p>
+                  </div>
+                  <p></p>
+                </div>
+            </div>
+         </div>
     </div>
 </div>
 
@@ -266,49 +268,6 @@
   </div>
 </div>
 
-<div class="modal fade" id="editCompanyModal" tabindex="-1" aria-labelledby="editCompanyModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header ft-5">
-        <h1 class="modal-title fs-5" id="editCompanyModalLabel">Edit company</h1>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <form >
-          <div class="form-item">
-            <label>Name:</label>
-            <input type="text" [(ngModel)]="company.name" name="name"/>
-          </div>
-          <div class="form-item">
-            <label>Description:</label>
-            <input type="text" [(ngModel)]="company.description" name="description"/>
-          </div>
-          <div class="form-item">
-            <label>Street:</label>
-            <input type="text" [(ngModel)]="company.address.street" name="street"/>
-          </div>
-          <div class="form-item">
-            <label>Number:</label>
-            <input type="text" [(ngModel)]="company.address.number" name="number"/>
-          </div>
-          <div class="form-item">
-            <label>City:</label>
-            <input type="text" [(ngModel)]="company.address.city" name="city"/>
-          </div>
-          <div class="form-item">
-            <label>Country:</label>
-            <input type="text" [(ngModel)]="company.address.country" name="country"/>
-          </div>
-          <div class="modal-footer me-4">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            <button type="button" class="btn btn-success" (click)="saveChanges() ">Apply</button>
-          </div>
-        </form>
-      </div>
-    </div>
-  </div>
-</div>
-
 <div class="modal fade" id="equipmentModal" tabindex="-1" aria-labelledby="equipmentModalLabel" aria-hidden="true">
   <div class="modal-dialog">
       <div class="modal-content">
@@ -333,6 +292,11 @@
                   <div class="mb-3">
                     <label for="name" class="form-label">Quantity:</label>
                     <input type="number" class="form-control" formControlName="quantity" id="quantity" name="quantity" placeholder="Enter quantity">
+                  </div>
+
+                  <div class="mb-3">
+                    <label for="name" class="form-label">Price:</label>
+                    <input type="number" class="form-control" formControlName="price" id="price" name="price" placeholder="Enter price">
                   </div>
 
                   <div class="mb-3">
@@ -414,6 +378,8 @@
               <tbody>
                   <tr *ngFor="let appointment of predefinedAppointments" (click)="selectAppointment(appointment)" [ngStyle]="{'border': selectedAppointment === appointment ? '2px solid blue' : 'none'}">
                       <td>{{ appointment.start | date:'short' }}</td>
+                      <td>{{ appointment.adminName }}</td>
+                      <td>{{ appointment.adminSurname }}</td>
                   </tr>
               </tbody>
             </table>
@@ -434,18 +400,18 @@
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
-              <form [formGroup]="appointmentForm">
-
+  
                   <div class="mb-3">
                       <label for="name" class="form-label">Name:</label>
-                      <input type="text" class="form-control" formControlName="adminName" id="adminName" name="adminName" placeholder="Enter your name">
+                      <input [disabled]="true" type="text" class="form-control" [(ngModel)]="user.name">
                   </div>
 
                   <div class="mb-3">
                       <label for="description" class="form-label">Surname:</label>
-                      <input type="text" class="form-control" formControlName="adminSurname" id="adminSurname" name="adminSurname" placeholder="Enter your surname">
+                      <input [disabled]="true" type="text" class="form-control" [(ngModel)]="user.surname">
                   </div>
-
+                  
+                <form [formGroup]="appointmentForm">
                   <div class="mb-3">
                     <label for="date" class="form-label">Date:</label>
                     <input type="date" id="datepicker" formControlName="date" name="date"/>

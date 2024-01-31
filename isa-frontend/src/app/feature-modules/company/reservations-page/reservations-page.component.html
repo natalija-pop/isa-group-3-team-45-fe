@@ -1,0 +1,90 @@
+<html lang="en">
+<head>
+  <title>Reservations</title>
+</head>
+<body>
+
+  <div class="container">
+    <h1 class="mt-5">Reservations</h1>
+    <div class="row mt-4">
+      <div class="col-md-4 mb-3">
+        <label for="name" class="form-label">Upload QR code of reservation to process:</label>
+        <input type="file" id="imageInput" (change)="onQrCodeSelected($event)" accept="image/*" placeholder="QR code">
+      </div>
+      <div class="col-md-4 mb-3 d-flex align-items-end">
+        <button class="btn btn-primary" (click)="uploadQrCode()">Upload</button>
+      </div><br>
+      <div *ngIf="showModal" class="col-md-4 mb-3 d-flex align-items-start">
+        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#qrCodeAppointmentModal">Show QR code informations</button>
+      </div>
+    </div>
+    <div class="row mt-4">
+      <div class="col-md-12">
+        <div *ngFor="let appointment of appointments" class="card mb-3">
+          <div class="card-body">
+            <h5 class="card-title"></h5>
+            <p class="card-text fs-5"><strong>Customer: {{ appointment.customerName  }} {{ appointment.customerSurname }}</strong></p>
+            <p class="card-text">Time and date: {{ appointment.start | date: 'shortTime' }} &nbsp;&nbsp;{{ appointment.start | date: 'mediumDate' }}</p>
+            <p class="card-text">Status: {{getAppointmentStatusString(appointment.status)}}</p>
+            <p>Reserved equipment: </p>
+            <ul>
+                <li *ngFor="let equipment of appointment.equipment">
+                  {{ equipment.name }}
+                </li>
+            </ul>
+            
+            <button [disabled]="appointment.status === 2 || appointment.status === 3 || appointment.status === 4" class="btn btn-primary position-absolute bottom-0 mb-3 me-3 end-0" (click)="completeReservation(appointment)">
+                Complete reservation
+              </button>
+        </div>
+        </div>
+      </div>
+    </div>
+    <div id="modalContainer">
+      <div class="modal fade" id="qrCodeAppointmentModal" tabindex="-1" aria-labelledby="qrCodeAppointmentModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h2 class="modal-title" id="qrCodeAppointmentModalLabel">Appointment info</h2>
+              <button type="button" class="btn-close" (click)="hideModal()" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <div class="mb-3">
+                <label for="name" class="form-label">Customer name:</label>
+                <label class="form-control">{{qrCodeAppointment.customerName}}</label>
+              </div>
+              <div class="mb-3">
+                <label for="name" class="form-label">Customer surname:</label>
+                <label class="form-control">{{qrCodeAppointment.customerSurname}}</label>
+              </div>
+              <div class="mb-3">
+                <label for="name" class="form-label">Admin name:</label>
+                <label class="form-control">{{qrCodeAppointment.adminName}}</label>
+              </div>
+              <div class="mb-3">
+                <label for="name" class="form-label">Admin surname:</label>
+                <label class="form-control">{{qrCodeAppointment.adminSurname}}</label>
+              </div>
+              <div class="mb-3">
+                <label for="name" class="form-label">Status:</label>
+                <label class="form-control">{{getAppointmentStatusString(qrCodeAppointment.status)}}</label>
+              </div>
+              <div class="mb-3">
+                <label for="name" class="form-label">Equipment:</label>
+                <ul>
+                  <li *ngFor="let equipment of qrCodeAppointment.equipment">
+                    {{ equipment.name }}, {{equipment.quantity}}
+                  </li>
+              </ul>
+              </div>
+              <div class="modal-footer me-4">
+                <button type="submit" (click)="completeReservation(qrCodeAppointment)" [disabled]="qrCodeAppointment.status === 2 || qrCodeAppointment.status === 3 || qrCodeAppointment.status === 4" class="btn btn-primary">Complete reservation</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

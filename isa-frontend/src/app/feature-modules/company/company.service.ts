@@ -4,9 +4,9 @@ import { Observable } from 'rxjs';
 import { PagedResults } from 'src/app/shared/model/paged.results.model';
 import { Appointment, Company } from './model/company.model';
 import { environment } from 'src/env/environment';
-import { CompanyProfileComponent } from './company-profile/company-profile.component';
-import { User } from 'src/app/infrastructure/auth/model/user.model';
+import { CompanyAdmin, User } from 'src/app/infrastructure/auth/model/user.model';
 import { Equipment } from './model/equipment.model';
+import { Contract } from './model/contract.model';
 
 @Injectable({
   providedIn: 'root'
@@ -35,20 +35,28 @@ export class CompanyService {
     return this.http.get<PagedResults<Company>>(environment.apiHost + 'company/getAll');
   }
 
-  getCompanyAdmins(companyId: number): Observable<User[]> {
-    return this.http.get<User[]>(environment.apiHost + 'user/getCompanyAdmins/' + companyId);
+  getCompanyAdmins(companyId: number): Observable<CompanyAdmin[]> {
+    return this.http.get<CompanyAdmin[]>(environment.apiHost + 'company/get-company-admins/' + companyId);
   }
 
   createCompany(company: Company): Observable<Company> {
     return this.http.post<Company>(environment.apiHost + 'company', company);
   }
 
-  createCompanyAdmin(companyId: number, admin: User): Observable<User> {
-    return this.http.post<User>(environment.apiHost + 'user/createCompanyAdmin/' + companyId, admin);
+  createCompanyAdmin(companyId: number, admin: CompanyAdmin): Observable<CompanyAdmin> {
+    return this.http.post<CompanyAdmin>(environment.apiHost + 'users/register-company-admin', admin);
   }
 
   getCompanyEquipmentSearchResults(companyId: number, searchKeyword?: string): Observable<Equipment[]> {
     return this.http.get<Equipment[]>(`${environment.apiHost}company/getCompanyEquipmentSearchResults/${companyId}?searchKeyword=${searchKeyword}`);
+  }
+
+  checkDeletionPenaltyInCurrentMonth(userId: number): any {
+    return this.http.get<boolean>(`${environment.apiHost}user/deletion-penalty/${userId}`);
+  }
+
+  clearPenaltyPointsForUser(userId: number): Observable<User> {
+    return this.http.post<User>(`${environment.apiHost}user/clear-penalty-points/${userId}`, {});
   }
 
   //appointment
@@ -60,14 +68,33 @@ export class CompanyService {
     return this.http.get<PagedResults<Appointment>>(`${environment.apiHost}appointment/getCompanyAppointments/${companyId}`);
   }
 
+  getCustomerAppointments(customerId: number): Observable<Appointment[]> {
+    return this.http.get<Appointment[]>(`${environment.apiHost}appointment/getCustomerAppointments/${customerId}`);
+  }
+
+  getCustomerProcessedAppointments(customerId: number): Observable<Appointment[]> {
+    return this.http.get<Appointment[]>(`${environment.apiHost}appointment/getCustomerProcessedAppointments/${customerId}`);
+  }
+
+  getCustomerScheduledAppointments(customerId: number): Observable<Appointment[]> {
+    return this.http.get<Appointment[]>(`${environment.apiHost}appointment/getCustomerScheduledAppointments/${customerId}`);
+  }
+
   reserveEquipment(appointment: Appointment, userEmail: string): Observable<Appointment> {
     return this.http.put<Appointment>(environment.apiHost + `appointment/reserveAppointment?userEmail=${userEmail}`, appointment);
+  }
+
+  cancelAppointment(appointment: Appointment, userId: number): Observable<Appointment> {
+    return this.http.put<Appointment>(environment.apiHost + `appointment/cancelAppointment?userId=${userId}`, appointment);
   }
 
   createAdditionalAppointment(appointment: Appointment, userEmail: string): Observable<Appointment> {
     return this.http.post<Appointment>(environment.apiHost + `appointment/additionalAppointment?userEmail=${userEmail}`, appointment);
   }
 
+  getReservedByCompanyAdmin(companyAdminId: number): Observable<Appointment> {
+    return this.http.get<Appointment>(environment.apiHost + 'appointment/getReservedByCompanyAdmin/' + companyAdminId);
+  }
 
   getAllCompanyAppointments(): Observable<PagedResults<Appointment>> {
     return this.http.get<PagedResults<Appointment>>(environment.apiHost + 'appointment/getAll');
@@ -87,7 +114,34 @@ export class CompanyService {
     return this.http.post<boolean>(`${environment.apiHost}appointment/checkValidity`, requestBody);
   }
 
+  markAppointmentAsProcessed(appointment: Appointment, userEmail: string): Observable<Appointment> {
+    return this.http.put<Appointment>(environment.apiHost + `appointment/markAppointmentAsProcessed?userEmail=${userEmail}`, appointment);
+  }
+
   checkIfEquipmentCanBeDeleted(equipmentId: number) {
     return this.http.get<boolean>(`${environment.apiHost}appointment/checkIfEquipmentIsReserved/${equipmentId}`);
+  }
+
+  checkIfSameAppintment(appointmentId: number, userId: number) {
+    return this.http.get<boolean>(`${environment.apiHost}appointment/checkIfSameAppintment/${appointmentId}?userId=${userId}`);
+  }
+
+  getBarcodeImages(userId: number): Observable<string[]> {
+    return this.http.get<string[]>(`${environment.apiHost}appointment/barcode/${userId}`);
+  }
+
+  ReadQrCode(qrCodeFilePath: File): Observable<Appointment> {
+    let formData = new FormData();
+    formData.append('qrCodeFile', qrCodeFilePath, qrCodeFilePath.name);
+    return this.http.post<Appointment>(environment.apiHost + 'appointment/barcode/read', formData);
+  }
+
+  //contract
+  getAllContracts(): Observable<PagedResults<Contract>> {
+    return this.http.get<PagedResults<Contract>>(environment.apiHost + 'contract/getAll');
+  }
+
+  cancelContract(message: string): Observable<Contract> {
+    return this.http.post<Contract>(environment.apiHost + 'contract/cancel-delivery', message);
   }
 }

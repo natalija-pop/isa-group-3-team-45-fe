@@ -14,21 +14,37 @@ import { AllEquipmentPageComponent } from './feature-modules/equipment/all-equip
 import { ChangePasswordComponent } from './feature-modules/stakeholders/change-password/change-password.component';
 import { SysAdminRegistrationComponent } from './infrastructure/auth/sys-admin-registration/sys-admin-registration.component';
 import { WorkCalendarComponent } from './feature-modules/company/work-calendar/work-calendar.component';
+import { BarcodesPageComponent } from './feature-modules/company/barcodes-page/barcodes-page.component';
+import { ReservationsPageComponent } from './feature-modules/company/reservations-page/reservations-page.component';
+import { UsersProcessedReservationsComponent } from './feature-modules/company/users-processed-reservations/users-processed-reservations.component';
+import { UsersScheduledReservationsComponent } from './feature-modules/company/users-scheduled-reservations/users-scheduled-reservations.component';
+import { PositionSimulatorComponent } from './feature-modules/simulators/position-simulator/position-simulator/position-simulator.component';
+import { EditCompanyProfileComponent } from './feature-modules/company/edit-company-profile/edit-company-profile.component';
+import { ContractPageComponent } from './feature-modules/company/contract-page/contract-page.component';
 
 const routes: Routes = [
-  {path: '', component: HomeComponent},
-  {path: 'company-profile/:id', component: CompanyProfileComponent},
-  {path: 'user-profile', component: UserProfileComponent, canActivate: [AuthGuard]},
-  {path: 'login', component: LoginComponent},
-  {path: 'register', component: RegistrationComponent},
-  {path: 'activate', component: ActivateUserComponent},
-  {path: 'companies-page', component: CompaniesPageComponent},
-  {path: 'register-company', component: CompanyFormComponent},
-  {path: 'company-admin-profile', component: CompanyAdminProfileComponent},
-  {path: 'all-equipment', component: AllEquipmentPageComponent},
-  {path: 'change-password', component: ChangePasswordComponent},
-  {path: 'register-sys-admin', component: SysAdminRegistrationComponent},
-  {path: 'work-calendar/:id', component: WorkCalendarComponent}
+  { path: '', component: HomeComponent },
+  { path: 'company-profile/:id', component: CompanyProfileComponent },
+  { path: 'edit-company-profile/:id', component: EditCompanyProfileComponent },
+  { path: 'user-profile', component: UserProfileComponent, canActivate: [AuthGuard] },
+  { path: 'login', component: LoginComponent },
+  { path: 'register', component: RegistrationComponent },
+  { path: 'activate', component: ActivateUserComponent },
+  { path: 'companies-page', component: CompaniesPageComponent },
+  { path: 'register-company', component: CompanyFormComponent },
+  { path: 'company-admin-profile', component: CompanyAdminProfileComponent },
+  { path: 'all-equipment', component: AllEquipmentPageComponent },
+  { path: 'change-password', component: ChangePasswordComponent },
+  { path: 'register-sys-admin', component: SysAdminRegistrationComponent },
+  { path: 'work-calendar/:id', component: WorkCalendarComponent },
+  { path: 'barcodes-page', component: BarcodesPageComponent },
+  { path: 'reservations-page', component: ReservationsPageComponent },
+  { path: 'users-processed-reservations', component: UsersProcessedReservationsComponent},
+  { path: 'users-scheduled-reservations', component: UsersScheduledReservationsComponent},
+  {path: 'position-simulator', component: PositionSimulatorComponent},
+  { path: 'users-processed-reservations', component: UsersProcessedReservationsComponent },
+  { path: 'users-scheduled-reservations', component: UsersScheduledReservationsComponent },
+  { path: 'contract-page', component: ContractPageComponent }
 ];
 
 @NgModule({

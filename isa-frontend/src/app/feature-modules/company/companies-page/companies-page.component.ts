@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { CompanyService } from '../company.service';
 import { Company } from '../model/company.model';
+import { AuthService } from 'src/app/infrastructure/auth/auth.service';
+import { User } from 'src/app/infrastructure/auth/model/user.model';
 
 @Component({
   selector: 'companies-page',
@@ -9,15 +11,46 @@ import { Company } from '../model/company.model';
 })
 export class CompaniesPageComponent implements OnInit{
 
-  constructor(private companyService: CompanyService) {}
+  constructor(private companyService: CompanyService, private authService: AuthService) {}
 
   name: string = '';
   city: string = '';
   rating: number | null = null;
   companies: Company[] = []; 
   searchedCompanies: Company[] = [];
+  deletionPenalty: boolean = false;
+
+  user: User = {
+    id: 0,
+    role: 0,
+    email: "",
+    password: "",
+    name: "",
+    surname: "",
+    isActivated: false,
+    penaltyPoints: 0,
+  };
 
   ngOnInit(): void {
+    this.authService.user$.subscribe(user => {
+      this.user = user;
+    });
+
+    if(this.user.role === 0){
+      this.companyService.checkDeletionPenaltyInCurrentMonth(this.user.id).
+        subscribe((result: any) => {
+          if(result === false)
+            {
+              if(this.user.email !== ""){
+                this.companyService.clearPenaltyPointsForUser(this.user.id).
+                subscribe(result => {
+                  console.log('Penalty points cleared!');
+                });
+              }
+            }   
+        })  
+    }
+
     this.getAllCompanies();
   }
 

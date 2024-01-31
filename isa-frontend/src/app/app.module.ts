@@ -12,6 +12,7 @@ import { StakeholdersModule } from './feature-modules/stakeholders/stakeholders.
 import { FormsModule } from '@angular/forms';
 import { EquipmentModule } from './feature-modules/equipment/equipment.module';
 import { SharedModule } from './shared/shared.module';
+import { SimulatorsModule } from './feature-modules/simulators/simulators.module';
 
 
 @NgModule({
@@ -28,6 +29,7 @@ import { SharedModule } from './shared/shared.module';
     AuthModule,
     MaterialModule,
     StakeholdersModule,
+    SimulatorsModule,
     FormsModule,
     SharedModule
   ],

@@ -19,12 +19,8 @@ export class LoginComponent implements OnInit {
     password: "",
     name: "",
     surname: "",
-    city: "",
-    country: "",
-    phone: "",
-    profession: "",
-    companyInformation: "",
-    isActivated: false
+    isActivated: false,
+    penaltyPoints: 0,
   };
 
   constructor(

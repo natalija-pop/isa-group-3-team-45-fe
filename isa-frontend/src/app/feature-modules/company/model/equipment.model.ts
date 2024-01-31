@@ -9,6 +9,7 @@ export interface Equipment {
     reservedQuantity: number,
     companyId: number,
     company?: Company
+    price: number;
 }
 
 export enum EquipmentType {

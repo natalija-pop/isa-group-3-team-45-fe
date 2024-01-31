@@ -1,13 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { CompanyService } from '../company.service';
-import { Appointment, Company } from '../model/company.model';
+import { Appointment, AppointmentStatus, Company } from '../model/company.model';
 import { Equipment, EquipmentType } from '../model/equipment.model';
-import { User } from 'src/app/infrastructure/auth/model/user.model';
+import { CompanyAdmin, User } from 'src/app/infrastructure/auth/model/user.model';
 import { AbstractControl, FormControl, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from 'src/app/infrastructure/auth/auth.service';
 import { ActivatedRoute } from '@angular/router';
 import { EquipmentService } from '../../equipment/equipment.service';
 import { StakeholdersService } from '../../stakeholders/stakeholders.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-company-profile',
@@ -17,7 +18,7 @@ import { StakeholdersService } from '../../stakeholders/stakeholders.service';
 export class CompanyProfileComponent implements OnInit {
 
   appointments: Appointment[] = [];
-  selectedNavItem: 'description' | 'companyInfo' | 'equipment' | 'admins' | 'appointments' = 'description';
+  selectedNavItem: 'description' | 'companyInfo' | 'equipment' | 'admins' | 'appointments' | 'customers' = 'description';
 
   company: Company = {
     id: 0,
@@ -39,6 +40,7 @@ export class CompanyProfileComponent implements OnInit {
     },
     workCalendar: []
   }
+
   user: User = {
     id: 0,
     role: 0,
@@ -46,14 +48,22 @@ export class CompanyProfileComponent implements OnInit {
     password: "",
     name: "",
     surname: "",
-    city: "",
-    country: "",
-    phone: "",
-    profession: "",
-    companyInformation: "",
-    isActivated: false
+    isActivated: false,
+    penaltyPoints: 0
   };
-  admins: User[] = [];
+
+  companyAdmin: CompanyAdmin = {
+    id: 0,
+    role: 0,
+    email: "",
+    password: "",
+    name: "",
+    surname: "",
+    isActivated: false,
+    penaltyPoints: 0,
+    companyId: 0
+  };
+  admins: CompanyAdmin[] = [];
   equipmentList: Equipment[] = [];
   addAdmin: boolean = false;
   editMode: boolean = false;
@@ -70,6 +80,7 @@ export class CompanyProfileComponent implements OnInit {
     quantity: 0,
     reservedQuantity: 0,
     companyId: 0,
+    price: 0,
   }
   selectedEquipmentType: string = '';
   selectedDate: Date | null = null;
@@ -78,11 +89,16 @@ export class CompanyProfileComponent implements OnInit {
 
   selectedEquipments: Equipment[] = [];
   predefinedAppointments: Appointment[] = [];
+  scheduledAndProccesedAppointments: Appointment[] = [];
+  uniqueCustomerIds: number[] = [];
+  customers: User[] = [];
   equipmentToReserve: Equipment[] = [];
   selectedAppointment: Appointment | undefined;
 
+  base64ImageStrings: string[] = [];
+  dataUri: string[] = [];
 
-  constructor( private companyService: CompanyService, private authService: AuthService, private route: ActivatedRoute, private equipmentService: EquipmentService, private stakeholdersService: StakeholdersService) { }
+  constructor(private companyService: CompanyService, private authService: AuthService, private route: ActivatedRoute, private equipmentService: EquipmentService, private stakeholdersService: StakeholdersService, private router: Router) { }
 
   ngOnInit(): void {
     this.route.params.subscribe(params => {
@@ -106,7 +122,29 @@ export class CompanyProfileComponent implements OnInit {
       }
     })
 
+    if (this.user && this.user.role === 1) {
+      this.stakeholdersService.getCompanyAdmin(this.user.id).subscribe({
+        next: (result: CompanyAdmin) => {
+          if (this.companyAdmin.companyId !== null) {
+            this.companyAdmin = result;
+            console.log(result);
+          }
+        },
+        error: () => {
+        }
+      })
+    }
+
     this.getPredefinedCompanyAppointments();
+    this.getBarcodeImages();
+  }
+
+  navigateToEditCompanyProfile(companyId: number): void {
+    this.router.navigate(['/edit-company-profile', companyId]);
+  }
+
+  navigateToWorkCalendar(companyId: number): void {
+    this.router.navigate(['/work-calendar', companyId]);
   }
 
   isSelected(equipment: Equipment): boolean {
@@ -125,7 +163,7 @@ export class CompanyProfileComponent implements OnInit {
   }
 
   scheduleAdditionalAppointment(equipment: Equipment[]): void {
-    if(this.selectedAppointment != undefined){
+    if (this.selectedAppointment != undefined) {
       const start = new Date(this.selectedAppointment.start)
       const year = start.getFullYear();
       const month = ('0' + (start.getMonth() + 1)).slice(-2);
@@ -140,16 +178,22 @@ export class CompanyProfileComponent implements OnInit {
         duration: this.selectedAppointment.duration,
         adminName: this.selectedAppointment.adminName,
         adminSurname: this.selectedAppointment.adminSurname,
+        adminId: this.selectedAppointment.adminId,
         customerName: this.user.name,
         customerSurname: this.user.surname,
+        customerId: this.user.id,
         companyId: this.selectedAppointment.companyId,
-        scheduled: true, 
-        equipment: equipment
+        status: 1,
+        equipment: equipment,
+        price: this.selectedAppointment.price,
       };
 
       console.log(newAppointment)
       this.companyService.createAdditionalAppointment(newAppointment, this.user.email).subscribe({
-        next: () => {}
+        next: () => { },
+        error: (err) => {
+          alert('Error scheduling appointment: ' + err.message || 'Unknown error');
+        }
       })
     }
   }
@@ -200,6 +244,13 @@ export class CompanyProfileComponent implements OnInit {
 
   showEquipment() {
     this.selectedNavItem = 'equipment';
+    setTimeout(() => {
+      if (this.user && this.user.penaltyPoints !== undefined) {
+        if (this.user.penaltyPoints >= 3) {
+          alert(`You have ${this.user.penaltyPoints} penalty points. You cannot reserve equipment.`);
+        }
+      }
+    }, 100);
   }
 
   showAdmins() {
@@ -208,6 +259,10 @@ export class CompanyProfileComponent implements OnInit {
 
   showAppointments() {
     this.selectedNavItem = 'appointments';
+  }
+
+  showCustomers() {
+    this.selectedNavItem = 'customers';
   }
 
   switchMode(newMode: boolean) {
@@ -226,11 +281,6 @@ export class CompanyProfileComponent implements OnInit {
     email: new FormControl('', [Validators.required, Validators.email, Validators.pattern('[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$')]),
     password: new FormControl('', [Validators.required, Validators.minLength(6)]),
     passwordConfirmation: new FormControl('', [Validators.required, Validators.minLength(6)]),
-    city: new FormControl('', [Validators.required]),
-    country: new FormControl('', [Validators.required]),
-    phone: new FormControl('', [Validators.required, Validators.pattern('[0-9]+')]),
-    profession: new FormControl('', [Validators.required]),
-    companyInformation: new FormControl('', [Validators.required]),
   }, { validators: this.passwordMatchValidator })
 
   passwordMatchValidator(group: AbstractControl) {
@@ -239,19 +289,15 @@ export class CompanyProfileComponent implements OnInit {
     return password === passwordConfirmation ? null : { passwordMismatch: true };
   }
 
-  createNewAdmin(): void {
-    const admin: User = {
+  registerNewAdmin(): void {
+    const admin: CompanyAdmin = {
       id: 0,
       name: this.adminForm.value.name || "",
       surname: this.adminForm.value.surname || "",
       email: this.adminForm.value.email || "",
       password: this.adminForm.value.password || "",
-      city: this.adminForm.value.city || "",
-      country: this.adminForm.value.country || "",
-      phone: this.adminForm.value.phone || "",
-      profession: this.adminForm.value.profession || "",
-      companyInformation: this.adminForm.value.companyInformation || "",
       isActivated: true,
+      companyId: this.company.id,
       role: 1
     };
 
@@ -260,6 +306,8 @@ export class CompanyProfileComponent implements OnInit {
         next: (result: any) => {
           console.log(result);
           this.admins.push(result);
+          alert('Registration of new company admin successfull');
+          this.addAdmin = false;
         },
         error: (err) => {
           console.log(err);
@@ -272,7 +320,8 @@ export class CompanyProfileComponent implements OnInit {
     name: new FormControl('', [Validators.required]),
     description: new FormControl('', [Validators.required]),
     quantity: new FormControl(0, [Validators.required]),
-    type: new FormControl('', [Validators.required])
+    type: new FormControl('', [Validators.required]),
+    price: new FormControl(0, [Validators.required]),
   })
 
   createEquipment(): void {
@@ -282,7 +331,8 @@ export class CompanyProfileComponent implements OnInit {
       type: this.getEquipmentTypeEnum(this.equipmentForm.value.type || ""),
       quantity: this.equipmentForm.value.quantity || 0,
       reservedQuantity: 0,
-      companyId: this.companyId
+      companyId: this.companyId,
+      price: this.equipmentForm.value.price || 0,
     };
 
     if (this.equipmentForm.valid) {
@@ -375,33 +425,53 @@ export class CompanyProfileComponent implements OnInit {
   }
 
   reserveEquipment(equipment: Equipment[]) {
-    this.companyService.getCompanyAppointments(this.companyId).subscribe(
-      (result: any) => {
+    this.companyService.getCompanyAppointments(this.companyId).subscribe({
+      next: (result: any) => {
         this.predefinedAppointments = result;
         console.log(this.selectedAppointment);
+      },
+      error: (err) => {
+        alert('Error reserving appointment: ' + err.message || 'Uknown error');
       }
-    )
+    });
   }
 
-  reserveEquipmentConfirmation(equipment: Equipment[]){
-    if(this.selectedAppointment != undefined){
+  reserveEquipmentConfirmation(equipment: Equipment[]) {
+
+
+
+    if (this.selectedAppointment != undefined) {
       this.selectedAppointment.customerName = this.user.name;
       this.selectedAppointment.customerSurname = this.user.surname;
+      this.selectedAppointment.customerId = this.user.id;
       this.selectedAppointment.equipment = equipment;
-      this.selectedAppointment.scheduled = true;
-      
-      this.companyService.reserveEquipment(this.selectedAppointment, this.user.email).subscribe({
-        next: () => { }
-      })
+      this.selectedAppointment.status = 1;
+
+      if (this.selectedAppointment.id) {
+        this.companyService.checkIfSameAppintment(this.selectedAppointment.id, this.user.id).subscribe(
+          (canBeReserved: boolean) => {
+            if (canBeReserved) {
+              alert('You successfully reserved equipment!');
+              if (this.selectedAppointment) {
+                this.companyService.reserveEquipment(this.selectedAppointment, this.user.email).subscribe({
+                  next: () => { }
+                })
+              }
+            } else {
+              alert('You already have appointment in same company at same time. Reservation is not possible.');
+            }
+          }
+        );
+
+      }
+
     }
   }
 
   appointmentForm = new FormGroup({
     date: new FormControl('', [Validators.required]),
     time: new FormControl('', [Validators.required]),
-    duration: new FormControl({ value: '60', disabled: true }, [Validators.required]),
-    adminName: new FormControl('', [Validators.required]),
-    adminSurname: new FormControl('', [Validators.required]),
+    duration: new FormControl({ value: '60', disabled: true }, [Validators.required])
   })
 
   createPredefinedAppointment() {
@@ -424,22 +494,25 @@ export class CompanyProfileComponent implements OnInit {
       const appointment: Appointment = {
         start: selectedDateTime,
         duration: 60 || "",
-        adminName: this.appointmentForm.value.adminName || "",
-        adminSurname: this.appointmentForm.value.adminSurname || "",
+        adminName: this.user.name || "",
+        adminSurname: this.user.surname || "",
+        adminId: this.user.id,
         companyId: this.companyId,
-        scheduled: false,
+        status: 0,
+        price: 0,
       };
 
-      this.companyService.checkAppointmentValidity(selectedDateTime, this.companyId, this.appointmentForm.value.adminName || "", this.appointmentForm.value.adminSurname || "").subscribe(
+      this.companyService.checkAppointmentValidity(selectedDateTime, this.companyId, this.user.name || "", this.user.surname || "").subscribe(
         (isValid: boolean) => {
           if (isValid) {
-            alert('You successfully defined appointment!');
             this.companyService.createPredefinedAppointment(appointment).subscribe({
               next: (result) => {
+                alert('You successfully defined appointment!');
                 console.log(result);
                 this.getPredefinedCompanyAppointments();
               },
               error: (err) => {
+                alert("Error creating appointment: " + err.message || 'Unknown error');
                 console.log(err);
               }
             });
@@ -463,6 +536,36 @@ export class CompanyProfileComponent implements OnInit {
         appointment.adminSurname === this.user.surname
       )
         .sort((a, b) => new Date(a.start).getTime() - new Date(b.start).getTime());
+
+      this.scheduledAndProccesedAppointments = this.allAppointments.filter(appointment =>
+        (appointment.status === 1 || appointment.status === 3) &&
+        appointment.companyId === this.companyId)
+      this.uniqueCustomerIds = [...new Set(this.scheduledAndProccesedAppointments.map(appointment => appointment.customerId))]
+        .filter(customerId => customerId !== undefined) as number[];
+
+      if (this.uniqueCustomerIds.length > 0) {
+        this.stakeholdersService.getUsersByIds(this.uniqueCustomerIds).subscribe((result: any) => {
+          this.customers = result;
+        })
+      }
     })
+  }
+
+  getBarcodeImages(): void {
+    this.companyService.getBarcodeImages(this.user.id).subscribe({
+      next: (data) => {
+        const dataURIs: string[] = [];
+
+        data.forEach((base64ImageString: string) => {
+          const dataURI = 'data:image/png;base64,' + base64ImageString;
+          dataURIs.push(dataURI);
+        });
+
+        this.dataUri = dataURIs;
+      },
+      error: (error) => {
+        console.error('Error fetching barcode images:', error);
+      }
+    });
   }
 }
