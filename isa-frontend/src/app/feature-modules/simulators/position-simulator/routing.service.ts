@@ -7,11 +7,9 @@ import { environment } from 'src/env/environment';
   providedIn: 'root'
 })
 export class RoutingService {
-
   constructor(private http: HttpClient) {}
 
-  activateSimulator(activationMessage: ActivationMessage): Observable<string> {
-    return this.http.post<string>(environment.apiHost + 'activate-simulator', activationMessage);
-  }
-
+    activateSimulator(activationMessage: ActivationMessage): Observable<string> {
+      return this.http.post(environment.apiHost + 'position-simulator/activate-simulator', activationMessage,  { responseType: 'text' });
+    }
 }

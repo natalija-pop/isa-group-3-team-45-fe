@@ -15,7 +15,7 @@ export class SignalRService {
 
   constructor() { 
     this.hubConnection = new signalR.HubConnectionBuilder()
-    .withUrl(wss + 'position-simulato-hub')
+    .withUrl(wss.apiHost +  'position-simulator-hub', { withCredentials: true })
     .build();
 
     this.hubConnection

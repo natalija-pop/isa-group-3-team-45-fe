@@ -1,31 +1,30 @@
-import { Component, OnInit} from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit} from '@angular/core';
 import { Position } from '../position.model';
 import { RoutingService } from '../routing.service';
 import { ActivationMessage } from '../activationMessage.model';
 import { FormControl, FormGroup} from '@angular/forms';
 import { SignalRService } from '../signal-r.service';
+import * as L from 'leaflet';
 
 @Component({
   selector: 'app-position-simulator',
   templateUrl: './position-simulator.component.html',
   styleUrls: ['./position-simulator.component.css']
 })
-export class PositionSimulatorComponent implements OnInit{
-  
-  constructor(private routingService: RoutingService, private signarRService: SignalRService) {}
-  
-  ngOnInit(): void {
-    this.signarRService.stopSimulation$.subscribe((message) => {
-      console.log('Stopping simulation. Delivery finished: ', message);
-    });
+export class PositionSimulatorComponent implements OnInit, AfterViewInit{
+  private carIcon = L.icon({
+    iconUrl: 'assets/icons/car.png',
+    iconSize: [32, 32],
+    iconAnchor: [16, 16],
+ });
+ 
 
-    this.signarRService.newPosition$.subscribe((message) => {
-      console.log('Position updated. Current position: ', message);
-      this.currentPosition = message;
-    })
-  }
-  
   private map: any;
+
+  startMarker: L.Marker = L.marker([0, 0]);
+  endMarker: L.Marker = L.marker([0, 0]);
+  currentPositionMarker: L.Marker = L.marker([0, 0]);
+
   startPoint: Position = {
     longitude: 0.0,
     latitude: 0.0
@@ -37,7 +36,30 @@ export class PositionSimulatorComponent implements OnInit{
   currentPosition: Position = this.startPoint;
   frequency: number = -1.0;
   showMap: boolean = false;
+  
+  constructor(private routingService: RoutingService, private signarRService: SignalRService) {}
+  ngOnInit(): void {
+    this.signarRService.stopSimulation$.subscribe((message) => {
+      console.log('Stopping simulation. Delivery finished: ', message);
+      alert('Stopping simulation. Delivery finished: ' +  message);
+    });
 
+    this.signarRService.newPosition$.subscribe((message) => {
+      console.log('Position updated. Current position: ', message);
+      this.currentPosition = message;
+      this.move();
+    })
+  }
+  
+
+  ngAfterViewInit(): void {
+    this.map = L.map('mapDiv').setView([0, 0], 13);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '© OpenStreetMap contributors',
+    }).addTo(this.map);
+    console.log('Map Container:', document.getElementById('mapDiv'));
+  }
+  
   positionsForm = new FormGroup({
     startLongitude: new FormControl(),
     startLatitude: new FormControl(),
@@ -66,15 +88,32 @@ export class PositionSimulatorComponent implements OnInit{
         frequency: this.frequency
       };
       this.routingService.activateSimulator(activationMessage).subscribe({
-        next: (result: any) => {
-            if(result.message === 'Activation started'){
-              this.showMap = true;
-              return;
+        next: (result: string) => {
+            if (result == "Activation started") {
+                this.showMap = true;
+                this.initializeMap();
+            } else {
+                console.error('Unexpected server response:', result);
             }
         },
         error: (err) => alert('Error: ' + err.message)
-      });
+    });
   }
 
+  private initializeMap(){
+    this.startMarker = L.marker([this.startPoint.latitude, this.startPoint.longitude]).addTo(this.map);
+    this.endMarker = L.marker([this.endPoint.latitude, this.endPoint.longitude]).addTo(this.map);
+    this.currentPositionMarker = L.marker([this.startPoint.latitude, this.startPoint.longitude]).addTo(this.map);
+  }
 
+  private move(){
+    if(this.currentPositionMarker != undefined){
+      this.map.removeLayer(this.currentPositionMarker);
+    }
+    this.currentPositionMarker = new L.Marker([this.currentPosition.latitude, this.currentPosition.longitude],
+    {
+        icon: this.carIcon,
+     }
+    ).addTo(this.map);
+  }
 }
