@@ -6,6 +6,7 @@ import { Appointment, Company } from './model/company.model';
 import { environment } from 'src/env/environment';
 import { CompanyAdmin, User } from 'src/app/infrastructure/auth/model/user.model';
 import { Equipment } from './model/equipment.model';
+import { Contract } from './model/contract.model';
 
 @Injectable({
   providedIn: 'root'
@@ -91,7 +92,7 @@ export class CompanyService {
     return this.http.post<Appointment>(environment.apiHost + `appointment/additionalAppointment?userEmail=${userEmail}`, appointment);
   }
 
-  getReservedByCompanyAdmin(companyAdminId: number): Observable<Appointment>{
+  getReservedByCompanyAdmin(companyAdminId: number): Observable<Appointment> {
     return this.http.get<Appointment>(environment.apiHost + 'appointment/getReservedByCompanyAdmin/' + companyAdminId);
   }
 
@@ -121,7 +122,7 @@ export class CompanyService {
     return this.http.get<boolean>(`${environment.apiHost}appointment/checkIfEquipmentIsReserved/${equipmentId}`);
   }
 
-  checkIfSameAppintment(appointmentId: number, userId : number) {
+  checkIfSameAppintment(appointmentId: number, userId: number) {
     return this.http.get<boolean>(`${environment.apiHost}appointment/checkIfSameAppintment/${appointmentId}?userId=${userId}`);
   }
 
@@ -129,9 +130,18 @@ export class CompanyService {
     return this.http.get<string[]>(`${environment.apiHost}appointment/barcode/${userId}`);
   }
 
-  ReadQrCode(qrCodeFilePath: File): Observable<Appointment>{
+  ReadQrCode(qrCodeFilePath: File): Observable<Appointment> {
     let formData = new FormData();
-    formData.append('qrCodeFile', qrCodeFilePath, qrCodeFilePath.name);  
+    formData.append('qrCodeFile', qrCodeFilePath, qrCodeFilePath.name);
     return this.http.post<Appointment>(environment.apiHost + 'appointment/barcode/read', formData);
+  }
+
+  //contract
+  getAllContracts(): Observable<PagedResults<Contract>> {
+    return this.http.get<PagedResults<Contract>>(environment.apiHost + 'contract/getAll');
+  }
+
+  cancelContract(message: string): Observable<Contract> {
+    return this.http.post<Contract>(environment.apiHost + 'contract/cancel-delivery', message);
   }
 }

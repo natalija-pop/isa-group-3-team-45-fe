@@ -20,6 +20,7 @@ import { UsersProcessedReservationsComponent } from './feature-modules/company/u
 import { UsersScheduledReservationsComponent } from './feature-modules/company/users-scheduled-reservations/users-scheduled-reservations.component';
 import { PositionSimulatorComponent } from './feature-modules/simulators/position-simulator/position-simulator/position-simulator.component';
 import { EditCompanyProfileComponent } from './feature-modules/company/edit-company-profile/edit-company-profile.component';
+import { ContractPageComponent } from './feature-modules/company/contract-page/contract-page.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -42,7 +43,8 @@ const routes: Routes = [
   { path: 'users-scheduled-reservations', component: UsersScheduledReservationsComponent},
   {path: 'position-simulator', component: PositionSimulatorComponent},
   { path: 'users-processed-reservations', component: UsersProcessedReservationsComponent },
-  { path: 'users-scheduled-reservations', component: UsersScheduledReservationsComponent }
+  { path: 'users-scheduled-reservations', component: UsersScheduledReservationsComponent },
+  { path: 'contract-page', component: ContractPageComponent }
 ];
 
 @NgModule({

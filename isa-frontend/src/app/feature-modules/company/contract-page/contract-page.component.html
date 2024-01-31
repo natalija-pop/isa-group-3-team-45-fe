@@ -1,0 +1,33 @@
+<html lang="en">
+<head>
+  <title>Constracts</title>
+</head>
+<body>
+
+    <div class="container">
+        <h1 class="mt-5">Contracts</h1>
+    
+        <div class="row mt-4">
+          <div class="col-md-12">
+            <button class="btn btn-primary ms-auto" [disabled]="!canCancel || contracts.length === 0" (click)="cancelDeliveryButtonClicked">
+              Cancel Upcoming Delivery
+            </button>
+          </div>
+        </div>
+    
+        <div class="row mt-4">
+          <div class="col-md-12">
+            <div *ngFor="let contract of contracts" class="card mb-3">
+              <div class="card-body">
+                <h5 class="card-title"></h5>
+                <p class="card-text fs-5"><strong>Equipment: {{ contract.equipment  }} </strong></p>
+                <p class="card-text">Delivery time: &nbsp;{{ contract.deliveryTime | date: 'shortTime' }} &nbsp;&nbsp; {{ contract.deliveryTime | date: 'mediumDate' }}</p>
+                <p class="card-text">Hospital name: &nbsp;{{ contract.hospitalName }}</p>
+                <p class="card-text">Hospital address: &nbsp;{{ contract.hospitalAddress }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+</body>
+</html>
